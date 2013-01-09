@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>documents</key>
+	<array>
+		<dict>
+			<key>filename</key>
+			<string>2013-cmj-betablocker.tex</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>fig</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>selected</key>
+			<true/>
+			<key>sourceDirectory</key>
+			<string>../fig</string>
+		</dict>
+	</array>
+	<key>fileHierarchyDrawerWidth</key>
+	<integer>274</integer>
+	<key>metaData</key>
+	<dict/>
+	<key>showFileHierarchyDrawer</key>
+	<false/>
+	<key>showFileHierarchyPanel</key>
+	<true/>
+	<key>treeState</key>
+	<dict/>
+	<key>windowFrame</key>
+	<string>{{161, -43}, {991, 774}}</string>
+</dict>
+</plist>

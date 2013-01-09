@@ -12,6 +12,11 @@
 \urlstyle{same} % make url tags have the same font
 \setcounter{secnumdepth}{-1} % remove section numbering
 
+\usepackage{ifpdf}
+
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\graphicspath{{../fig/}}
+
 
 %% The package endfloat moves all floats (figures, tables...) to the end of the paper, as required for the final version of a CMJ paper.
 %% Leave this package commented out for initial submission, but uncomment it for final version. 
@@ -32,7 +37,7 @@
 \begin{cmjAuthorAddress}
 	Media Lab Helsinki, Department of Media\\
 	Aalto University\\
-	Hämeentie 135c\\
+	H\"ameentie 135 c\\
 	00560 Helsinki, Finland\\
 	till.bovermann@aalto.fi
 \end{cmjAuthorAddress}
@@ -48,7 +53,7 @@
 \begin{cmjAuthorAddress}
 	Media Lab Helsinki, Department of Media\\
 	Aalto University\\
-	Hämeentie 135c\\
+	H\"ameentie 135 c\\
 	00560 Helsinki, Finland\\
 	dave@fo.am
 \end{cmjAuthorAddress}
@@ -73,8 +78,16 @@ The field of software engineering is littered with concepts such as regression t
 
 Livecoders look this beast straight in the eyes. 
 When a livecoding performer takes to the stage and projects her screen, she invites us to join her in attempting to understand this intricate dance between human and machine. 
-Livecoding is attempting to treat computation as a material on it's own terms, pick it up, feel what shapes it has and make music with it. 
-Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making the process as much part of a livecoding performance as the code that describes it.
+
+But livecoding is more than performance practice.
+It is a broad field that can be viewed from many different angles.
+From rehearsed public performances, reaching over collaborative improvisations and individual sound explorations, to it's utilisation as a method in science, it has been utilised in a manifold of applications.
+All these derivations of the original theme share elements of live coding as they are featured in the toplap manifesto.
+So livecoding is attempting to treat computation as a material on it's own terms, pick it up and feel what shapes it has.
+
+Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making this process as much part of the performance as the code that describes it.
+Built around this element is a variety of applications for testing, performing and scientific as well as artistic investigations.
+
 
 \parskip 18pt
 
@@ -114,7 +127,7 @@ It began as a highly graphical fluxus based livecoding environment to be perform
 
 Betablocker/Slow (the Fluxus/DS version) makes computation tangible by slowing down processes by many orders of magnitude. 
 The smallest musical loop in Betablocker/Slow is 3 instructions long -- push a value onto the stack, play it as a note, jump back to start. 
-In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at 2.8*10^9 cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents - forming a complete state vector of the processor.
+In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents - forming a complete state vector of the processor.
 
 Performing with Betablocker/Slow consists of starting with empty memory and manually writing programs that modify themselves and each other.
 Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a Turing soup which is happily writing it's own code. 
@@ -130,15 +143,76 @@ In most successful performances both choices are made over the course of the con
 % section betablocker_a_virtual_stack_machine (end)
 \vspace*{24pt}
 
-\section{LiveCoding applications} % (fold)
+\section*{LiveCoding applications} % (fold)
 \label{sec:livecoding_applications}
 
+\subsection*{creative coding} % (fold)
+\label{sub:creative_coding}
 % + betablocker for creative coding
-%    + noise aesthetics: on texture and rhythm
-% + betablocker as research in computing processes (till, dave)
-%   + practice-based research through life coding
-%   + making assembler code accessible (visual human speed programming)
-%   + limitations and characters of betablocker assembler programs
+
+% subsection creative_coding (end)
+
+\subsection*{Research in computing processes} % (fold)
+\label{sub:research_in_computing_processes}
+
+\subsubsection*{Noise aesthetics -- on texture and rhythm} % (fold)
+\label{sub:noise_aesthetics}
+
+
+
+
+% subsection noise_aesthetics (end)
+
+\subsubsection*{Making assembler code accessible (visual human speed programming)} % (fold)
+\label{sub:making_assembler_code_accessible}
+
+% subsection making_assembler_code_accessible (end)
+
+\subsubsection*{Practice-based research through life coding} % (fold)
+\label{sub:practice_based_research_through_life_coding}
+
+
+
+
+%   + limitations and sonic characteristics of betablocker assembler programs
+
+% subsection practice_based_research_through_life_coding (end)
+\begin{itemize}
+\item Heap is filled with random data 
+	% http://tai-studio.org/index.php/2011/05/betablocker-ugen/ 
+\item Implemented access to heap's data. This means that it can be (a) set (b) read and (c) manipulated while running. Also, several engines can share a heap. 
+	% http://tai-studio.org/index.php/2011/08/detablockerbuf-8channel/ 
+\item helper classes facilitating the generation of BBlocker programs 
+	% http://tai-studio.org/index.php/2011/08/twentydblockers/ 
+\item further sonic exploration, listening sessions 
+	% http://tai-studio.org/index.php/2011/10/betablocker-pieces/
+
+	What I found out: Random programs settle into a local stability. there is less high frequencies in the output signal. 
+	For now the layout is always additive, i.e., several BBlocker engines next to each other
+\item Idea generation
+	% http://tai-studio.org/index.php/2011/10/betablocker-theory-day/ 
+\item Visual representation
+	% http://tai-studio.org/index.php/2011/11/attempt-for-representing-2x8bit/
+\item public demo video
+	% http://tai-studio.org/index.php/2011/12/dblockerintro/ 
+\item adding convenience methods play/scope/plot to BBlockerProgram based on feedback of first introduction to a non-programmer
+	% http://tai-studio.org/index.php/2011/12/cambridge-day-4/ 
+\item New iteration of the BetaBlocker wrapper, adding more output (pos and whole stack) and removing the possibility to control it with demand rate,
+	% http://tai-studio.org/index.php/2011/12/60-panned/ 
+	includes a sound study.
+\item Multi-out UGen with audio-rate input
+	% http://tai-studio.org/index.php/2011/12/cambridge-day-8/
+\item Decision to focus on sonic aspects. Therefore tried to write/design programs with specific sonic features in mind.
+	% http://tai-studio.org/index.php/2011/12/cambridge-days-912/ 
+\item Performance at Cambridge, fixed setup
+\item Rehearsal for SuperCollider Symposium
+\item Concert at SuperCollider Symposium
+\item Workshop at UdK.
+\item Oulipop performance
+\end{itemize}
+
+
+% subsection research_in_computing_processes (end)
 
 
 % section livecoding_applications (end)
