@@ -1,0 +1,215 @@
+\documentclass[letterpaper, 12pt]{article}
+
+
+\usepackage{cmjStyle} %use CMJ style
+\usepackage{natbib} %natbib package, necessary for customized cmj BibTeX style
+\bibpunct{(}{)}{;}{a}{}{,} %adapt style of references in text
+\doublespacing
+\raggedright % use this to remove spacing and hyphenation oddities
+%\setlength{\parindent}{0} % first para indent?
+\setlength{\parskip}{2ex}
+\parindent 24pt
+\urlstyle{same} % make url tags have the same font
+\setcounter{secnumdepth}{-1} % remove section numbering
+
+
+%% The package endfloat moves all floats (figures, tables...) to the end of the paper, as required for the final version of a CMJ paper.
+%% Leave this package commented out for initial submission, but uncomment it for final version. 
+% \usepackage{endfloat}
+
+%---Document----------
+\begin{document}
+
+{\cmjTitle 	Computation as material: (meta) live coding experiences}
+\vspace*{24pt}
+
+% (In the initial submission, omit all the following author information to ensure anonymity during peer review.)
+
+%author - name
+{\cmjAuthor Till Bovermann}
+%author - address
+\newline
+\begin{cmjAuthorAddress}
+	Media Lab Helsinki, Department of Media\\
+	Aalto University\\
+	Hämeentie 135c\\
+	00560 Helsinki, Finland\\
+	till.bovermann@aalto.fi
+\end{cmjAuthorAddress}
+
+\vspace*{24pt}
+{\cmjAuthorPhone +358 (50) 5296398}
+\vspace*{24pt}
+
+%author - name
+{\cmjAuthor Dave Griffiths}
+%author - address
+\newline
+\begin{cmjAuthorAddress}
+	Media Lab Helsinki, Department of Media\\
+	Aalto University\\
+	Hämeentie 135c\\
+	00560 Helsinki, Finland\\
+	dave@fo.am
+\end{cmjAuthorAddress}
+
+\vspace*{24pt}
+{\cmjAuthorPhone xxxxxxxxxxxxxx}
+\vspace*{24pt}
+
+
+% use of asterisk in section number to remove numbering
+\section*{Abstract}
+
+
+
+\section{<<Start article>>}
+
++ how people imagine computation now (scary stuff) (Dave)
+
+Computation is odd. 
+In fact in many ways it's one of the strangest things that have been discovered, and 77 years on we continue to fail to fully grasp it's behaviour and so, struggle to keep unseen ramifications of our decisions under control. Faced with such a strange and yet essential beast the only sane strategy is to try and tame it. 
+The field of software engineering is littered with concepts such as regression testing, type checking, white rooms, sandboxing, contracts, and encapsulation -- all attempts to cope with the fact that we can't really understand how a mundane machine of sufficient complexity will act when it is programmed by a human.
+
+Livecoders look this beast straight in the eyes. 
+When a livecoding performer takes to the stage and projects her screen, she invites us to join her in attempting to understand this intricate dance between human and machine. 
+Livecoding is attempting to treat computation as a material on it's own terms, pick it up, feel what shapes it has and make music with it. 
+Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making the process as much part of a livecoding performance as the code that describes it.
+
+\parskip 18pt
+
+\section*{BetaBlocker, a virtual stack machine} % (fold)
+\label{sec:betablocker_a_virtual_stack_machine}
+
+% + implementation details (short)
+%   + core (Dave)
+
+The Betablocker core is a simple multithreaded virtual machine following Von Neumann architecture design (where code and data are treated the same). 
+It's uncrashable, so every possible program will run, although it will halt in infinite loops. 
+It has 23 instructions whose width is either 8 or 16bit for those that take operands. The heap is constrained to 256 bytes of memory, while each thread has 8 bytes of stack. 
+
+\subsection*{portable} % (fold)
+\label{sub:portable}
+%   + DS (Dave)
+It began as a highly graphical fluxus based livecoding environment to be performed with the use of a gamepad (debuted at Piksel Festival 200something) and later moved on to the Gameboy DS in order to make use of it's particular graphics processing, sound chip and stylus input method -- while the small screen on the device is projected by the use of a webcam.
+
+% TODO: more detail, also technical level... graphical interface, why you chose the grid gui etc.
+% subsection portable (end)
+
+\subsection*{scripteable} % (fold)
+\label{sub:scripteable}
+%   + SuperCollider (Till)
+
+% subsection scripteable (end)
+
+
+\section*{live-coding at both speeds} % (fold)
+\label{sec:bothSpeeds}
+
+\subsection*{visual 'human speed' computation} % (fold)
+\label{sub:visual_human_speed_computation}
+
+% subsection visual_human_speed_computation (end)
+%   + visual 'human speed' computation (Dave)
+
+Betablocker/Slow (the Fluxus/DS version) makes computation tangible by slowing down processes by many orders of magnitude. 
+The smallest musical loop in Betablocker/Slow is 3 instructions long -- push a value onto the stack, play it as a note, jump back to start. 
+In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at 2.8*10^9 cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents - forming a complete state vector of the processor.
+
+Performing with Betablocker/Slow consists of starting with empty memory and manually writing programs that modify themselves and each other.
+Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a Turing soup which is happily writing it's own code. 
+At this point the decision is whether to collaborate or compete.
+Collaboration involves looking for interesting bits of code that emerge and manually modifying them, while the best strategy for competing is attempting to find a space to write a program that gradually clears memory so you can start again. 
+In most successful performances both choices are made over the course of the concert.
+
+% + sonic computing, livecoding of programmatic sound textures (till)
+
+% section bothSpeeds (end)
+
+
+% section betablocker_a_virtual_stack_machine (end)
+\vspace*{24pt}
+
+\section{LiveCoding applications} % (fold)
+\label{sec:livecoding_applications}
+
+% + betablocker for creative coding
+%    + noise aesthetics: on texture and rhythm
+% + betablocker as research in computing processes (till, dave)
+%   + practice-based research through life coding
+%   + making assembler code accessible (visual human speed programming)
+%   + limitations and characters of betablocker assembler programs
+
+
+% section livecoding_applications (end)
+\vspace*{24pt}
+
+
+% % format for Heading-B style
+% \subsection{Format for Heading-B Style; Use This for Subsection Headings}
+% 
+% Insert body text here.  
+% 
+% % format for Heading-C style
+% \subsubsection{Format for Heading-C Style; Use This for Minor Sub-subsection Headings}
+% 
+% Insert body text here.
+% 
+% In the initial manuscript submission, you are encouraged to include figures (with captions) inline with the text, for ease of reading during the review process. For example, like this:
+% 
+% % include figures in text with captions for initial submission, like this:
+% \begin{figure}[htpb]
+% \begin{center}
+% \includegraphics{myFigure.pdf}
+% \caption{Insert Figure caption here.}
+% \label{fig:myFigure}
+% \end{center}
+% \end{figure}
+% 
+% However, for the final version after the manuscript has been accepted, all figures should be moved to the end so that the text only contain markers like ``[Figure 1 about here]'' near where the figure would normally have occurred. You can rearrange the text to this effect simply by enabling the package {\tt endfloat} as suggested in the header of this document.
+% 
+% 
+% % equations
+% You can insert equations inline with the text like this:
+% 
+% \begin{equation}
+% 	\label{radupdate}
+% 		\Psi_{N}^{n+1} = m_{N}^{(-)}\Psi_{N-1}^{n}+m_{N}^{(0)}\Psi_{N}^{n} + q_{N}\Psi_{N}^{n-1}
+% \end{equation}
+% where
+% \begin{eqnarray*}
+% 	m_{N}^{(-)} &=& \frac{\lambda^2}{2\tau}\left(S_{N+1}+2S_{N}+S_{N-1}\right)\\
+% 	m_{N}^{(0)} &=& \frac{1}{\tau}\left(2-\frac{\lambda^2}{2}\left(S_{N+1}+2S_{N}+S_{N-1}\right)\right)\\
+% 	q_{N} &=& \frac{1}{\tau}\left(\frac{\gamma^2 k^2}{2h}\left(S_{N+1}+S_{N}\right)\left(\frac{\alpha_{1}}{k}-	\alpha_{2}\right)-1\right)
+% \end{eqnarray*}
+% and where 
+% \begin{equation*}
+% 	\tau = \frac{\gamma^2 k^2}{2h}\left(S_{N+1}+S_{N}\right)\left(\frac{\alpha_{1}}{k}+\alpha_{2}\right)+1
+% \end{equation*}
+% 
+% % Use this environment for inserting source code examples.
+% % Note, that this will print out text in the document exactly as you type it here in the .tex file. That means you can add empty spaces, tabs, blank lines here and they will be printed out like this in the document.). 
+% %For more information check out the LaTeX-Package 'fancyvbr' documentation
+% %
+% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+% Use this style for program code, for example:
+% main() {
+%     printf("Hello World\n");    
+% }
+% \end{Verbatim}
+% 
+% %use of references
+% Some examples for the use of references in the text:\\
+% %author name in sentence, single authors
+% \cite{Ano08}, \cite{Bele68}, \cite{Ther99}, \cite{Zica02},
+% %author name in sentence, multiple authors
+% \cite*{VeRo00}, \cite*{AtDa04}, 
+% %reference in brackets, multiple authors
+% \citep*{AtDa04} 
+
+
+%References
+\bibliographystyle{cmj}
+\bibliography{cmjbib}
+
+\end{document}
