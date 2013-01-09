@@ -88,6 +88,9 @@ So livecoding is attempting to treat computation as a material on it's own terms
 Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making this process as much part of the performance as the code that describes it.
 Built around this element is a variety of applications for testing, performing and scientific as well as artistic investigations.
 
+Three levels: (a) technology, (b) unfolding as performance/research practice/method (conceptual and descriptive) and (c) aesthetic qualities.
+
+
 
 \parskip 18pt
 
@@ -99,10 +102,124 @@ Built around this element is a variety of applications for testing, performing a
 The Betablocker core is a simple multithreaded virtual machine following the \emph{von Neumann architecture} design pattern where there is no separation between code and data.
 It's uncrashable, so every possible program will run, although it will halt in infinite loops. 
 It has 23 instructions whose width is either 8 or 16bit for those that take operands. The heap is constrained to 256 bytes of memory, while each thread has 8 bytes of stack. 
+
+
+BetaBlocker has the following structure:(a) a heap of 256 8bit values, (b) an instruction table, (c) a process consisting of (ca) a program counter, pointing to an address in the heap, and (cb) a stack of eight 8bit values.
+
+\subsection{Heap} % (fold)
+\label{sub:heap}
+This is the place where the program and its data are located. In line to the von Neumann architecture, it is possible (and intended) to alter the program while it is running, i.e. interpreting it as data rather than an instruction set. The actual representation of a heap is an array of 256 8bit values. Each value can be interpreted either as an instruction, an address, or an actual number
+% subsection heap (end)
+
+\subsection{thread} % (fold)
+\label{sub:thread}
+A thread is something that executes code stored on the heap. It has a current position (the instruction it is currently evaluating), a stack (some sort of storage, see below), and a timer, determining when it will move its program counter to the heap's next address.
+% subsection thread (end)
+
+\subsection{stack} % (fold)
+\label{sub:stack}
+A stack serves as a temporary storage for a thread. It can be accessed only from top by either (a) pop an item from the stack, (b) return the topmost item without removing it, and (c) push a value to the stack.
+% subsection stack (end)
+
+
+\subsection{instructions} % (fold)
+\label{sub:instructions}
+
+% TODO: IMHO, we should differenciate between a core instruction set (without e.g. NOTE and VOX) and various add-ons (NOTE, VOX, OUT).
+
+These are the implemented instructions:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+NOP - do nothing
+ORG - define relative origin address for this thread
+EQU - compare first two elements on the stack, pop them off the stack, and push the result
+JMP - jump to the address specified right after this instruction
+JMPZ - jump only if stack returns 0
+PSHL - push value on address specified right after this instruction to the stack
+PSH - push value on address specified by the value on the address specified right after this instruction to the stack
+PSHI - like push but one more encapsulation
+POP - pop item from stack to the point in the heap following this instruction
+POPI - pop item from stack and write the value at that address in the heap to the address following this instruction
+ADD - perform an addition on the first two elements on the stack, pop them off the stack, and push the result
+SUB - perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
+INC - increment value on stack
+DEC - decrement value on stack
+AND - perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
+OR - perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
+XOR - perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
+NOT - perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
+ROR - perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
+ROL - perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
+PIP - increments value specified by the next value on the heap
+PIP - decrements value specified by the next value on the heap
+DUP - push a duplicate of the topmost value of the stack to the stack
+\end{Verbatim}
+% NOTE - usually play a note (here: like NOP)
+% VOX - usually play a vox (here: like NOP)
+% STOP - usually stop program (here: like NOP)
+
+This is their actual implementation:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+switch(instr)
+{
+case NOP: break;
+case ORG: m_start=m_start+m_pc-1; m_pc=1; break;
+case EQU: push(pop()==pop()); break;
+case JMP: m_pc=peek(m,m_pc++); break;
+case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
+case PSHL: push(peek(m,m_pc++)); break;
+case PSH: push(peek(m,peek(m,m_pc++))); break;
+case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
+case POP: poke(m,peek(m,m_pc++),pop()); break;
+case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
+case ADD: push(pop()+pop()); break;
+case SUB: push(pop()-pop()); break;
+case INC: push(pop()+1); break;
+case DEC: push(pop()-1); break;
+case AND: push(pop()&pop()); break;
+case OR: push(pop()|pop()); break;
+case XOR: push(pop()^pop()); break;
+case NOT: push(~pop()); break;
+case ROR: push(pop()>>peek(m,m_pc++)); break;
+case ROL: push(pop()<<peek(m,m_pc++)); break;
+case PIP:
+{
+u8 d=peek(m,m_pc++);
+poke(m,d,peek(m,d)+1);
+} break;
+case PDP:
+{
+u8 d=peek(m,m_pc++);
+poke(m,d,peek(m,d)-1);
+} break;
+case DUP: push(top()); break;
+case NOTE:
+{
+// m_pitch=pop();
+// m_played_sound=m_pitch;
+// m_sound->play(m_instrument,m_pitch);
+} break;
+case VOX:
+{
+// m_instrument=pop();
+// m_played_sound=m_pitch;
+// m_sound->play(m_instrument,m_pitch);
+} break;
+case STOP: /*m_active=false;*/ break;
+default : break;
+};
+\end{Verbatim}
+
+% subsection instructions (end)
+
 % betablocker_core (end)
 
 \section{Unfolding self modification to livecode collaboration} % (fold)
 \label{sec:unfolding_self_modification_to_livecode_collaboration}
+
+Although the output of a given bblockerstack is deteministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
+
 
 \subsection*{Slow computing} % (fold)
 \label{sub:slow_computing}
