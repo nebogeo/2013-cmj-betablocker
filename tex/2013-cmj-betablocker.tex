@@ -1,7 +1,7 @@
 \documentclass[letterpaper, 12pt]{article}
 
 
-\usepackage{cmjStyle} %use CMJ style
+\usepackage{cmjStyle-pdftex} %use CMJ style
 \usepackage{natbib} %natbib package, necessary for customized cmj BibTeX style
 \bibpunct{(}{)}{;}{a}{}{,} %adapt style of references in text
 \doublespacing
@@ -215,11 +215,19 @@ default : break;
 
 % betablocker_core (end)
 
-\section{Unfolding self modification to livecode collaboration} % (fold)
+\section{Unfolding self modification to livecode pseudo-collaboration} % (fold)
 \label{sec:unfolding_self_modification_to_livecode_collaboration}
 
-Although the output of a given bblockerstack is deteministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
+The reason behind having 
 
+Although the output of a given Betablocker stack is deterministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
+
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{../fig/bbds-seq.png}
+	\caption{caption}
+	\label{fig:fig_bbds-seq}
+\end{figure}
 
 \subsection*{Slow computing} % (fold)
 \label{sub:slow_computing}
@@ -271,6 +279,13 @@ There are two different UGens, Demand rate and MultiOut.
 \label{sub:creative_coding}
 % + betablocker for creative coding
 
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{../fig/bbbot.JPG}
+	\caption{caption}
+	\label{fig:fig_bbbot}
+\end{figure}
+
 %  creative_coding (end)
 
 \subsection*{Research in computing processes} % (fold)
@@ -278,9 +293,23 @@ There are two different UGens, Demand rate and MultiOut.
 
 % artistic research practice on and with Betablocker
 
-\begin{itemize}
-\item Heap is filled with random data 
-	% http://tai-studio.org/index.php/2011/05/betablocker-ugen/ 
+Based on phenomenological methods/maxims, treating the subject of investigation (here: BetaBlocker) as being only perceivable \emph{through} phenomena (things "present to the mind"). 
+As we are interested in sonic qualities, the selected modality of the observed phenomena are mainly of sonic nature.
+On our way through the system, though, other introspective as well as extrospective data emerged and was taken into account.
+
+To illustrate the research journey, we will now list key events that happened:
+
+Starting point was a collection of C files that defined the BetaBlocker core.
+To keep things simple at the beginning, a crucial strategy in implementations, we decided to fill the heap with a very simple program resembling a sawtooth \verb#[ORG, INC, JMP, 0]#. 
+After successfully listening to this basic setup, we replaced the hardcoded heap with one that gets initialised with random values between $0$ and $255$.\footnote{\url{http://tai-studio.org/index.php/2011/05/betablocker-ugen/}}
+
+% listening experience
+Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rhythmical pattern
+% listening experience end
+
+The next step
+
+\begin{itemize}	 
 \item Implemented access to heap's data. This means that it can be (a) set (b) read and (c) manipulated while running. Also, several engines can share a heap. 
 	% http://tai-studio.org/index.php/2011/08/detablockerbuf-8channel/ 
 \item helper classes facilitating the generation of BBlocker programs 
@@ -340,6 +369,24 @@ Oulipop; the relation between written text, code and sound.
 \label{sub:visuality}
 
 different approaches to visual patterning (8bit display, scopes and buffer-iris)
+
+\begin{figure}
+	\centering
+		\includegraphics[width=3in, height=3in]{2013-heapIris-white}
+		\includegraphics[width=3in, height=3in]{2013-heapIris-black}
+	\caption{Iris-style visualisations of heaps.}
+	\label{fig:fig_2013-heapIris-white}
+\end{figure}
+
+\begin{figure}
+	\centering
+		\includegraphics[width=2in]{binaryRepresentation-01}
+		\includegraphics[width=2in]{binaryRepresentation-02}
+		\includegraphics[width=2in]{binaryRepresentation-03}
+	\caption{Visual representation of 2x8-bit.}
+	\label{fig:fig_2013-heapIris-white}
+\end{figure}
+
 
 % subsection visuality (end)
 
