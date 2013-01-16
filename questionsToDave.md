@@ -3,7 +3,7 @@
 + What makes BetaBlocker distinct to other approaches of computation?
 + What makes BetaBlocker distinct to other approaches of sound generation?
 + in which way does the BetaBlocker approach to data (no distinction between data and program) influence the sonic qualities of your performance?
-
++ in which way does your work differ from mine?
 
 + In which way is BetaBlocker suited for livecoding?
 + can you imagine livecoding with BetaBlocker without an audience?
@@ -20,7 +20,7 @@
 + what do you consider more important, the idea or the musical results?
 + how did you approach the performances? did you have a specific plan?
 
-
++ any future work?
 
 -------------------------
 
@@ -32,9 +32,12 @@
 Originally, I started to work with Betablocker because my interest was in examining the materiality of data. 
 The utilising of an uncrasheable low-level machine designed for data processing that can be modified and accessed easily was an indeal choice since it allowed the addition of audio probes such that it was able to listen to the processing of the data.
 
+My intention is to use the chip design to tell something about the specifity/character/gestalt of a given dataset.
+
+
 ## What is BetaBlocker?
 
-well... sufficiently answered in the section "BBlocker core technology".
+well... Technically, this is sufficiently answered in the section "BBlocker core technology".
 
 ## What makes BetaBlocker distinct to other approaches of computation?
 
@@ -50,6 +53,15 @@ Due to the way, the sound signal is derived from the Betablocker engine, namely 
 Although the system is deterministic, i.e., it's outcome can be calculated supposed its state is known, it is so complex that we rather work with empirics than with analytical approaches.
 
 ## in which way does the BetaBlocker approach to data (no distinction between data and program) influence the sonic qualities of your performance?
+
+When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
+I observed that most of the times, the oscillator starts with a rough spectral output that slowly settles to a much less 
+
+## in which way does your work differ from mine?
+
+You alter content (i.e., data stored in the heap) to manipulate the behaviour of the "machine". 
+My intention is more to undertand the (sonic?) characteristic of the machine itself.
+
 ## In which way is BetaBlocker suited for livecoding?
 ## can you imagine livecoding with BetaBlocker without an audience?
 ## What is your opion about livecoding in general? what is its legitimation?
@@ -62,3 +74,7 @@ Although the system is deterministic, i.e., it's outcome can be calculated suppo
 ## do you have a conceptual background to your work?
 ## what do you consider more important, the idea or the musical results?
 ## how did you approach the performances? did you have a specific plan?
+
+## future work
+
+My intention is to manipulate the machine itself either by having a set of machine variations or by adapting its instruction set on the fly.
