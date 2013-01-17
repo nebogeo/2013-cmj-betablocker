@@ -280,6 +280,86 @@ There are two different UGens, Demand rate and MultiOut.
 
 % synthesis/human creation
 %% classic synthesis techniques adapted to Betablocker: e.g. Additive/FM/AM
+
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{Additive-Betablocker}
+	\caption{Additive synthesis.}
+	\label{fig:fig_Additive-Betablocker}
+\end{figure}
+
+
+Additive:
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+{var output, pC, stack;
+
+var numChains = 5;
+var ctls = ['rates'.kr(1000!numChains), 'bufnums'.kr(0!numChains), 'amps'.kr(0.1!numChains)].flop;
+
+output = ctls.collect{|ctl|
+	# pC ... stack = BBlockerBuf.ar(
+		ctl[0], ctl[1])
+	);
+	LeakDC.ar(stack[0] * ctl[2]);
+}
+
+Out.ar(0, output.sum)}.play;
+\end{Verbatim}
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{FM-Betablocker}
+	\caption{Frequency modulation synthesis.}
+	\label{fig:fig_FM-Betablocker}
+\end{figure}
+
+FM:
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+{var modulator, pC, stack, carrier;
+
+modulator = Demand.ar(
+  Impulse.ar('modRate'.kr(2000)), 
+  'reset'.tr(0),
+  DetaBlockerBuf('modBufnum'.kr(0))
+).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
+
+# pC ... stack = BBlockerBuf.ar(
+	modulator, 'carBufnum'.kr(0)
+);
+carrier = LeakDC.ar(stack[0]);
+
+Out.ar(0, carrier)}.play;
+\end{Verbatim}
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{AM-Betablocker}
+	\caption{Amplitude modulation synthesis.}
+	\label{fig:fig_AM-Betablocker}
+\end{figure}
+
+AM:
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+{var amp, pC, stack, output;
+
+amp = Demand.ar(
+  Impulse.ar('modRate'.kr(2000)), 
+  'reset'.tr(0),
+  DetaBlockerBuf('modBufnum'.kr(0))
+).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
+
+# pC ... stack = BBlockerBuf.ar(
+	'rate'.kr(1000), 'carBufnum'.kr(0)
+);
+output = LeakDC.ar(stack[0] * amp);
+
+Out.ar(0, output)}.play;
+\end{Verbatim}
+
+
+
 %% programming sonic structures: e.g. pulsewave/sawtooth/impulse
 %%% excursion: genetic programming with FFT
 
@@ -288,7 +368,7 @@ There are two different UGens, Demand rate and MultiOut.
 %%% first 1000 computation steps could be seen as transiental 
 %%% longterm adaption: sound settles over the course of several minutes to be less sharp/rough
 
-Due to the way, the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts -- the stack --, the shape of the waveform is limited. 
+The shape of the waveform is limited due to the way the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts, the stack. 
 However, this limitation is inherent to the structure of the system itself.
 
 Although the system is deterministic, i.e., its outcome can be calculated supposed its state is known, it is so complex that we rather work with empirics than with analytical approaches.
