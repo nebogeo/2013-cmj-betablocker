@@ -4,7 +4,10 @@
 \usepackage{cmjStyle-pdftex} %use CMJ style
 \usepackage{natbib} %natbib package, necessary for customized cmj BibTeX style
 \bibpunct{(}{)}{;}{a}{}{,} %adapt style of references in text
-\doublespacing
+
+% \doublespacing
+
+
 \raggedright % use this to remove spacing and hyphenation oddities
 %\setlength{\parindent}{0} % first para indent?
 \setlength{\parskip}{2ex}
@@ -263,11 +266,10 @@ In most successful performances both choices are made over the course of the con
 \label{sub:sound_computing}
 %   + SuperCollider (Till)
 
-An alternative way of dealing with the Beatblocker engine is to run it at audio rate in order to directly render sound with it.
-To achieve this, we wrapped it to be a SuperCollider UGen.
-There are two different UGens, Demand rate and MultiOut.
-
-
+An alternative way of dealing with the Beatblocker engine is to run it at audio rate and render sound directly.
+For easy access of such a method, not only in livecoding settings, we write a SuperCollider UGen implementation for this purpose.\footnote{The implementation is available as open source at \url{https://github.com/supercollider/sc3-plugins}.}
+To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (DetaBlockerBuf) allowing to use in SuperCollider's demand chain implementation 
+and a multi-out version (BBlockerBuf) that exposes the position of the program counter as well as all 8 elements of the stack.
 
 % playing random instruction sequences vs. "conscious" programming
 
@@ -297,11 +299,11 @@ var numChains = 5;
 var ctls = ['rates'.kr(1000!numChains), 'bufnums'.kr(0!numChains), 'amps'.kr(0.1!numChains)].flop;
 
 output = ctls.collect{|ctl|
-	# pC ... stack = BBlockerBuf.ar(
-		ctl[0], ctl[1])
-	);
-	LeakDC.ar(stack[0] * ctl[2]);
-}
+  # pC ... stack = BBlockerBuf.ar(
+    ctl[0], ctl[1]
+  );
+  LeakDC.ar(stack[0] * ctl[2]);
+};
 
 Out.ar(0, output.sum)}.play;
 \end{Verbatim}
@@ -351,7 +353,7 @@ amp = Demand.ar(
 ).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
 
 # pC ... stack = BBlockerBuf.ar(
-	'rate'.kr(1000), 'carBufnum'.kr(0)
+  'rate'.kr(1000), 'carBufnum'.kr(0)
 );
 output = LeakDC.ar(stack[0] * amp);
 
@@ -414,22 +416,44 @@ When working mostly with random data input, the pseudo-unpredicability kicks in 
 
 % a turing-test for livecode companions
 
-\subsection{livecoding performance practice influenced by Betablocker}
+\subsection{Betablocker livecoding practice}
 \label{sub:livecoding_performance_practice_influenced_by_betablocker}
 
-\subsubsection{Dave's Betablocker practice}
-\label{sub:daves_performance_style}
+% \subsubsection{Dave's Betablocker practice}
+% \label{sub:daves_performance_style}
+% 
+% 
+% \subsubsection{Till's Betablocker practice}
+% \label{sub:tills_performance_style}
 
+Subsequent, we describe Betablocker-based performances in their order of appearance.
 
-\subsubsection{Till's Betablocker practice}
-\label{sub:tills_performance_style}
+\subsubsection{SuperCollider symposium London -- livecoding and visuals [4.2012]}
+\label{sub:livecoding_and_visuals}
 
-%%% translation of codes: Oulipop
-Oulipop; the relation between written text, code and sound.
+For the livecoding gig at the SuperCollider Symposium 2012, London, the two authors performed together for the first time. 
+As they lived at that time already in different countries, they developed a remote rehearsal routine, i.e. each of them prepared his part as a sound recording and the other performed on top of it.
 
+At the same time, both authors prepared their life sets.
 
-%%% finding a visual language
+Till's aesthetic goal for the performance was to play poly-rhythmical layers of coloured, noisy sounds with a setup purely based around his SuperCollider Betablocker implementation. 
+At the same time, he aimed for a certain amount of transparency, i.e., it should be possible to not only see the changes he is making to the code but also how  Betablocker engines alter the heaps' content.
+This meant 
+(a) to develop a visual representation of the heaps he was playing, 
+(b) to design a textual helper environment for his livecoding, mainly providing text blocks, and
+(c) to pre-select heaps that he used as "raw materials" for his part of the  performance.
+
+%%% a visual language
 different approaches to visual patterning (8bit display, scopes and buffer-iris)
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{2012-SuperColliderSymposiumLiveCodingEnvironment-till}
+	\caption{Till's livecoding environment as used at the SuperCollider symposium 2012, London.}
+	\label{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}
+\end{figure}
+
 
 \begin{figure}
 	\centering
@@ -439,14 +463,35 @@ different approaches to visual patterning (8bit display, scopes and buffer-iris)
 	\label{fig:fig_2013-heapIris-white}
 \end{figure}
 
+% \begin{figure}
+% 	\centering
+% 		\includegraphics[width=2in]{binaryRepresentation-01}
+% 		\includegraphics[width=2in]{binaryRepresentation-02}
+% 		\includegraphics[width=2in]{binaryRepresentation-03}
+% 	\caption{Visual representation of 2x8-bit.}
+% 	\label{fig:fig_2013-heapIris-white}
+% \end{figure}
+
+
+\subsubsection{Oulipop -- translation of codes [5.2012]}
+\label{sub:oulipop}
+2 Performers, 1 laptop, 20 minutes. Till Bovermann and Sara Hildebrand Marques Lopes.
+
+%%% translation of codes: Oulipop
+Relation between written text, code and sound.
+
+Manipulating texts according to Oulipo rules (\cite{mathews2005-oul}).
+Meta-level live-coding. 
+Each keystroke triggers a process that translates the current text's characters into a set of commands for a fictional CPU. 
+Treated as a sound signal, the ever-changing output of that CPU is played back, and thereby influences the performers' decisions on how to further alter the text. 
+Over the course of the performance, an initially meaningful text turns into nonsense before it eventually settles into a new and often surprising semantical meaning.\footnote{For more information and a documentation video, see \url{http://www.tai-studio.org/oulipop/}.}
 \begin{figure}
 	\centering
-		\includegraphics[width=2in]{binaryRepresentation-01}
-		\includegraphics[width=2in]{binaryRepresentation-02}
-		\includegraphics[width=2in]{binaryRepresentation-03}
-	\caption{Visual representation of 2x8-bit.}
-	\label{fig:fig_2013-heapIris-white}
+		\includegraphics[height=3in]{20120509-IMG_3278}
+	\caption{The Oulipop performance environment.}
+	\label{fig:fig_20120509-IMG_3278}
 \end{figure}
+
 
 %%% Research in computing processes
 Based on phenomenological methods/maxims, treating the subject of investigation (here: BetaBlocker) as being only perceivable \emph{through} phenomena (things "present to the mind"). 
@@ -464,7 +509,7 @@ Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rh
 % listening experience end
 
 \begin{itemize}	 
-\item Implemented access to heap's data. This means that it can be (a) set (b) read and (c) manipulated while running. Also, several engines can share a heap. 
+\item Implemented access to heap's data. This means that it can be set, read and manipulated while running. Also, several engines can share a heap. 
 	% http://tai-studio.org/index.php/2011/08/detablockerbuf-8channel/ 
 \item helper classes facilitating the generation of BBlocker programs 
 	% http://tai-studio.org/index.php/2011/08/twentydblockers/ 
@@ -595,6 +640,6 @@ Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rh
 
 %References
 \bibliographystyle{cmj}
-\bibliography{cmjbib}
-
+% \bibliography{cmjbib}
+\bibliography{/Users/tboverma/Public/unpub/BibTeX/bovermann}
 \end{document}
