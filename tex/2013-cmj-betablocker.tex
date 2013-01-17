@@ -64,7 +64,7 @@
 
 
 % use of asterisk in section number to remove numbering
-\section*{Abstract}
+\section{Abstract}
 
 
 
@@ -98,7 +98,7 @@ Leading to a bunch of different insights
 
 \parskip 18pt
 
-\section*{BetaBlocker core technology} % (fold)
+\section{BetaBlocker core technology} 
 \label{sec:betablocker_core}
 
 % describing the theoretical background and implementation (switch statement etc.)
@@ -110,23 +110,21 @@ It has 23 instructions whose width is either 8 or 16bit for those that take oper
 
 BetaBlocker has the following structure:(a) a heap of 256 8bit values, (b) an instruction table, (c) a process consisting of (ca) a program counter, pointing to an address in the heap, and (cb) a stack of eight 8bit values.
 
-\subsection{Heap} % (fold)
+\subsection{Heap} 
 \label{sub:heap}
 This is the place where the program and its data are located. In line to the von Neumann architecture, it is possible (and intended) to alter the program while it is running, i.e. interpreting it as data rather than an instruction set. The actual representation of a heap is an array of 256 8bit values. Each value can be interpreted either as an instruction, an address, or an actual number
-% subsection heap (end)
 
-\subsection{thread} % (fold)
+
+\subsection{thread} 
 \label{sub:thread}
 A thread is something that executes code stored on the heap. It has a current position (the instruction it is currently evaluating), a stack (some sort of storage, see below), and a timer, determining when it will move its program counter to the heap's next address.
-% subsection thread (end)
 
-\subsection{stack} % (fold)
+\subsection{stack} 
 \label{sub:stack}
 A stack serves as a temporary storage for a thread. It can be accessed only from top by either (a) pop an item from the stack, (b) return the topmost item without removing it, and (c) push a value to the stack.
-% subsection stack (end)
 
 
-\subsection{instructions} % (fold)
+\subsection{instructions} 
 \label{sub:instructions}
 
 % TODO: IMHO, we should differenciate between a core instruction set (without e.g. NOTE and VOX) and various add-ons (NOTE, VOX, OUT).
@@ -215,25 +213,35 @@ default : break;
 };
 \end{Verbatim}
 
-% subsection instructions (end)
 
-% betablocker_core (end)
+\section{Background and historical context} 
+\label{sec:background}
 
-\section{Unfolding self modification to livecode pseudo-collaboration} % (fold)
-\label{sec:unfolding_self_modification_to_livecode_collaboration}
+% musical and computational
 
-The reason behind having 
 
-Although the output of a given Betablocker stack is deterministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
 
-\begin{figure}
-	\centering
-		\includegraphics[height=3in]{../fig/bbds-seq.png}
-	\caption{caption}
-	\label{fig:fig_bbds-seq}
-\end{figure}
+\section{Distinct character of Betablocker and its influence on sound and performance practice} 
+\label{sec:distinct_character}
 
-\subsection*{Slow computing} % (fold)
+
+% statement: 
+The character of Betablocker, be it sonic/computational/musical influences not only the sonic results of a livecoding session but also its overall structuring. 
+It is e.g. possible to start with a blank page and speedily add a fairly complicated pattern to it.
+In the next subsections, we describe our findings and explorations with regard to Betablocker, as we used it on different levels of (livecoding) performances, and give links on how the mentioned behaviour may influence a livecoding session.
+
+\subsection{Computational features} 
+\label{sub:computational_features}
+
+BetaBlocker's distinction to other approaches of computation is manyfold:
+(a) Because it is implemented as a software emulation, it can be easily modified, allowing to add e.g. probes or to vary its instruction set.
+(b) The formal structure of Betablocker is rather minimal, complexity therefore arises out of the induced data, resp. of the combination of that data and it's processing.
+(c) The main purpose of Betablocker is not the outcome of the computation but to be able to observe the process of computation itself. 
+
+
+
+% rythmical patterns vs. audiosynthesis
+\subsubsection{Slow computing} 
 \label{sub:slow_computing}
 %  describing the nintendoDS part of the implementation
 It began as a highly graphical fluxus based livecoding environment to be performed with the use of a gamepad (debuted at Piksel Festival 200something) and later moved on to the Gameboy DS in order to make use of it's particular graphics processing, sound chip and stylus input method -- while the small screen on the device is projected by the use of a webcam.
@@ -251,37 +259,127 @@ Collaboration involves looking for interesting bits of code that emerge and manu
 In most successful performances both choices are made over the course of the concert.
 
 
-
-%  slow_computing (end)
-
-\subsection*{Sound computing} % (fold)
+\subsubsection{Sound computing} 
 \label{sub:sound_computing}
 %   + SuperCollider (Till)
 
-An alternative way of dealing with the Beatblocker engine was to run it at audio speed in order to directly render sound with it.
+An alternative way of dealing with the Beatblocker engine is to run it at audio rate in order to directly render sound with it.
 To achieve this, we wrapped it to be a SuperCollider UGen.
 There are two different UGens, Demand rate and MultiOut.
 
-%  sound_computing (end)
 
-\subsection{Genetic computing} % (fold)
-\label{sec:genetic_computing}
 
-%  genetic_computing (end)
-
-%  unfolding_self_modification_to_livecode_collaboration (end)
+% playing random instruction sequences vs. "conscious" programming
 
 
 
-%  betablocker_a_virtual_stack_machine (end)
-\vspace*{24pt}
+\subsection{Sonic features} 
+\label{sub:sonic_features}
 
-\section*{Meta-discussion} % (fold)
-\label{sec:meta_discussion}
+%%%%% on an audiolevel
 
-\subsection*{Complex computing examples for creative coding} % (fold)
-\label{sub:creative_coding}
-% + betablocker for creative coding
+% synthesis/human creation
+%% classic synthesis techniques adapted to Betablocker: e.g. Additive/FM/AM
+%% programming sonic structures: e.g. pulsewave/sawtooth/impulse
+%%% excursion: genetic programming with FFT
+
+% analysis/findings
+%% sonic variation in random synthesis depends on time: 
+%%% first 1000 computation steps could be seen as transiental 
+%%% longterm adaption: sound settles over the course of several minutes to be less sharp/rough
+
+Due to the way, the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts -- the stack --, the shape of the waveform is limited. 
+However, this limitation is inherent to the structure of the system itself.
+
+Although the system is deterministic, i.e., its outcome can be calculated supposed its state is known, it is so complex that we rather work with empirics than with analytical approaches.
+
+\subsubsection{Noise aesthetics -- on texture and rhythm} 
+\label{sub:noise_aesthetics}
+
+%   + limitations and sonic characteristics of betablocker assembler programs
+
+What I found out: Random programs settle into a local stability. there is less high frequencies in the output signal. 
+
+Dynamics in amplitude and pitch can be added by FM/AM-like synth designs.
+
+
+
+\subsection{Musical features} 
+\label{sub:musical_features}
+
+%%%%% on a rythmical level
+
+% synthesis/human creation
+%% programming sonic structures: e.g. drum pattern
+
+\section{Betablocker and livecoding practice: a report} 
+\label{sec:betablocker_and_livecoding_practice_a_report}
+
+\subsection{Explicit livecoding vs. meta-livecoding} 
+\label{sub:explicit_livecoding_}
+
+% Explicit livecoding (here: on assembler level)
+% meta-livecoding (here: the machine codes itself)
+
+
+\subsection{Unfolding self modification to livecode pseudo-collaboration} 
+\label{sec:unfolding_self_modification_to_livecode_collaboration}
+
+Although the output of a given Betablocker stack is deterministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
+
+When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
+
+% pseudo-interaction
+%% human (behaviour) <---> computer (pseudo-proactive behaviour)
+
+% a turing-test for livecode companions
+
+\subsection{livecoding performance practice influenced by Betablocker}
+\label{sub:livecoding_performance_practice_influenced_by_betablocker}
+
+\subsubsection{Dave's Betablocker practice}
+\label{sub:daves_performance_style}
+
+
+\subsubsection{Till's Betablocker practice}
+\label{sub:tills_performance_style}
+
+% translation of codes: Oulipop
+Oulipop; the relation between written text, code and sound.
+
+
+% finding a visual language
+different approaches to visual patterning (8bit display, scopes and buffer-iris)
+
+\begin{figure}
+	\centering
+		\includegraphics[width=3in, height=3in]{2013-heapIris-white}
+		\includegraphics[width=3in, height=3in]{2013-heapIris-black}
+	\caption{Iris-style visualisations of heaps.}
+	\label{fig:fig_2013-heapIris-white}
+\end{figure}
+
+\begin{figure}
+	\centering
+		\includegraphics[width=2in]{binaryRepresentation-01}
+		\includegraphics[width=2in]{binaryRepresentation-02}
+		\includegraphics[width=2in]{binaryRepresentation-03}
+	\caption{Visual representation of 2x8-bit.}
+	\label{fig:fig_2013-heapIris-white}
+\end{figure}
+
+
+\section{Meta}
+\label{sec:meta}
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=3in]{../fig/bbds-seq.png}
+	\caption{caption}
+	\label{fig:fig_bbds-seq}
+\end{figure}
+
 
 \begin{figure}
 	\centering
@@ -290,9 +388,13 @@ There are two different UGens, Demand rate and MultiOut.
 	\label{fig:fig_bbbot}
 \end{figure}
 
-%  creative_coding (end)
 
-\subsection*{Research in computing processes} % (fold)
+
+
+
+\vspace*{24pt}
+
+\subsection{Research in computing processes} 
 \label{sub:research_in_computing_processes}
 
 % artistic research practice on and with Betablocker
@@ -347,55 +449,14 @@ The next step
 \end{itemize}
 
 
-\subsection{Findings} % (fold)
+\subsection{Findings} 
 \label{sub:findings}
 
-\subsubsection*{Noise aesthetics -- on texture and rhythm} % (fold)
-\label{sub:noise_aesthetics}
-
-%   + limitations and sonic characteristics of betablocker assembler programs
-
-What I found out: Random programs settle into a local stability. there is less high frequencies in the output signal. 
-
-Dynamics in amplitude and pitch can be added by FM/AM-like synth designs.
 
 
-%  noise_aesthetics (end)
-
-\subsubsection{translation of codes} % (fold)
-\label{sub:translation_of_codes}
-
-Oulipop; the relation between written text, code and sound.
-
-% translation_of_codes (end)
-
-\subsubsection{visuality} % (fold)
-\label{sub:visuality}
-
-different approaches to visual patterning (8bit display, scopes and buffer-iris)
-
-\begin{figure}
-	\centering
-		\includegraphics[width=3in, height=3in]{2013-heapIris-white}
-		\includegraphics[width=3in, height=3in]{2013-heapIris-black}
-	\caption{Iris-style visualisations of heaps.}
-	\label{fig:fig_2013-heapIris-white}
-\end{figure}
-
-\begin{figure}
-	\centering
-		\includegraphics[width=2in]{binaryRepresentation-01}
-		\includegraphics[width=2in]{binaryRepresentation-02}
-		\includegraphics[width=2in]{binaryRepresentation-03}
-	\caption{Visual representation of 2x8-bit.}
-	\label{fig:fig_2013-heapIris-white}
-\end{figure}
 
 
-% subsection visuality (end)
 
-
-% findings (end)
 
 \vspace*{24pt}
 

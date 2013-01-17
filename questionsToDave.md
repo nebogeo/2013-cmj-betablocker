@@ -66,7 +66,7 @@ My intention is more to undertand the (sonic?) characteristic of the machine its
 ## can you imagine livecoding with BetaBlocker without an audience?
 ## What is your opion about livecoding in general? what is its legitimation?
 ## is there something you want to deliver to the audience?
-## Is there communicayion between you and the audience?
+## Is there communication between you and the audience?
 ## is there a specific style (both in lievecoding and sounds) that you are after?
 ## what made you choose to implement and use betablocker on mobile devices?
 ## in which way do limitations/themes play a role in your work?
