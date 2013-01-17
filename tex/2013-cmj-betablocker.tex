@@ -266,10 +266,10 @@ In most successful performances both choices are made over the course of the con
 \label{sub:sound_computing}
 %   + SuperCollider (Till)
 
-An alternative way of dealing with the Beatblocker engine is to run it at audio rate and render sound directly.
+One approach to utilise Betablocker is to run it at audio rate and render sound directly.
 For easy access of such a method, not only in livecoding settings, we write a SuperCollider UGen implementation for this purpose.\footnote{The implementation is available as open source at \url{https://github.com/supercollider/sc3-plugins}.}
-To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (DetaBlockerBuf) allowing to use in SuperCollider's demand chain implementation 
-and a multi-out version (BBlockerBuf) that exposes the position of the program counter as well as all 8 elements of the stack.
+To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (\verb#DetaBlockerBuf#) allowing to use in SuperCollider's demand chain implementation 
+and a multi-out version (\verb#BBlockerBuf#) that exposes the position of the program counter as well as all 8 elements of the stack.
 
 % playing random instruction sequences vs. "conscious" programming
 
