@@ -1,0 +1,408 @@
+Till: I thought of doing a backlog description of my adaptation...
+Till: somehow there's a lot of insight in there that is IMHO valuable
+Till: decision processes etc.
+Till: is it ok for you to not talk too much about "livecoding performance" but rather to talk about livecoding?
+Till: because IMHO, livecoding is more than just performance practice
+Dave: ok, for me it's key, but understand your and julians approach is less about this
+Dave: btw is 25 pages what we are aiming for, or can it be quite a bit shorter?
+Till: it can be shorter, of course
+Till: I altered your introduction...
+Till: do you still have time to read that part now? it's about 5 sentences...
+Till: // this is orginal:
+Computation is odd. 
+In fact in many ways it's one of the strangest things that have been discovered, and 77 years on we continue to fail to fully grasp it's behaviour and so, struggle to keep unseen ramifications of our decisions under control. Faced with such a strange and yet essential beast the only sane strategy is to try and tame it. 
+The field of software engineering is littered with concepts such as regression testing, type checking, white rooms, sandboxing, contracts, and encapsulation -- all attempts to cope with the fact that we can't really understand how a mundane machine of sufficient complexity will act when it is programmed by a human.
+
+Livecoders look this beast straight in the eyes. 
+When a livecoding performer takes to the stage and projects her screen, she invites us to join her in attempting to understand this intricate dance between human and machine. 
+
+// here I start to alter:
+But livecoding is more than performance practice.
+It is a broad field that can be viewed from many different angles.
+From rehearsed public performances, reaching over collaborative improvisations and individual sound explorations, to it's utilisation as a method in science, it has been utilised in a manifold of applications.
+All these derivations of the original theme share elements of live coding as they are featured in the toplap manifesto.
+So livecoding is attempting to treat computation as a material on it's own terms, pick it up and feel what shapes it has.
+
+Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making this process as much part of the performance as the code that describes it.
+Built around this element is a variety of applications for testing, performing and scientific investigations.
+Dave: sounds good
+Dave: but I was concerned with the fact it was a music journal
+Dave: so trying to boost those aspects
+Dave: dunno if that's a consideration
+Dave: brb
+Till: well, CMJ is a technical music journal
+Till: and this is a special issue
+Till: also, IMHO, we can put a focus on sonic research/artistic research
+Till: and then of course to sound and performance as well.
+Dave: ok
+Dave: well ~25 pages is loads more than I expected :)
+Till: we'll succeed with what we have as content.
+Till: let's not force it to anything, just write what we have and that's it, ok?
+Till: better short than lenghty
+Dave: agreed
+Dave: what do you want me to work on next?
+Till: if you don't mind, the intro (Betablocker, a virtual stack machine)?
+Dave: Ok
+Till: but then again, it's up to you where you want to add things.
+Dave: I should move betablocker ds to github also
+Dave: I would like to add the inner loop of the interpreter as a appendix
+Dave: the switch statement basically
+Dave: how far (if at all) do you think I should go into the code evolving strategies (genetic algorithms and dawinistic)
+Till: hm...
+Till: adding the switch statement is a good idea
+Till: maybe in a commented form...
+Dave:    case NOP: break;
+    case ORG: m_start=m_start+m_pc-1; m_pc=1; break;
+    case EQU: push(pop()==pop()); break;
+    case JMP: m_pc=peek(m,m_pc++); break;
+    case JMPZ: if (pop()==0) m_pc=peek(m,m_pc); else m_pc++; break;
+    case PSHL: push(peek(m,m_pc++)); break;
+    case PSH: push(peek(m,peek(m,m_pc++))); break;
+    case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
+    case POP: poke(m,peek(m,m_pc++),pop()); break;
+    case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
+    case ADD: push(pop()+pop()); break;
+    case SUB: push(pop()-pop()); break;
+    case INC: push(pop()+1); break;
+    case DEC: push(pop()-1); break;
+    case AND: push(pop()&pop()); break;
+    case OR: push(pop()|pop()); break;
+    case XOR: push(pop()^pop()); break;
+    case NOT: push(~pop()); break;
+    case ROR: push(pop()>>peek(m,m_pc++)); break;
+    case ROL: push(pop()<<peek(m,m_pc++)); break;
+    case PIP: 
+    {
+        u8 d=peek(m,m_pc++); 
+        poke(m,d,peek(m,d)+1); 
+    } break;
+    case PDP: 
+    {
+        u8 d=peek(m,m_pc++); 
+        poke(m,d,peek(m,d)-1); 
+    } break;
+    case DUP: push(top()); break;
+Till: maybe something like this?
+
+http://tai-studio.org/index.php/2011/08/betablocker-ugen-layout/
+Dave: oh yes - that's nice
+Dave: I think for genetic bizness, perhaps just go into how it's working on arduino processors
+Dave: with the special IN and OUT instructions
+Till: what I'd like to see is your automation process to generate specific output
+Dave: for pin i/o
+Dave: ah yes - the fft stuff
+Dave: would be good to write that up some more and do some recordings
+Dave: http://www.pawfal.org/dave/blog/2012/11/spork-factory/
+Dave: connects nicely with your work too
+Dave: I had this great setup where it would spit the fittest program to the chip after each generation
+Dave: so you could hear it evolve
+Dave: (as well as a sonification of the software as it did the flash memory write)
+Till: this one:
+http://www.pawfal.org/dave/blog/2011/10/evolving-musical-bytecode-3/
+Dave: ah ok
+Till: yepp, and the spork factory is nice as well
+Dave: the eventual plan is to do livecoding by moving around self modifying programmable objects
+Dave: hundreds of them :)
+Till: also, I think this 
+http://tai-studio.org/index.php/2012/06/betablocker-example-code/
+might be interesting as a first step
+Till: and then RULE THE WORLD™
+Till: with the smallscale objects
+Dave: so we could have example programs for both approaches (fast and slow) then move on to our more advanced approaches
+Till: ok
+Till: so, 
+
+
++ BetaBlocker core
++ slow computing
++ lightspeed computing
++ complex computing
+
+?
+Till: it's a bit like having a core and then unfolding it
+Dave: "towards self-livecoding software"
+Till: unfolding self-livecoding software
+Till: unfolding self-livecoding capabilities of the betablocker platform
+Till: ?
+Dave: unfolding self modification as livecode collaboration
+Till: who collaborates?
+Dave: human and machine, well
+Dave: human can act as if this is happening
+Dave: which provides a more "normal" interaction
+Dave: referencing nick collins' stuff with machine music processes and live performance
+Till: you: "I'd like to stress the combination of
+human and machine rather than imply that betablocker is doing anything
+clever, or has a voice of it's own -"
+Dave: yes - the complexity is in the human's interpretation of a simple machine
+Till: then we have to explicitely tell that
+Dave: we want them to be like us so we suspend disbelief
+Till: maybe that is the core here?
+Dave: perhaps
+Dave: tangibility is in the mind of the human
+Till: actually, you could imagine the BBlocker stuff to be a companion in livecoding, something that helps you to get around that blank-page syndrome we're all suffering from.
+Dave: somehow an anti-"skeumorph" message
+Dave: unfolding things that are sincere to their true nature rather than pasting interfaces over them
+Dave: results in higher tangibility
+Dave: dunno
+Till: and I also like the fact that, although the output of a given bblockerstack is deteministic, it still is a mystery (i.e. not determinable) for the human mind
+Dave: that is the key point
+Dave: good stuff
+Till: ok, so now we have the key point.
+Dave: so - we make something that is really dumb
+Dave: and still we can't understand it
+Till: well...
+Dave: and it's exciting to use
+Till: ok
+Till: (I most often do not understand the dumbest things possible being made...)
+Till: (but then again, they're mostly not fun to use)
+Till: :)
+Dave: "although the output of a given bblockerstack is deteministic, it still is a mystery (i.e. not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding"
+Dave: is perhaps the core idea?
+Till: about the paper outline then, I'd say something like
+
+
++ intro
++ unfolding self modification to livecode collaboration
+Till: too early posted...
+Till: wait a sec
+Dave: great that we can lift so much from our blogs
+Till: isn't it?
+Till: + intro
+
++ Betablocker core technology
+++ describing the theoretical background and implementation (switch statement etc.)
+
++ unfolding self modification to livecode collaboration
+++ slow computing
+++ sound computing
+++ genetic computing
+
++ Meta-discussion
+++ complex computing in art
+++ and as artistic research practice
+Till: this ^^ would be my take
+Till: what is still missing is the sound aesthetic part...
+Dave: sounds good
+Till: but somehow, it'd be nice to fit that into the artistic research practice...
+Till: hm...
+Till: would you say that we purely focus on descriptive elements in the unfolding section?
+Till: descriptive in the sense that we explain the unfolding part and then go on with describing the different approaches
+Dave: no - I think it's important to talk of the 'whys' in the unfolding
+Dave: i.e. put it in artistic context
+Till: yes, sure....
+Till: that's what I meant with explain the unfolding part
+Till: because I see at least three levels here:
+
+technology
+unfolding as performance/research practice/method (conceptual and descriptive)
+aesthetic qualities
+Till: but now, I have to run for food
+Till: ...
+Till: sorry... I'm meeting Callum
+Dave: ok, just a heads up - I have 2 EU proposals due this week, a talk next week and teaching 20 8-12 yr olds how to program scratch on tuesday, so
+Till: :D
+Till: a lot to do
+Dave: might be a bit distracted
+Till: but it's good to have the structure up and running
+Dave: yes
+Till: have you seen this, btw. ?
+http://tai-studio.org/index.php/projects/deind/
+Till: my first funded project...
+Dave: yes looks very nice
+Dave: congratulations!
+Till:  but now I'm off
+see you soon :)
+Dave: laters
+Till: I'm atm rearranghing things in the file to reflect our discussion
+Till: ok, I'm done with this for today.
+have fun!
+Dave: okdoke
+Dave: will try and have a look later in the week
+Till: k
+Till: nice working on this with you, btw.
+Dave: ditto
+Dave: also great procrastination vehicle
+Till: I start to get into it again.
+Till: what is procrastination to you is actual work for me...
+Till: what's the EU projects about?
+Dave: me too, of course
+Dave: eu - more livecoding + creative industries, and some craft one about food
+Till: nice :)
+Till: have a position for me there?
+Till: :D
+Dave: perhaps
+Dave: well definately hoping to do some betablocker for it
+Till: I am also willing to read through the proposal(s) if you ask nicely
+Dave: sure, all a mess atm though
+Dave: deadline friday :(
+Till: okok
+Till: see you after that
+Till: :)
+Till: for your spork factory; maybe it'd be useful to add a DAC to the equation? e.g.: http://www.ti.com/product/dac0802&lpos=Middle_Container&lid=Alternative_Devices
+Till: :)
+Dave: why would you ever need more than 1 bit sound?
+Dave: _quadrophonic_ 1 bit sound at that
+Till: oho...
+Till: just say'in
+Dave: yeah, it was a bit proof of concept
+Dave: simplest output possible
+Dave: i also always debug microproccesor with piezos anyway
+Till: Ö=
+Till: ups
+Till: :)
+Till: also: http://en.wikipedia.org/wiki/Resistor_ladder
+Till: hey dave,
+Till: hope your deadline is doing ok
+Dave: hmm
+Dave: 80 pages of joy
+Till: I made some changes to the text today, not an aweful lot but just something to check in...
+Dave: ok grea
+Dave: t
+Till: I increasingly get unsure about what it'll be after all but hey, let's find out on the way :)
+Dave: when is the deadline again?
+Till: 20 + 7
+Dave: 20 days
+Dave: no worries
+Dave: end of month?
+Till: 28th for us
+Till: official is 21.
+Till: I think, what I'd like to add a disclaimer abotu the scope of the paper reading simething along the lines of "This paper collects experiences, challenges and insights gathered over the course of 3 years being engaged in combining live coding techniques with virtual chips."
+Dave: I would still like to hit proper deadline
+Till: I'm not against it, though I'm not sure we'll make it...
+Dave: Quite happy to fit it in with a specific idea/methodology if you have one in mind
+Till: "Soon after starting the project, it became evident that complex behaviour can emerge out of simple instructions and self-alteration of code.
+Till: "
+Till: hm...
+Till: or something along those lines...
+Dave: thing is
+Dave: tons of genetic programming/alife stuff in the 90's
+Till: what I wanted to say is actually that we have a bunch of different insights
+Dave: yes
+Dave: artistic approach
+Dave: a research project grounded in tech
+Till: broad approach
+Dave: but driven by artistic direction
+Till: an artistic research project grounded in thechnical theory
+Dave: with livecoding as method
+Dave: sumfink like that
+Dave: or
+Dave: maybe talk about our approaches personally
+Dave: you escaping science
+Dave: me not really having a clue
+Dave: i mean
+Dave: trying to be more methodical
+Dave: meeting in the middle?
+Till: I like the idea to talk about our experiences individually
+Till: the other day I had this idea of making an interview of each other
+Till: so you interview me and I interview you
+Till: that way we could get some nice thoughts together
+Dave: ohho
+Dave: publish it quite raw
+Till: yeah, why not
+Dave: i like the sound of that
+Dave: a bit unconventional
+Till: :)
+Till: artsy
+Dave: not sure it'll get published
+Dave: but who cares
+Dave: we publish it
+Till: it doesn't have to be all interview
+Dave: i should have a look at prior papers in that journal
+Dave: is it open access btw?
+Dave: I have a go at alex if not ;)
+Till: maybe we can publish the interview by ourselves and then have raw cuts from it in the journal
+Till: CMJ is the brainchild of IRCAM...
+Till: so: no, not openAccess
+Till: but they have for every issue one paper for free, I think
+Dave: that's great because I don't want people nicking my ideas ;)
+Till: (facepalm)
+Dave: anyway
+Dave: I'll try to come up with some questions for you next week
+Dave: the start that we have is good I think
+Dave: but this could provide the guts of it perhaps
+Dave: at some point I'd like to talk to you about executable research papers
+Till: wow
+Till: yesyesyesyes
+Till: should we do "live" interviews?
+Till: or something with prepared questions?
+Dave: happier with text
+Dave: but it could be over email
+Dave: so question/response still
+Till: nono, I mean "life" text-skypechat
+Dave: oh true
+Dave: perhaps
+Till: but doesn't necessarily have to be
+Dave: it would be in context
+Till: maybe we can start with the email version
+Dave: no I think maybe your right
+Dave: irc for improved credibility
+Till: oup
+Till: youp
+Till: no I have to eat something
+Dave: I have to finish a presentation
+Dave: (not funding proposal though)
+Dave: yippie
+Till: ok, see ya in a bit (tomorrow?) then
+Till: yeah!
+Till: or lets see
+Dave: possibly tomorrow, more likely monday
+Till: yes
+Till: say greetings to the family, please!
+Dave: have a great weekend (still snow?)
+Dave: oskar says hi
+Till: it's -7 ºC
+Till: how's amber?
+Dave: she's good - got a lectureship job here
+Dave: finally fixed career after finnish 'issue'
+Till: wonderful!
+Till: ah, how far is Cambridge from you?
+Till: I'll heading there in may
+Dave: estimate 6.5 hours train
+Till: wow
+Till: maybe... hmm...
+Dave: not so far just UK
+Dave: trains
+Dave: and infrastructure generally
+Dave: but if I'm in london or near around then, could meet up
+Till: definitely
+Dave: are you going to ZKM live.code.fest?
+Till: yepp
+Till: (at least I got a performance in...)
+Dave: see you there then first
+Till: :)
+Till: what will you do?
+Dave: slub
+Till: slub?
+Till: ah
+Dave: just gig
+Till: I'll have Oulipop
+Till: with sara
+Till: based on BBlocker
+Till: :)
+Dave: Oulipop?
+Dave: link
+Till: http://tai-studio.org/index.php/projects/chipinterpretations/oulipop/
+Dave: ah yesyes
+Dave: that's really great!
+Till: :)
+Till: thanks
+Till: :)
+Dave: cu soon
+Till: yeah!
+Till: :)
+Till: (wave)
+Till: hey dave, when should we start the interviewing thing?
+Dave: not possible for me until thursday :(
+Dave: was thinking though
+Dave: might be worth writing up all betablocker blog entries into something
+Dave: from my POV it's forms a fairly coherent thread
+Till: yepp, that's what I thought as well
+Dave: if you do the same
+Dave: then it will give us probably most of the content
+Dave: we can look at ways of splicing them together
+Dave: and then have a discussion based on this
+Dave: (I'll try to do this on Wednesday, I have a long train journey)
+Till: ok, let's go for that then.
+Till: I also put my initial question draft into the git
+Till: maybe it helps you to formulate?
+Till: http://tai-studio.org/index.php/2013/01/betablocker-paper-structure-draft/

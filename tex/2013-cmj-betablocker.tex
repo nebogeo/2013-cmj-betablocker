@@ -99,6 +99,13 @@ This paper collects experiences, challenges and insights gathered by the two aut
 Soon after starting the project, it became evident that complex behaviour can emerge out of simple instructions and self-alteration of code.
 Leading to a bunch of different insights
 
+\subsection{disclaimers}
+\label{sub:disclaimers}
+
+The Betablocker computation does not make any distinction between a program (i.e., an instruction set) and data (i.e., data on which the program operates). 
+The notions of code, data and program are therefore synonyms, however they represent semantical meaning rather than systematical/structural meaning.
+Particular attention has to be given to the fact that, although a specific part of data stored on Betablocker's heap is meant to be a program, it is by definition possible that it is altered (e.g., by a separate process running independently on the same heap).
+
 \parskip 18pt
 
 \section{BetaBlocker core technology} 
@@ -237,8 +244,8 @@ In the next subsections, we describe our findings and explorations with regard t
 \label{sub:computational_features}
 
 BetaBlocker's distinction to other approaches of computation is manyfold:
-(a) Because it is implemented as a software emulation, it can be easily modified, allowing to add e.g. probes or to vary its instruction set.
-(b) The formal structure of Betablocker is rather minimal, complexity therefore arises out of the induced data, resp. of the combination of that data and it's processing.
+(a) Because it is implemented as a software emulation, it can be easily modified, which allows for e.g., the addition of probes and varying its instruction set.
+(b) The formal structure of Betablocker is rather minimal. Complexity therefore arises out of the induced data, resp. of the combination of input data and it's processing.
 (c) The main purpose of Betablocker is not the outcome of the computation but to be able to observe the process of computation itself. 
 
 
