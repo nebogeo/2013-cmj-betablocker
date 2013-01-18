@@ -274,12 +274,35 @@ In most successful performances both choices are made over the course of the con
 %   + SuperCollider (Till)
 
 One approach to utilise Betablocker is to run it at audio rate and render sound directly.
+In this article, this approach is denoted as Betablocker/Audio.
 For easy access of such a method, not only in livecoding settings, we write a SuperCollider UGen implementation for this purpose.\footnote{The implementation is available as open source at \url{https://github.com/supercollider/sc3-plugins}.}
 To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (\verb#DetaBlockerBuf#) allowing to use in SuperCollider's demand chain implementation 
 and a multi-out version (\verb#BBlockerBuf#) that exposes the position of the program counter as well as all 8 elements of the stack.
+A basic example for each of the two Betablocker/Audio implementations is given in the following listings.
+It is assumed that the heap to be operated on is pre-loaded into a Buffer object.
+By adding the LeakDC operator to the stack values, possible DC offsets are prevented to affect the speaker system.
 
-% playing random instruction sequences vs. "conscious" programming
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+x = { // BBlockerBuf example
+	var signal = Demand.ar(
+	  Impulse.ar('bbRate'.kr(22100)), 
+	  'reset'.tr(0),
+	  DetaBlockerBuf('heapBuf'.kr(0))
+	);
+	LeakDC.ar(signal);
+}.play;
+\end{Verbatim}
 
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+x = { // BBlockerBuf example
+	var pC, stack;
+	#pC ... stack = BBlockerBuf.ar('bbRate'.kr(22100), 
+		'heapBuf'.kr(0), 'startpoint'.kr(0));
+	stack = LeakDC.ar(stack);
+	 // use information on program counter to place sound output
+	Splay.ar(stack, spread: 0.1, center: pC);
+}.play;
+\end{Verbatim}
 
 
 \subsection{Sonic features} 
@@ -287,6 +310,17 @@ and a multi-out version (\verb#BBlockerBuf#) that exposes the position of the pr
 
 % synthesis/human creation
 
+\subsubsection{Noise aesthetics -- on texture and rhythm} 
+\label{sub:noise_aesthetics}
+
+% playing random instruction sequences vs. "conscious" programming
+Although the system is deterministic, i.e., its outcome can be calculated supposed its state is known.
+Due to it's complexity a valid and, as it turned out, fruitful approach is to work with randomness and empirical observations rather than with analytical approaches.
+
+% analysis/findings
+Random programs settle into a local stability. there is less high frequencies in the output signal. 
+Sonic variation in random synthesis depends on time: 
+first 1000 computation steps could be seen as transiental, whereas a longterm adaption takes place as sound settles over the course of several minutes to be less sharp/rough.
 
 \subsubsection{Manually programming sonic structures}
 \label{sub:manual_programming_sonic_structures}
@@ -324,33 +358,44 @@ However, this limitation is inherent to the structure of the system itself.
 
 
 
-\subsubsection{Noise aesthetics -- on texture and rhythm} 
-\label{sub:noise_aesthetics}
 
-Although the system is deterministic, i.e., its outcome can be calculated supposed its state is known.
-Due to it's complexity a valid and, as it turned out, fruitful approach is to work with randomness and empirical observations rather than with analytical approaches.
-
-
-
-% analysis/findings
-Random programs settle into a local stability. there is less high frequencies in the output signal. 
-Sonic variation in random synthesis depends on time: 
-first 1000 computation steps could be seen as transiental, whereas a longterm adaption takes place as sound settles over the course of several minutes to be less sharp/rough
 
 \subsubsection{Classic synthesis techniques adapted to Betablocker} % (fold)
 \label{sub:classic_synthesis_techniques_adapted_to_betablocker}
 
-Dynamics in amplitude and pitch can be added by FM/AM-like synth designs.
+The Betablocker/Audio implementation allows for alteration of calculation rate. 
+This opens the possibility to add dynamics not only in amplitude but also in pitch by FM/AM-like synth designs.
+The following listings show examples on additive synthesis, frequency modulation and amplitude modulation of several Betablocker/Audio engines.
+Implementation is done in SuperCollider.
+
+% \begin{figure}
+% 	\centering
+% 		\includegraphics[height=3in]{Additive-Betablocker}
+% 	\caption{Additive synthesis.}
+% 	\label{fig:fig_Additive-Betablocker}
+% \end{figure}
+% \begin{figure}
+% 	\centering
+% 		\includegraphics[height=3in]{FM-Betablocker}
+% 	\caption{Frequency modulation synthesis.}
+% 	\label{fig:fig_FM-Betablocker}
+% \end{figure}
+% \begin{figure}
+% 	\centering
+% 		\includegraphics[height=3in]{AM-Betablocker}
+% 	\caption{Amplitude modulation synthesis.}
+% 	\label{fig:fig_AM-Betablocker}
+% \end{figure}
 
 \begin{figure}
 	\centering
-		\includegraphics[height=3in]{Additive-Betablocker}
-	\caption{Additive synthesis.}
+		\includegraphics[height=1.75in]{Additive-Betablocker}
+		\includegraphics[height=1.75in]{FM-Betablocker}
+		\includegraphics[height=1.75in]{AM-Betablocker}
+	\caption{Betablocker synthesis techniques.}
 	\label{fig:fig_Additive-Betablocker}
 \end{figure}
 
-
-Additive:
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
 {var output, pC, stack;
 
@@ -367,13 +412,6 @@ output = ctls.collect{|ctl|
 Out.ar(0, output.sum)}.play;
 \end{Verbatim}
 
-
-\begin{figure}
-	\centering
-		\includegraphics[height=3in]{FM-Betablocker}
-	\caption{Frequency modulation synthesis.}
-	\label{fig:fig_FM-Betablocker}
-\end{figure}
 
 FM:
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
@@ -394,12 +432,6 @@ Out.ar(0, carrier)}.play;
 \end{Verbatim}
 
 
-\begin{figure}
-	\centering
-		\includegraphics[height=3in]{AM-Betablocker}
-	\caption{Amplitude modulation synthesis.}
-	\label{fig:fig_AM-Betablocker}
-\end{figure}
 
 AM:
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
