@@ -229,6 +229,244 @@ default : break;
 
 % musical and computational
 
+Betablocker was the first attempt at a game pad programmable live coding system in fluxus. It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and also visually by games such as "Mr Driller," in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic.
+
+The program is a virtual machine running inside fluxus. It
+visualizes the simulation of a fictional CPU with 256 bytes
+of memory, and allows multiple threads of execution to be
+run sharing the same address space. The Betablocker
+language is very much based on the ideas in Core Wars,
+
+
+
+Some useful Betablocker DS code patterns as used in common live coding situations.
+Firstly, when carrying out a sound check before a live performance it's important to keep some kinds of sound engineers happy generating as many different sounds as you can so they can fiddle around with stuff - of course remember to turn everything up to 8 when asked to make the loudest sound you can in order to leave some overhead to blow the PA.
+This is a betablocker program which will play all the sounds in a sound bank at all frequencies. Add more concurrent threads to make it more interesting. Values interpreted as pointers are visualised as arrows:
+
+
+\begin{figure}
+	\centering
+		\includegraphics[height=1in]{bbds-sndchk1}
+	\caption{Sound check}
+	\label{fig:fig_bbds-sndchk1}
+\end{figure}
+
+In betablocker the beat is always locked to the instruction cycle rate, so fast changing sounds are a matter of optimisation. One of the most common ways around this (and a good way to start things off in a gig) is to use one fast loop program for playing sounds while another slower program modifies the first by overwriting bits of it. 
+
+\begin{figure}
+	\centering
+		\includegraphics[height=1in]{bbds-xorrave}
+	\caption{XOR rave}
+	\label{fig:fig_bbds-xorrave}
+\end{figure}
+
+Following on from the last installment of Betablocker DS coding patterns, this time looking at some very short programs that are nicely controllable by the livecoder - including some actual audio examples here (embedding seems broken on archive.org).
+Both these example programs are 16 bytes long, and require 3 concurrent threads to be running over different parts of the program. Each thread has a simple purpose, the first loads a byte and plays it as a sound repeatedly, the second one increments the byte that the first is playing, and the third periodically resets the byte to a constant value.
+ 
+\begin{figure}
+	\centering
+		\includegraphics[height=1in]{bbds-arp}
+	\caption{XOR rave}
+	\label{fig:fig_bbds-arp}
+\end{figure}
+
+The first example simply plays the byte as a note - resulting in an arpeggiator style sound. After writing the code, the performer can change the speed of each of the three threads to get quite a bit of variety. For example, the slower the resetting thread runs, the longer the pattern will be before it repeats.
+
+\begin{figure}
+	\centering
+		\includegraphics[height=1in]{bbds-seq}
+	\caption{XOR rave}
+	\label{fig:fig_bbds-seq}
+\end{figure}
+
+The second example is very similar, but is slightly modified to play a sequence of different sounds rather than notes, to become a drum sequencer. The second instruction is also changed from a "push literal" to a "push contents of address" which results in the program playing a part of memory as a sequence. We can control the start address location with the reset byte, write directly to this part of memory, and fiddle with the other thread's speed to get even more complexity.
+
+
+
+At it's core, Betablocker provides a simple virtual machine for playing with music which is 'unstoppable' (any combination of instructions can be executed). It started off originally as a Fluxus scheme program, then got rewritten in C++ for the Nintendo DS, and has now been ported to Supercollider. I've built yet another Linux commandline version, and glued it to the Java Genetic Algorithms Package via Clojure.
+
+This means I can continue with the genetic programming experiments and try evolving programs using a real genetic algorithm framework, using the betablocker instruction set. This is mainly just for kicks, but it's also partly to "grow" new strategies for livecoding betablocker and researching instruction sets more generally.
+The first test was to try and find a program to just play note 99. I would write this in betablocker like this (using a text representation of the icon interface for convenience):
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+   pshl 99 ; push the literal value 99 on to the stack
+   note    ; play the top of the stack as a note 
+\end{Verbatim}
+
+First we need a fitness function to score the results from the programs which are generated:First we need a fitness function to score the results from the programs which are generated:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+(defn fitness [notes]
+    (- 255 (Math/abs (- (first notes) 99))))
+\end{Verbatim}
+
+It takes a list of the notes played by a candidate program, and measures how far away the first element is from 99 - the bigger the number, the fitter the individual program is. I gave it 8 instructions to work with and a population of 500 individuals - after just a couple of generations, this chromosome/program popped up with a top fitness of 255 - meaning it was successfully playing note 99:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+99 46 213 89 7 142 23 168
+\end{Verbatim}
+
+Which when disassembled looks something like this:
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+    99       ; <-- address 0 
+    nop
+    nop
+    nop
+    pshi 142 ; pushes contents of address at location 142 (which is 0)
+    note     ; play the note
+    nop
+\end{Verbatim}
+
+This program has grown taking advantage of the fact that the memory is initialised to zero, so if it dereferences a large address like 142 it will be zero and load the contents of the first byte - 99. It's this kind of wacked out approach genetic algorithms are great at finding/abusing.
+The next problem, something a bit more general - create a sequence of notes which are all different to one another. The fitness function:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+(defn list-contains? [l i]
+  (cond
+   (empty? l) false
+   (= (first l) i) true
+   :else (recur (rest l) i)))
+
+(defn fitness [a]
+  (count
+   (reduce
+    (fn [r v]
+      (if (not (list-contains? r v))
+        (cons v r)
+        r))
+    '()
+    a)))
+\end{Verbatim}
+
+This just counts the number of unique elements in the list - again, the higher the better. This one took longer, but eventually came up with this:  
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+139 246 1 23 12 22 23 12 20 95 22 3
+\end{Verbatim}
+
+Which when disassembled:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+    nop
+    nop
+    org
+start:
+    note      ; play a note
+    inc       ; increment top stack byte
+    dup       ; duplicate top stack byte
+    note      ; play a note (consumes 1 stack byte)
+    inc       ; increment again
+    pip 95    ; increment address 95 (junk - doesn't have any effect)
+    dup       ; duplicate again
+    jmp start ; return to the start
+\end{Verbatim}
+
+Which plays a rising sequence of notes, with none repeated, so the highest fitness achievable:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21
+\end{Verbatim}
+
+This is already doing much better than the genetic programming I was mucking about with before - indeed there seems to be some literature on evolving java bytecode, but with betablocker there is an advantage that you don't need to enforce the correctness of the programs before they can be run.
+
+
+Following on from the first BetaBlocker genetic algorithm bytecode experiments, in addition to the "most different notes" fitness function I added a similar calculation for the first derivative (ie. the difference between the notes in time order). This was an attempt to steer the evolution away from simple scales and into more complex patterns.
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+(defn deriv [l]
+  (cond
+   (empty? l) '()
+   (empty? (rest l)) '()
+   :else (cons (- (first (rest l)) (first l))
+               (deriv (rest l)))))
+\end{Verbatim}
+	       
+The code to find the first derivative of a sequence of notes - eg. (deriv '(1 2 3 2 6 7)) => (1 1 -1 4 1). We then add this to the fitness function which looks like this:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+(+ (count (num-unique res)) ; unique notes are good
+   (count (num-unique (deriv res))) ; unique gaps between notes are good
+   (min (count res) 20)) ; lots of notes are good (stop at 20)
+\end{Verbatim}
+   
+This resulted in the following bytecode to emerge from the primordial soup: 23 17 7 6 23 21 9 23 8 212 3 2 4 2 180 124 - which disassembles to:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+	note      ; stack is empty, so plays zero
+	not       ; pushes bitwise "not" of zero => 255
+loop:
+	pshi 6    ; push the contents of address 6 (-> 9 = 212)
+	note      ; play the note (212)
+	pdp 9     ; decrement address 9 (212 becomes 211)
+	note      ; plays 255 first time, 0 after that when stack is empty
+	pop 212   ; stack is now empty so writes 0 to adress 212
+	jmp loop  ; goto loop
+	jmpz 2    ; junk, we never reach here
+	nop
+	nop
+\end{Verbatim}
+
+The arrows show the indirection which helps as this one is a bit tricky to pull apart. It's the first time I've seen self modification emerge - it decrements the "212" and uses it as a variable for the note sequence. Combining the pshi and pdp like this is a nice trick I can make use of when programming betablocker myself.
+The program is self destructive - the "pop" which otherwise does nothing of use will eventually write zeros over the program itself if it's run for a few more cycles than the 100 I'm testing the programs for.
+The output looks like this: 
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+0 212 255 211 0 210 0 209 0 208 0 207 0 206 0 205 0 204 0 203 0 202 0 201 0 200 0 199 0 198 0 197 0 196
+\end{Verbatim}
+
+According to our fitness function, the interleaved zeros give it a very high scoring derivative list:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+212 43 -44 -211 210 -210 209 -209 208 -208 207 -207 206 -206 205 -205 204 -204 203 -203 202 -202 201 -201 200 -200 199 -199 198 -198 197 -197 196
+\end{Verbatim}
+
+However the actual pattern is not so interesting, so still more work needed on the fitness criteria.
+
+For the next attempt in BetaBlocker bytecode evolution I wanted to favour patterns that had a rhythmic nature by measuring them with this function:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+(defn freq [l n]
+  (defn _ [c]
+    (cond
+     (>= (+ c n) (count l)) 0
+     (= (nth l c) (nth l (+ c n))) (+ 1 (_ (+ c 1)))
+     :else (_ (+ c 1))))
+  (_ 0))
+\end{Verbatim}
+
+Which looks for repeating values spaced apart by "n" positions, so (freq '(100 1 2 3 100 4 5 6 100 7 8 9 100) 4) returns 3, as it finds 3 pairs of equal values (100) distanced by the specified 4 positions.
+With this fitness function:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+(+ (* 50 (count (num-unique res))) ; unique notes are very good
+   (freq res 4) ; equal notes every 4 beats are good
+   (freq res 6)) ; equal notes every 6 beats are good
+\end{Verbatim}
+
+We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by multiplying it by 50. After some generations, we get a high scoring individual: 23 23 13 22 7 12 17 20 12 23 23 5 0 7 12 3 
+Which disassembles as:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+loop:
+    note    ; play & remove top of stack (zero when empty)
+    note    ; play & remove top of stack
+    dec     ; decrement top of stack
+    dup     ; duplicate - pushes a copy of stack top 
+    pshi 12 ; push the value pointed at by address at 12 (self read)
+    not     ; performs bitwise not on stack top
+    pip 12  ; increment value at address 12
+    note    ; play & remove top of stack
+    note    ; play & remove top of stack
+    pshl 0  ; pushes this literal number (the 0 is at address 12)
+    pshi 12 ; push the value pointed at by 12 (self read)
+    jmp loop
+\end{Verbatim}
+    
+This program creates a pattern from 4 separate sources, using all 16 bytes of code:
+
+
+The result: "0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12 5 243 250 17 6 238 249 20 7 235 248 12 8" scores poorly for it's rhythmic patterns, but it's probable that this surprising local maxima was found by the early influence of the rhythmic fitness criteria on it's ancestor populations. 
+This one was strange enough to warrant dialing into Betablocker DS to see how it actually sounded. Here it is in Hungarian Gypsy scale:
 
 
 \section{Distinct character of Betablocker and its influence on sound and performance practice} 
