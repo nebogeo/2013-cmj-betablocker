@@ -285,10 +285,62 @@ and a multi-out version (\verb#BBlockerBuf#) that exposes the position of the pr
 \subsection{Sonic features} 
 \label{sub:sonic_features}
 
-%%%%% on an audiolevel
-
 % synthesis/human creation
-%% classic synthesis techniques adapted to Betablocker: e.g. Additive/FM/AM
+
+
+\subsubsection{Manually programming sonic structures}
+\label{sub:manual_programming_sonic_structures}
+
+When dealing with a computational system on a low level, the understanding of it's inner works is crucial.
+With the given instructionset of Betablocker/Audio, we hand-crafted algorithms to produce specific waveforms as good as possible.
+The simplest set is a sawtooth which can be implemented with the heap \verb#[\ORG, \INC, \JMP, 1]#.
+An impulse at nearly Nyquist frequency can be rendered with the program \verb#[\ORG, \NOT, \JMP, 1]#, whereas a pulsewave with adjustable pulsewidth can be programmed with \verb#[\ORG, \NOP, ... , \NOT, \JMP, 1]#.
+More complex structures are a combination of a sawtooth and an impulse generator with adjustable slope of the sawtooth: \verb#[\ORG, \PSHL, 6, \ADD, \JMP, 1, <slope>]#. Note that position 6 will never be reached by the program counter and therefore serves as a safe "data storage" for the slope value.
+An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveforms_POPdestroy-random}.
+
+% POP destroy ( leak = false leak = true )
+\verb#[6, 7, 6, 245, \ORG, \NOP, \NOP, \NOP, \NOP, \PSHL, -6, \PSHL, -2, \POP, \JMP, 1]#
+If the remaining part of the heap is initialised with random values, a random number is pushed onto the stack.
+% TODO: explain behavior...
+
+\begin{figure}
+	\centering
+		\includegraphics[width=2in]{wv-POPdestroy-noRandom}
+		\includegraphics[width=2in]{wv-POPdestroy-random}
+		\includegraphics[width=2in]{wv-impulse}
+		\includegraphics[width=2in]{wv-pulse202}
+		\includegraphics[width=2in]{wv-pulse22}
+		\includegraphics[width=2in]{wv-sawImpulse}
+		\includegraphics[width=2in]{wv-sawtooth}
+	\caption{All the waveforms generated manually}
+	\label{fig:fig_waveforms_POPdestroy-random}
+\end{figure}
+
+
+%   + limitations and sonic characteristics of betablocker assembler programs
+% TODO: find appropriate link to upper part
+Findings: The shape of the waveform is limited due to the way the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts, the stack. 
+However, this limitation is inherent to the structure of the system itself.
+
+
+
+\subsubsection{Noise aesthetics -- on texture and rhythm} 
+\label{sub:noise_aesthetics}
+
+Although the system is deterministic, i.e., its outcome can be calculated supposed its state is known.
+Due to it's complexity a valid and, as it turned out, fruitful approach is to work with randomness and empirical observations rather than with analytical approaches.
+
+
+
+% analysis/findings
+Random programs settle into a local stability. there is less high frequencies in the output signal. 
+Sonic variation in random synthesis depends on time: 
+first 1000 computation steps could be seen as transiental, whereas a longterm adaption takes place as sound settles over the course of several minutes to be less sharp/rough
+
+\subsubsection{Classic synthesis techniques adapted to Betablocker} % (fold)
+\label{sub:classic_synthesis_techniques_adapted_to_betablocker}
+
+Dynamics in amplitude and pitch can be added by FM/AM-like synth designs.
 
 \begin{figure}
 	\centering
@@ -369,28 +421,12 @@ Out.ar(0, output)}.play;
 
 
 
-%% programming sonic structures: e.g. pulsewave/sawtooth/impulse
-%%% excursion: genetic programming with FFT
 
-% analysis/findings
-%% sonic variation in random synthesis depends on time: 
-%%% first 1000 computation steps could be seen as transiental 
-%%% longterm adaption: sound settles over the course of several minutes to be less sharp/rough
 
-The shape of the waveform is limited due to the way the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts, the stack. 
-However, this limitation is inherent to the structure of the system itself.
 
-Although the system is deterministic, i.e., its outcome can be calculated supposed its state is known, it is so complex that we rather work with empirics than with analytical approaches.
 
-\subsubsection{Noise aesthetics -- on texture and rhythm} 
-\label{sub:noise_aesthetics}
-
-%   + limitations and sonic characteristics of betablocker assembler programs
-
-What I found out: Random programs settle into a local stability. there is less high frequencies in the output signal. 
-
-Dynamics in amplitude and pitch can be added by FM/AM-like synth designs.
-
+\subsubsection{Genetic programming of sonic features} % (fold)
+\label{sub:genetic_programming_of_sonic_features}
 
 
 \subsection{Musical features} 
@@ -500,7 +536,9 @@ Over the course of the performance, an initially meaningful text turns into nons
 \end{figure}
 
 
-%%% Research in computing processes
+\section{Research in computing processes (Till's junkyard)}
+\label{sub:research_in_computing_processes}
+
 Based on phenomenological methods/maxims, treating the subject of investigation (here: BetaBlocker) as being only perceivable \emph{through} phenomena (things "present to the mind"). 
 As we are interested in sonic qualities, the selected modality of the observed phenomena are mainly of sonic nature.
 On our way through the system, though, other introspective as well as extrospective data emerged and was taken into account.
@@ -511,9 +549,9 @@ Starting point was a collection of C files that defined the BetaBlocker core.
 To keep things simple at the beginning, a crucial strategy in implementations, we decided to fill the heap with a very simple program resembling a sawtooth \verb#[ORG, INC, JMP, 0]#. 
 After successfully listening to this basic setup, we replaced the hardcoded heap with one that gets initialised with random values between $0$ and $255$.\footnote{\url{http://tai-studio.org/index.php/2011/05/betablocker-ugen/}}
 
-% listening experience
+
 Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rhythmical pattern
-% listening experience end
+
 
 \begin{itemize}	 
 \item Implemented access to heap's data. This means that it can be set, read and manipulated while running. Also, several engines can share a heap. 
@@ -556,7 +594,7 @@ Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rh
 
 \begin{figure}
 	\centering
-		\includegraphics[height=3in]{../fig/bbds-seq.png}
+		\includegraphics[height=3in]{bbds-seq}
 	\caption{caption}
 	\label{fig:fig_bbds-seq}
 \end{figure}
@@ -564,7 +602,7 @@ Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rh
 
 \begin{figure}
 	\centering
-		\includegraphics[height=3in]{../fig/bbbot.JPG}
+		\includegraphics[height=3in]{bbbot}
 	\caption{caption}
 	\label{fig:fig_bbbot}
 \end{figure}
