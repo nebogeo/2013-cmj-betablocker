@@ -25,6 +25,8 @@
 %% Leave this package commented out for initial submission, but uncomment it for final version. 
 % \usepackage{endfloat}
 
+\usepackage{microtype}
+
 %---Document----------
 \begin{document}
 
@@ -106,6 +108,8 @@ The Betablocker computation does not make any distinction between a program (i.e
 The notions of code, data and program are therefore synonyms, however they represent semantical meaning rather than systematical/structural meaning.
 Particular attention has to be given to the fact that, although a specific part of data stored on Betablocker's heap is meant to be a program, it is by definition possible that it is altered (e.g., by a separate process running independently on the same heap).
 
+A state vector consisting of a heap, a stack and a program counter sufficiently represents the state of a Betablocker engine.
+
 \parskip 18pt
 
 \section{BetaBlocker core technology} 
@@ -122,103 +126,88 @@ BetaBlocker has the following structure:(a) a heap of 256 8bit values, (b) an in
 
 \subsection{Heap} 
 \label{sub:heap}
-This is the place where the program and its data are located. In line to the von Neumann architecture, it is possible (and intended) to alter the program while it is running, i.e. interpreting it as data rather than an instruction set. The actual representation of a heap is an array of 256 8bit values. Each value can be interpreted either as an instruction, an address, or an actual number
+This is the place where the program and its data are located. In line to the von Neumann architecture, it is possible (and intended) to alter the program while it is running, i.e. interpreting it as data rather than an instruction set. The actual representation of a heap is an array of 256 8bit values. Each value can be interpreted either as an instruction, an address, or an actual number.
 
 
-\subsection{thread} 
+\subsection{Thread} 
 \label{sub:thread}
 A thread is something that executes code stored on the heap. It has a current position (the instruction it is currently evaluating), a stack (some sort of storage, see below), and a timer, determining when it will move its program counter to the heap's next address.
 
-\subsection{stack} 
+\subsection{Stack} 
 \label{sub:stack}
 A stack serves as a temporary storage for a thread. It can be accessed only from top by either (a) pop an item from the stack, (b) return the topmost item without removing it, and (c) push a value to the stack.
 
 
-\subsection{instructions} 
+\subsection{Instruction set} 
 \label{sub:instructions}
 
 % TODO: IMHO, we should differenciate between a core instruction set (without e.g. NOTE and VOX) and various add-ons (NOTE, VOX, OUT).
 
 These are the implemented instructions:
 
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-NOP - do nothing
-ORG - define relative origin address for this thread
-EQU - compare first two elements on the stack, pop them off the stack, and push the result
-JMP - jump to the address specified right after this instruction
-JMPZ - jump only if stack returns 0
-PSHL - push value on address specified right after this instruction to the stack
-PSH - push value on address specified by the value on the address specified right after this instruction to the stack
-PSHI - like push but one more encapsulation
-POP - pop item from stack to the point in the heap following this instruction
-POPI - pop item from stack and write the value at that address in the heap to the address following this instruction
-ADD - perform an addition on the first two elements on the stack, pop them off the stack, and push the result
-SUB - perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
-INC - increment value on stack
-DEC - decrement value on stack
-AND - perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
-OR - perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
-XOR - perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
-NOT - perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
-ROR - perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
-ROL - perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
-PIP - increments value specified by the next value on the heap
-PIP - decrements value specified by the next value on the heap
-DUP - push a duplicate of the topmost value of the stack to the stack
-\end{Verbatim}
-% NOTE - usually play a note (here: like NOP)
-% VOX - usually play a vox (here: like NOP)
-% STOP - usually stop program (here: like NOP)
-
+\begin{description}
+\item[\texttt{NOP}] do nothing
+\item[\texttt{ORG}] define relative origin address for this thread
+\item[\texttt{EQU}] compare first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{JMP}] jump to the address specified right after this instruction
+\item[\texttt{JMPZ}] jump only if stack returns 0
+\item[\texttt{PSHL}] push value on address specified right after this instruction to the stack
+\item[\texttt{PSH}] push value on address specified by the value on the address specified right after this instruction to the stack
+\item[\texttt{PSHI}] like push but one more encapsulation
+\item[\texttt{POP}] pop item from stack to the point in the heap following this instruction
+\item[\texttt{POPI}] pop item from stack and write the value at that address in the heap to the address following this instruction
+\item[\texttt{ADD}] perform an addition on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{SUB}] perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{INC}] increment value on stack
+\item[\texttt{DEC}] decrement value on stack
+\item[\texttt{AND}] perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{OR}] perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{XOR}] perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{NOT}] perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
+\item[\texttt{ROR}] perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{ROL}] perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{PIP}] increments value specified by the next value on the heap
+\item[\texttt{PDP}] decrements value specified by the next value on the heap
+\item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
+\item[\texttt{NOTE}] (DS extension) play a note
+\item[\texttt{VOX}] (DS extension) play a vox
+\item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on % \item[\texttt{STOP}] stop program (here: like NOP)
+an ATtiny
+\end{description}
 This is their actual implementation:
 
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
 switch(instr)
 {
-case NOP: break;
-case ORG: m_start=m_start+m_pc-1; m_pc=1; break;
-case EQU: push(pop()==pop()); break;
-case JMP: m_pc=peek(m,m_pc++); break;
+case  NOP: break;
+case  ORG: m_start=m_start+m_pc-1; m_pc=1; break;
+case  EQU: push(pop()==pop()); break;
+case  JMP: m_pc=peek(m,m_pc++); break;
 case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
 case PSHL: push(peek(m,m_pc++)); break;
-case PSH: push(peek(m,peek(m,m_pc++))); break;
+case  PSH: push(peek(m,peek(m,m_pc++))); break;
 case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
-case POP: poke(m,peek(m,m_pc++),pop()); break;
+case  POP: poke(m,peek(m,m_pc++),pop()); break;
 case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
-case ADD: push(pop()+pop()); break;
-case SUB: push(pop()-pop()); break;
-case INC: push(pop()+1); break;
-case DEC: push(pop()-1); break;
-case AND: push(pop()&pop()); break;
-case OR: push(pop()|pop()); break;
-case XOR: push(pop()^pop()); break;
-case NOT: push(~pop()); break;
-case ROR: push(pop()>>peek(m,m_pc++)); break;
-case ROL: push(pop()<<peek(m,m_pc++)); break;
-case PIP:
-{
-u8 d=peek(m,m_pc++);
-poke(m,d,peek(m,d)+1);
+case  ADD: push(pop()+pop()); break;
+case  SUB: push(pop()-pop()); break;
+case  INC: push(pop()+1); break;
+case  DEC: push(pop()-1); break;
+case  AND: push(pop()&pop()); break;
+case   OR: push(pop()|pop()); break;
+case  XOR: push(pop()^pop()); break;
+case  NOT: push(~pop()); break;
+case  ROR: push(pop()>>peek(m,m_pc++)); break;
+case  ROL: push(pop()<<peek(m,m_pc++)); break;
+case  PIP: 
+{ u8 d=peek(m,m_pc++);
+  poke(m,d,peek(m,d)+1);
 } break;
-case PDP:
-{
-u8 d=peek(m,m_pc++);
-poke(m,d,peek(m,d)-1);
+case  PDP:
+{ u8 d=peek(m,m_pc++);
+  poke(m,d,peek(m,d)-1);
 } break;
-case DUP: push(top()); break;
-case NOTE:
-{
-// m_pitch=pop();
-// m_played_sound=m_pitch;
-// m_sound->play(m_instrument,m_pitch);
-} break;
-case VOX:
-{
-// m_instrument=pop();
-// m_played_sound=m_pitch;
-// m_sound->play(m_instrument,m_pitch);
-} break;
-case STOP: /*m_active=false;*/ break;
+case  DUP: push(top()); break;
 default : break;
 };
 \end{Verbatim}
@@ -229,44 +218,51 @@ default : break;
 
 % musical and computational
 
-Betablocker was the first attempt at a game pad programmable live coding system in fluxus. It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and also visually by games such as "Mr Driller," in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic.
+Betablocker was the first attempt at a game pad programmable live coding system in fluxus. 
+It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and also visually by games such as "Mr Driller," in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic.
 
-The program is a virtual machine running inside fluxus. It
-visualizes the simulation of a fictional CPU with 256 bytes
-of memory, and allows multiple threads of execution to be
-run sharing the same address space. The Betablocker
-language is very much based on the ideas in Core Wars,
+The program is a virtual machine running inside fluxus. 
+It visualises the simulation of a fictional CPU with 256 bytes of memory, and allows multiple threads of execution to be run sharing the same address space. 
+The Betablocker language is very much based on the ideas in Core Wars,
+
+From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}).
+
+Betablocker/Audio: Formalized Music: mathematical/stochastic sound synthesis, Gendy (\cite{Xenakis:1971}, \cite{luque2009-the}).
+
 
 
 \section{Distinct character of Betablocker and its influence on sound and performance practice} 
 \label{sec:distinct_character}
 
 
-% statement: 
-The character of Betablocker, be it sonic/computational/musical influences not only the sonic results of a livecoding session but also its overall structuring. 
-It is e.g. possible to start with a blank page and speedily add a fairly complicated pattern to it.
-In the next subsections, we describe our findings and explorations with regard to Betablocker, as we used it on different levels of (livecoding) performances, and give links on how the mentioned behaviour may influence a livecoding session.
+% \subsection{Computational features} 
+% \label{sub:computational_features}
 
-\subsection{Computational features} 
-\label{sub:computational_features}
+BetaBlocker is distinct to other approaches of computational machines in several aspects:
+In the design of Betablocker, the ability to observe computational behaviour was an essential goal, whereas the result of the computation (and therefore process optimisation) played a minor role.  
+Furthermore, Betablocker is implemented as a software emulation and can be modified easily.
+This allows for its alteration regarding introspection (by adding probes) and customisation (by altering the instruction set).
+Last not least, compared to common microprocessor architectures such as the x86\footnote{\url{http://en.wikipedia.org/wiki/X86}}, AVR\footnote{\url{http://en.wikipedia.org/wiki/Atmel_AVR}} or RISC\footnote{\url{http://en.wikipedia.org/wiki/Reduced_instruction_set_computing}}, Betablocker's architecture is simplistic.
+Operational complexity arises from the induced data and its processing rather than from the system's architectural features.
 
-BetaBlocker's distinction to other approaches of computation is manyfold:
-(a) Because it is implemented as a software emulation, it can be easily modified, which allows for e.g., the addition of probes and varying its instruction set.
-(b) The formal structure of Betablocker is rather minimal. Complexity therefore arises out of the induced data, resp. of the combination of input data and it's processing.
-(c) The main purpose of Betablocker is not the outcome of the computation but to be able to observe the process of computation itself. 
+The character of Betablocker influences not only the sonic results of a livecoding session but also its overall structuring.
+Due to its potential process complexity, it is e.g. possible to start with a blank page\footnote{As proposed in the TOPLAP Manifesto draft published at \url{http://toplap.org/wiki/ManifestoDraft}.}
+and add a fairly complicated pattern as the next step.
 
+We describe our findings and explorations with regard to Betablocker in the next paragraphs and give insights on how its behaviour influenced our livecoding sessions.
+As we used Betablocker mainly in two perceptional contrasting settings, rhythmic and sonic, we differentiate in the following between Betablocker/Slow and Betablocker/Audio.
 
 
 % rythmical patterns vs. audiosynthesis
-\subsubsection{Slow computing} 
+\subsubsection{Slow computing -- Betablocker/Slow}
 \label{sub:slow_computing}
 %  describing the nintendoDS part of the implementation
 It began as a highly graphical fluxus based livecoding environment to be performed with the use of a gamepad (debuted at Piksel Festival 200something) and later moved on to the Gameboy DS in order to make use of it's particular graphics processing, sound chip and stylus input method -- while the small screen on the device is projected by the use of a webcam.
 
 % TODO: more detail, also technical level... graphical interface, why you chose the grid gui etc.
 
-Betablocker/Slow (the Fluxus/DS version) makes computation tangible by slowing down processes by many orders of magnitude. 
-The smallest musical loop in Betablocker/Slow is 3 instructions long -- push a value onto the stack, play it as a note, jump back to start. 
+Betablocker/Slow (the Fluxus/DS version) makes computation tangible by slowing down processes by many orders of magnitude compared to typical scenarios. 
+The smallest musical loop in Betablocker/Slow is 3 instructions long -- push a value onto the stack (\texttt{PSH, 123}), play it as a note (\texttt{NOTE}), jump back to start (\texttt{JMP 0}). 
 In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents - forming a complete state vector of the processor.
 
 Performing with Betablocker/Slow consists of starting with empty memory and manually writing programs that modify themselves and each other.
@@ -284,7 +280,7 @@ This is a betablocker program which will play all the sounds in a sound bank at 
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{bbds-sndchk1}
+		\includegraphics[width=13cm]{bbds-sndchk1}
 	\caption{Sound check}
 	\label{fig:fig_bbds-sndchk1}
 \end{figure}
@@ -293,7 +289,7 @@ In betablocker the beat is always locked to the instruction cycle rate, so fast 
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{bbds-xorrave}
+		\includegraphics[width=13cm]{bbds-xorrave}
 	\caption{XOR rave}
 	\label{fig:fig_bbds-xorrave}
 \end{figure}
@@ -303,7 +299,8 @@ Both these example programs are 16 bytes long, and require 3 concurrent threads 
  
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{bbds-arp}
+	% TODO: caption
+		\includegraphics[width=13cm]{bbds-arp}
 	\caption{XOR rave}
 	\label{fig:fig_bbds-arp}
 \end{figure}
@@ -312,7 +309,7 @@ The first example simply plays the byte as a note - resulting in an arpeggiator 
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{bbds-seq}
+		\includegraphics[width=13cm]{bbds-seq}
 	\caption{XOR rave}
 	\label{fig:fig_bbds-seq}
 \end{figure}
@@ -321,17 +318,22 @@ The second example is very similar, but is slightly modified to play a sequence 
 
 
 
-\subsubsection{Sound computing} 
+\subsubsection{Sound computing -- Betablocker/Audio} 
 \label{sub:sound_computing}
 %   + SuperCollider (Till)
 
-One approach to utilise Betablocker is to run it at audio rate and render sound directly.
-In this article, this approach is denoted as Betablocker/Audio.
-For easy access of such a method, not only in livecoding settings, we write a SuperCollider UGen implementation for this purpose.\footnote{The implementation is available as open source at \url{https://github.com/supercollider/sc3-plugins}.}
-To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (\verb#DetaBlockerBuf#) allowing to use in SuperCollider's demand chain implementation 
-and a multi-out version (\verb#BBlockerBuf#) that exposes the position of the program counter as well as all 8 elements of the stack.
-A basic example for each of the two Betablocker/Audio implementations is given in the following listings.
-It is assumed that the heap to be operated on is pre-loaded into a Buffer object.
+Betablocker/Audio utilises the Betablocker engine to render sound directly by running it in the range of audio rate.
+In the first attempt (the SuperCollider UGen implementation), process monitoring was a desired feature. 
+We therefore added probes to specific parts of the engine.
+As shown below, signal variety is therefore limited and influenced by its computation.
+
+In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack.
+In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
+In the next paragraphs, we will describe the implementation and implications of the first attempt.
+
+We implemented Betablocker/Audio in SuperCollider for easy access not only in livecoding settings.\footnote{Available as open source code at \url{https://github.com/supercollider/sc3-plugins}.}
+To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (\texttt{DetaBlockerBuf}) exposing the topmost value of the stack by means of SuperCollider's demand chain implementation and a multi-out version (\texttt{BBlockerBuf}) that exposes the position of the program counter as well as all 8 elements of the stack.
+A basic example for their usage is given in the following listings.\footnote{It is assumed that the heap to be operated on is pre-loaded into a Buffer object.}
 By adding the LeakDC operator to the stack values, possible DC offsets are prevented to affect the speaker system.
 
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
@@ -379,25 +381,25 @@ first 1000 computation steps could be seen as transiental, whereas a longterm ad
 
 When dealing with a computational system on a low level, the understanding of it's inner works is crucial.
 With the given instructionset of Betablocker/Audio, we hand-crafted algorithms to produce specific waveforms as good as possible.
-The simplest set is a sawtooth which can be implemented with the heap \verb#[\ORG, \INC, \JMP, 1]#.
-An impulse at nearly Nyquist frequency can be rendered with the program \verb#[\ORG, \NOT, \JMP, 1]#, whereas a pulsewave with adjustable pulsewidth can be programmed with \verb#[\ORG, \NOP, ... , \NOT, \JMP, 1]#.
-More complex structures are a combination of a sawtooth and an impulse generator with adjustable slope of the sawtooth: \verb#[\ORG, \PSHL, 6, \ADD, \JMP, 1, <slope>]#. Note that position 6 will never be reached by the program counter and therefore serves as a safe "data storage" for the slope value.
+The simplest set is a sawtooth which can be implemented with the heap \texttt{[ORG, INC, JMP, 1]}.
+An impulse at nearly Nyquist frequency can be rendered with the program \texttt{[ORG, NOT, JMP, 1]}, whereas a pulsewave with adjustable pulsewidth can be programmed with \texttt{[ORG, NOP, ... , NOT, JMP, 1]}.
+More complex structures are a combination of a sawtooth and an impulse generator with adjustable slope of the sawtooth: \texttt{[ORG, PSHL, 6, ADD, JMP, 1, <slope>]}. Note that position 6 will never be reached by the program counter and therefore serves as a safe "data storage" for the slope value.
 An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveforms_POPdestroy-random}.
 
 % POP destroy ( leak = false leak = true )
-\verb#[6, 7, 6, 245, \ORG, \NOP, \NOP, \NOP, \NOP, \PSHL, -6, \PSHL, -2, \POP, \JMP, 1]#
+\texttt{[6, 7, 6, 245, ORG, NOP, NOP, NOP, NOP, PSHL, -6, PSHL, -2, POP, JMP, 1]}
 If the remaining part of the heap is initialised with random values, a random number is pushed onto the stack.
 % TODO: explain behavior...
 
 \begin{figure}
 	\centering
-		\includegraphics[width=2in]{wv-POPdestroy-noRandom}
-		\includegraphics[width=2in]{wv-POPdestroy-random}
-		\includegraphics[width=2in]{wv-impulse}
-		\includegraphics[width=2in]{wv-pulse202}
-		\includegraphics[width=2in]{wv-pulse22}
-		\includegraphics[width=2in]{wv-sawImpulse}
-		\includegraphics[width=2in]{wv-sawtooth}
+		\includegraphics[width=5cm]{wv-POPdestroy-noRandom}
+		\includegraphics[width=5cm]{wv-POPdestroy-random}
+		\includegraphics[width=5cm]{wv-impulse}
+		\includegraphics[width=5cm]{wv-pulse202}
+		\includegraphics[width=5cm]{wv-pulse22}
+		\includegraphics[width=5cm]{wv-sawImpulse}
+		\includegraphics[width=5cm]{wv-sawtooth}
 	\caption{All the waveforms generated manually}
 	\label{fig:fig_waveforms_POPdestroy-random}
 \end{figure}
@@ -441,9 +443,9 @@ Implementation is done in SuperCollider.
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1.75in]{Additive-Betablocker}
-		\includegraphics[height=1.75in]{FM-Betablocker}
-		\includegraphics[height=1.75in]{AM-Betablocker}
+		\includegraphics[height=4.5cm]{Additive-Betablocker}
+		\includegraphics[height=4.5cm]{FM-Betablocker}
+		\includegraphics[height=4.5cm]{AM-Betablocker}
 	\caption{Betablocker synthesis techniques.}
 	\label{fig:fig_Additive-Betablocker}
 \end{figure}
@@ -757,7 +759,7 @@ It's simply outputting 0's, then using the 'dec' to decrement the top of the sta
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{spork1}
+		\includegraphics[width=13cm]{spork1}
 	\caption{XOR rave}
 	\label{fig:fig_spork1}
 \end{figure}
@@ -783,7 +785,7 @@ loop:
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{spork2}
+		\includegraphics[width=13cm]{spork2}
 	\caption{XOR rave}
 	\label{fig:fig_spork2}
 \end{figure}
@@ -807,7 +809,7 @@ loop:
 
 \begin{figure}
 	\centering
-		\includegraphics[height=3in]{bbbot}
+		\includegraphics[width=13cm]{bbbot}
 	\caption{caption}
 	\label{fig:fig_bbbot}
 \end{figure}
@@ -817,7 +819,7 @@ loop:
 
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{amorphous}
+		\includegraphics[width=13cm]{amorphous}
 	\caption{500 betablocker CPUs}
 	\label{fig:amorphous}
 \end{figure}
@@ -825,7 +827,7 @@ loop:
 Departing in a new direction after evolved light follower robots, take 500 processor cores spread out in space. Give them a simple instruction set which includes a instruction to copy (DMA) 8 bytes of their code/data to nearby cores (with an error rate of 0.5%). Fill the cores with random junk and set them running. If we graph the bandwidth used (the amount of data transmitted per cycle by the whole system) we get a plot like this:
 \begin{figure}
 	\centering
-		\includegraphics[height=1in]{amorphous-bandwidth}
+		\includegraphics[width=13cm]{amorphous-bandwidth}
 	\caption{Bandwidth}
 	\label{fig:amorphous-bandwidth}
 \end{figure}
@@ -871,7 +873,7 @@ different approaches to visual patterning (8bit display, scopes and buffer-iris)
 
 \begin{figure}
 	\centering
-		\includegraphics[height=3in]{2012-SuperColliderSymposiumLiveCodingEnvironment-till}
+		\includegraphics[width=13cm]{2012-SuperColliderSymposiumLiveCodingEnvironment-till}
 	\caption{Till's livecoding environment as used at the SuperCollider symposium 2012, London.}
 	\label{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}
 \end{figure}
@@ -879,8 +881,8 @@ different approaches to visual patterning (8bit display, scopes and buffer-iris)
 
 \begin{figure}
 	\centering
-		\includegraphics[width=3in, height=3in]{2013-heapIris-white}
-		\includegraphics[width=3in, height=3in]{2013-heapIris-black}
+		\includegraphics[width=6cm, height=6cm]{2013-heapIris-white}
+		\includegraphics[width=6cm, height=6cm]{2013-heapIris-black}
 	\caption{Iris-style visualisations of heaps.}
 	\label{fig:fig_2013-heapIris-white}
 \end{figure}
@@ -909,7 +911,7 @@ Treated as a sound signal, the ever-changing output of that CPU is played back, 
 Over the course of the performance, an initially meaningful text turns into nonsense before it eventually settles into a new and often surprising semantical meaning.\footnote{For more information and a documentation video, see \url{http://www.tai-studio.org/oulipop/}.}
 \begin{figure}
 	\centering
-		\includegraphics[height=3in]{20120509-IMG_3278}
+		\includegraphics[width=13cm]{20120509-IMG_3278}
 	\caption{The Oulipop performance environment.}
 	\label{fig:fig_20120509-IMG_3278}
 \end{figure}
@@ -925,7 +927,7 @@ On our way through the system, though, other introspective as well as extrospect
 To illustrate the research journey, we will now list key events that happened:
 
 Starting point was a collection of C files that defined the BetaBlocker core.
-To keep things simple at the beginning, a crucial strategy in implementations, we decided to fill the heap with a very simple program resembling a sawtooth \verb#[ORG, INC, JMP, 0]#. 
+To keep things simple at the beginning, a crucial strategy in implementations, we decided to fill the heap with a very simple program resembling a sawtooth \texttt{[ORG, INC, JMP, 0]}. 
 After successfully listening to this basic setup, we replaced the hardcoded heap with one that gets initialised with random values between $0$ and $255$.\footnote{\url{http://tai-studio.org/index.php/2011/05/betablocker-ugen/}}
 
 
