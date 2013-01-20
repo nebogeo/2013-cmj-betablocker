@@ -171,8 +171,9 @@ These are the implemented instructions:
 \item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
 \item[\texttt{NOTE}] (DS extension) play a note
 \item[\texttt{VOX}] (DS extension) play a vox
-\item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on % \item[\texttt{STOP}] stop program (here: like NOP)
-an ATtiny
+\item[\texttt{IN}] (spork factory extension) pushes the ATTiny pin state to the stack 
+\item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on an ATTiny
+% \item[\texttt{STOP}] stop program (here: like NOP)
 \end{description}
 This is their actual implementation:
 
@@ -218,12 +219,7 @@ default : break;
 
 % musical and computational
 
-Betablocker was the first attempt at a game pad programmable live coding system in fluxus. 
-It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and also visually by games such as "Mr Driller," in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic.
-
-The program is a virtual machine running inside fluxus. 
-It visualises the simulation of a fictional CPU with 256 bytes of memory, and allows multiple threads of execution to be run sharing the same address space. 
-The Betablocker language is very much based on the ideas in Core Wars,
+The first version of Betablocker was an attempt at a game pad programmable live coding system in fluxus, and created as a way to livecoding without the use of a keyboard or mouse. It was originally inspired by a discussion on the TOPLAP mailing list about virtual machines, and also visually by games such as "Mr Driller," with colourful blocks interacting with each other and the creative use of chain reactions. The first performance occured at Piksel 2006 in Bergen. After numerous performances with the gamepad version both solo and alongside other members of slub, in 2010 betablocker was ported to the Gameboy DS in order to make use of it's sound hardware and stylus input method -- the small screens on the device are projected by the use of a webcam, which has the additional benefit of incuding the livecoder's fingers and stylus in the projection. The tile based nature of the GUI and machine visualisation proved perfect for the optimised graphics hardware on this device. This version went on to be performed and used as an example of livecoding technology in various situations, including the 4for8 night at Aalto university in 2011, SuperCollider Symposium 2012 in London and during the Vivo livecoding festival in Mexico City.
 
 From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}).
 
@@ -257,7 +253,6 @@ As we used Betablocker mainly in two perceptional contrasting settings, rhythmic
 \subsubsection{Slow computing -- Betablocker/Slow}
 \label{sub:slow_computing}
 %  describing the nintendoDS part of the implementation
-It began as a highly graphical fluxus based livecoding environment to be performed with the use of a gamepad (debuted at Piksel Festival 200something) and later moved on to the Gameboy DS in order to make use of it's particular graphics processing, sound chip and stylus input method -- while the small screen on the device is projected by the use of a webcam.
 
 % TODO: more detail, also technical level... graphical interface, why you chose the grid gui etc.
 
@@ -265,18 +260,17 @@ Betablocker/Slow (the Fluxus/DS version) makes computation tangible by slowing d
 The smallest musical loop in Betablocker/Slow is 3 instructions long -- push a value onto the stack (\texttt{PSH, 123}), play it as a note (\texttt{NOTE}), jump back to start (\texttt{JMP 0}). 
 In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents - forming a complete state vector of the processor.
 
-Performing with Betablocker/Slow consists of starting with empty memory and manually writing programs that modify themselves and each other.
+Performing with Betablocker/Slow consists of starting with empty memory and manually entering programs byte by byte that modify themselves and each other. Bytes used as address locations are visualised literally as pointers - arrows indicating the address in memory they are referencing. 
 Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a Turing soup which is happily writing it's own code. 
 At this point the decision is whether to collaborate or compete.
 Collaboration involves looking for interesting bits of code that emerge and manually modifying them, while the best strategy for competing is attempting to find a space to write a program that gradually clears memory so you can start again. 
 In most successful performances both choices are made over the course of the concert.
 
+It is this gradual cessation of control, with immediacy and totality of the understanding (or at least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between the audience and performer and the music they hear.
 
+In order to further illustrate the kinds of programs and livecoding strategies, here are some concrete 'code patterns' which are used in common live coding situations.
 
-Some useful Betablocker DS code patterns as used in common live coding situations.
-Firstly, when carrying out a sound check before a live performance it's important to keep some kinds of sound engineers happy generating as many different sounds as you can so they can fiddle around with stuff - of course remember to turn everything up to 8 when asked to make the loudest sound you can in order to leave some overhead to blow the PA.
-This is a betablocker program which will play all the sounds in a sound bank at all frequencies. Add more concurrent threads to make it more interesting. Values interpreted as pointers are visualised as arrows:
-
+Firstly, a program which will play all the sounds in a sound bank at all frequencies. Multiple threads can be issued to play this program at the same time to provide more complexity. Values interpreted as pointers are visualised as arrows:
 
 \begin{figure}
 	\centering
@@ -285,7 +279,7 @@ This is a betablocker program which will play all the sounds in a sound bank at 
 	\label{fig:fig_bbds-sndchk1}
 \end{figure}
 
-In betablocker the beat is always locked to the instruction cycle rate, so fast changing sounds are a matter of optimisation. One of the most common ways around this (and a good way to start things off in a gig) is to use one fast loop program for playing sounds while another slower program modifies the first by overwriting bits of it. 
+In betablocker/slow the beat is always locked to the instruction cycle rate, so fast changing sounds are a matter of optimisation. Fast loop programs can be used for playing sounds while another slower program modifies the first by overwriting parts of it as it's running, as in this example. 
 
 \begin{figure}
 	\centering
@@ -294,29 +288,26 @@ In betablocker the beat is always locked to the instruction cycle rate, so fast 
 	\label{fig:fig_bbds-xorrave}
 \end{figure}
 
-Following on from the last installment of Betablocker DS coding patterns, this time looking at some very short programs that are nicely controllable by the livecoder - including some actual audio examples here (embedding seems broken on archive.org).
-Both these example programs are 16 bytes long, and require 3 concurrent threads to be running over different parts of the program. Each thread has a simple purpose, the first loads a byte and plays it as a sound repeatedly, the second one increments the byte that the first is playing, and the third periodically resets the byte to a constant value.
+The following programs are both 16 bytes long, and require 3 concurrent threads to be running over different parts of the program. The first thread loads a byte and plays it as a sound repeatedly, the second one increments the byte that the first is loading, and the third periodically resets the byte to a constant value.
  
 \begin{figure}
 	\centering
 	% TODO: caption
 		\includegraphics[width=13cm]{bbds-arp}
-	\caption{XOR rave}
+	\caption{Simple arpeggiator}
 	\label{fig:fig_bbds-arp}
 \end{figure}
 
-The first example simply plays the byte as a note - resulting in an arpeggiator style sound. After writing the code, the performer can change the speed of each of the three threads to get quite a bit of variety. For example, the slower the resetting thread runs, the longer the pattern will be before it repeats.
+The first example simply plays the byte as a note - resulting in an arpeggiator style sound. After writing the code, the performer can change the speed of each of the three threads to get more variety. For example, the slower the resetting thread runs, the longer the pattern will be before it repeats.
 
 \begin{figure}
 	\centering
 		\includegraphics[width=13cm]{bbds-seq}
-	\caption{XOR rave}
+	\caption{Sequencer}
 	\label{fig:fig_bbds-seq}
 \end{figure}
 
-The second example is very similar, but is slightly modified to play a sequence of different sounds rather than notes, to become a drum sequencer. The second instruction is also changed from a "push literal" to a "push contents of address" which results in the program playing a part of memory as a sequence. We can control the start address location with the reset byte, write directly to this part of memory, and fiddle with the other thread's speed to get even more complexity.
-
-
+The second example is very similar, but is slightly modified to play a sequence of different sounds rather than notes, in order to become a percussion sequencer. In order to do this the second instruction is changed from a "push literal" to a "push contents of address" which results in the program playing a part of memory as a sequence. We can control the start address location with the reset byte, write directly to this part of memory, and fiddle with the other thread's speed to get even more complexity.
 
 \subsubsection{Sound computing -- Betablocker/Audio} 
 \label{sub:sound_computing}
