@@ -327,6 +327,9 @@ In the first attempt (the SuperCollider UGen implementation), process monitoring
 We therefore added probes to specific parts of the engine.
 As shown below, signal variety is therefore limited and influenced by its computation.
 
+% TODO: cite to Audio Sniffer
+Analog to the Audio Sniffer.\footnote{\url{http://www.openmusiclabs.com/projects/audio-sniffer/}}
+
 In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack.
 In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
 In the next paragraphs, we will describe the implementation and implications of the first attempt.
@@ -531,6 +534,16 @@ Out.ar(0, output)}.play;
 
 % Explicit livecoding (here: on assembler level)
 % meta-livecoding (here: the machine codes itself)
+
+% listing about levels of livecoding possibilities in Betablocker
+
+Livecoding with Betablocker can be done on various levels.
+\begin{description}
+	\item[Assembler-level programming] having full control over the program, apart of that it might modify itself at runtime, leading to
+	\item[Self-modification] the engine itself modifies its heap and therefore its behavior
+	\item[Structural programming] program interplay between several Betablocker engines (see also Section~\ref{sub:classic_synthesis_techniques_adapted_to_betablocker})
+	\item[Amorphous/Genetic livecoding] determine intended machine output and have a genetic/learing algorithm solve that problem for you
+\end{description}
 
 
 \subsection{Unfolding self modification to livecode pseudo-collaboration} 
