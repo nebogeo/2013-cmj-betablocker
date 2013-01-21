@@ -23,7 +23,8 @@
 
 %% The package endfloat moves all floats (figures, tables...) to the end of the paper, as required for the final version of a CMJ paper.
 %% Leave this package commented out for initial submission, but uncomment it for final version. 
-% \usepackage{endfloat}
+
+ \usepackage{endfloat}
 
 \usepackage{microtype}
 
@@ -84,10 +85,12 @@ The field of software engineering is littered with concepts such as regression t
 Livecoders look this beast straight in the eyes. 
 When a livecoding performer takes to the stage and projects her screen, she invites us to join her in attempting to understand this intricate dance between human and machine. 
 
+% livecoding is manifold: performance, research practice
 But livecoding is more than performance practice.
 It is a broad field that can be viewed from many different angles.
 From rehearsed public performances, reaching over collaborative improvisations and individual sound explorations, to it's utilisation as a method in science, it has been utilised in a manifold of applications.
 All these derivations of the original theme share elements of live coding as they are featured in the toplap manifesto.
+% livecoding definition/classification
 So livecoding is attempting to treat computation as a material on it's own terms, pick it up and feel what shapes it has.
 
 Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making this process as much part of the performance as the code that describes it.
@@ -141,77 +144,11 @@ A stack serves as a temporary storage for a thread. It can be accessed only from
 \subsection{Instruction set} 
 \label{sub:instructions}
 
+In Betablocker, we differentiate between a core instruction set consisting of 22 distinct instructions and various add-ons that, depending on the actual application in which Betablocker is used, introduce side-effect features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
+
+
 % TODO: IMHO, we should differenciate between a core instruction set (without e.g. NOTE and VOX) and various add-ons (NOTE, VOX, OUT).
 
-These are the implemented instructions:
-
-\begin{description}
-\item[\texttt{NOP}] do nothing
-\item[\texttt{ORG}] define relative origin address for this thread
-\item[\texttt{EQU}] compare first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{JMP}] jump to the address specified right after this instruction
-\item[\texttt{JMPZ}] jump only if stack returns 0
-\item[\texttt{PSHL}] push value on address specified right after this instruction to the stack
-\item[\texttt{PSH}] push value on address specified by the value on the address specified right after this instruction to the stack
-\item[\texttt{PSHI}] like push but one more encapsulation
-\item[\texttt{POP}] pop item from stack to the point in the heap following this instruction
-\item[\texttt{POPI}] pop item from stack and write the value at that address in the heap to the address following this instruction
-\item[\texttt{ADD}] perform an addition on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{SUB}] perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{INC}] increment value on stack
-\item[\texttt{DEC}] decrement value on stack
-\item[\texttt{AND}] perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{OR}] perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{XOR}] perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{NOT}] perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
-\item[\texttt{ROR}] perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{ROL}] perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{PIP}] increments value specified by the next value on the heap
-\item[\texttt{PDP}] decrements value specified by the next value on the heap
-\item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
-\item[\texttt{NOTE}] (DS extension) play a note
-\item[\texttt{VOX}] (DS extension) play a vox
-\item[\texttt{IN}] (spork factory extension) pushes the ATTiny pin state to the stack 
-\item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on an ATTiny
-% \item[\texttt{STOP}] stop program (here: like NOP)
-\end{description}
-This is their actual implementation:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-switch(instr)
-{
-case  NOP: break;
-case  ORG: m_start=m_start+m_pc-1; m_pc=1; break;
-case  EQU: push(pop()==pop()); break;
-case  JMP: m_pc=peek(m,m_pc++); break;
-case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
-case PSHL: push(peek(m,m_pc++)); break;
-case  PSH: push(peek(m,peek(m,m_pc++))); break;
-case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
-case  POP: poke(m,peek(m,m_pc++),pop()); break;
-case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
-case  ADD: push(pop()+pop()); break;
-case  SUB: push(pop()-pop()); break;
-case  INC: push(pop()+1); break;
-case  DEC: push(pop()-1); break;
-case  AND: push(pop()&pop()); break;
-case   OR: push(pop()|pop()); break;
-case  XOR: push(pop()^pop()); break;
-case  NOT: push(~pop()); break;
-case  ROR: push(pop()>>peek(m,m_pc++)); break;
-case  ROL: push(pop()<<peek(m,m_pc++)); break;
-case  PIP: 
-{ u8 d=peek(m,m_pc++);
-  poke(m,d,peek(m,d)+1);
-} break;
-case  PDP:
-{ u8 d=peek(m,m_pc++);
-  poke(m,d,peek(m,d)-1);
-} break;
-case  DUP: push(top()); break;
-default : break;
-};
-\end{Verbatim}
 
 
 \section{Background and historical context} 
@@ -219,7 +156,21 @@ default : break;
 
 % musical and computational
 
-The first version of Betablocker was an attempt at a game pad programmable live coding system in fluxus, and created as a way to livecoding without the use of a keyboard or mouse. It was originally inspired by a discussion on the TOPLAP mailing list about virtual machines, and also visually by games such as "Mr Driller," with colourful blocks interacting with each other and the creative use of chain reactions. The first performance occured at Piksel 2006 in Bergen. After numerous performances with the gamepad version both solo and alongside other members of slub, in 2010 betablocker was ported to the Gameboy DS in order to make use of it's sound hardware and stylus input method -- the small screens on the device are projected by the use of a webcam, which has the additional benefit of incuding the livecoder's fingers and stylus in the projection. The tile based nature of the GUI and machine visualisation proved perfect for the optimised graphics hardware on this device. This version went on to be performed and used as an example of livecoding technology in various situations, including the 4for8 night at Aalto university in 2011, SuperCollider Symposium 2012 in London and during the Vivo livecoding festival in Mexico City.
+Betablocker came to live as the first attempt at a game pad programmable live coding system in fluxus.\footnote{
+% TODO: add fluxus link
+(Fluxus link)
+} 
+It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and by games such as \emph{Mr Driller} in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic.\footnote{
+% TODO: add Mr Driller link
+(Mr Driller link)
+}
+
+Betablocker originally was a virtual machine running inside fluxus.
+It visualised the simulation of a fictional CPU with 256 bytes of memory, and allowed multiple threads of execution to be run sharing the same address space. 
+The Betablocker language is very much based on the ideas in Core Wars.\footnote{
+% TODO: add Code Wars link
+(Code Wars link)
+}
 
 From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}).
 
@@ -313,9 +264,12 @@ The second example is very similar, but is slightly modified to play a sequence 
 \label{sub:sound_computing}
 %   + SuperCollider (Till)
 
+% bytecode synthesis
+
 Betablocker/Audio utilises the Betablocker engine to render sound directly by running it in the range of audio rate.
-In the first attempt (the SuperCollider UGen implementation), process monitoring was a desired feature. 
-We therefore added probes to specific parts of the engine.
+Over the course of the project, we implemented two versions of Betablocker/Audio.
+The first version is a SuperCollider UGen implementation which renders sound according to the actual Betablocker operation; however, there is no separate instruction or structural enhancement involved.
+Instead, we added (software) probes to specific parts.
 As shown below, signal variety is therefore limited and influenced by its computation.
 
 % TODO: cite to Audio Sniffer
@@ -353,6 +307,31 @@ x = { // BBlockerBuf example
 \end{Verbatim}
 
 
+\subsubsection{Genetic programming} % (fold)
+\label{sub:genetic_programming}
+
+An introduction to genetic programming with Betablocker that explains its value regarding lifecoding practice.
+E.g. a method to find interesting patterns/sounds before doing a livecoding performance.
+
+% Description of genetic programming:
+A randomly chosen seed, i.e., one or more prototypes (here: heap) are avaluated according to a fitness function.
+The best ones (winner) survive and build the basis for another generation, usually generated by slight variations of their ancestors.
+The winners are as well included into the next generation.
+A variation of this pattern is the combination of two prototypes, however, this is difficult to achieve due to the fixed but complex coding (depending on its surrounding values, one value can be either a value, an address or an instruction).
+
+We implemented two versions of genetic programming, one on Betablocker/Slow and one on Betablocker/AudioHW.
+
+Both variants use jgap as its genetic algorithm framework.
+
+\subsection{Musical features} 
+\label{sub:musical_features}
+
+%%%%% on a rythmical level
+
+% synthesis/human creation
+%% programming sonic structures: e.g. drum pattern
+
+
 \subsection{Sonic features} 
 \label{sub:sonic_features}
 
@@ -370,20 +349,52 @@ Random programs settle into a local stability. there is less high frequencies in
 Sonic variation in random synthesis depends on time: 
 first 1000 computation steps could be seen as transiental, whereas a longterm adaption takes place as sound settles over the course of several minutes to be less sharp/rough.
 
-\subsubsection{Manually programming sonic structures}
+\subsubsection{Lessons learned from manually programming sonic structures}
 \label{sub:manual_programming_sonic_structures}
 
-When dealing with a computational system on a low level, the understanding of it's inner works is crucial.
-With the given instructionset of Betablocker/Audio, we hand-crafted algorithms to produce specific waveforms as good as possible.
-The simplest set is a sawtooth which can be implemented with the heap \texttt{[ORG, INC, JMP, 1]}.
-An impulse at nearly Nyquist frequency can be rendered with the program \texttt{[ORG, NOT, JMP, 1]}, whereas a pulsewave with adjustable pulsewidth can be programmed with \texttt{[ORG, NOP, ... , NOT, JMP, 1]}.
-More complex structures are a combination of a sawtooth and an impulse generator with adjustable slope of the sawtooth: \texttt{[ORG, PSHL, 6, ADD, JMP, 1, <slope>]}. Note that position 6 will never be reached by the program counter and therefore serves as a safe "data storage" for the slope value.
-An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveforms_POPdestroy-random}.
+When interacting with a low-level computational system, it is crucial to  understand it's inner structure and get an idea on how it operates.
+It is possible to gain such knowledge by manually programming (simple) algorithms in the system's native language and observe its resulting behaviour.
+In order to understand the Betablocker engines specifics regarding it's sonic characteristic, we hand-crafted algorithms using the SuperCollider implementation to render given waveforms as close as possible.
 
-% POP destroy ( leak = false leak = true )
-\texttt{[6, 7, 6, 245, ORG, NOP, NOP, NOP, NOP, PSHL, -6, PSHL, -2, POP, JMP, 1]}
-If the remaining part of the heap is initialised with random values, a random number is pushed onto the stack.
-% TODO: explain behavior...
+We found out that a sawtooth wave can be modelled by setting the initial 4 bytes of the heap to
+\texttt{[ORG, INC, JMP, 1]}.
+Supposed that computation will start with \texttt{pC = 0}, the remaining 252 bytes can be set arbitrarily as they will never be reached by the engine.
+Rendering an impulse at nearly Nyquist frequency can be achieved by executing the program \texttt{[ORG, NOT, JMP, 1]} whereas a pulse wave can be implemented with \texttt{[ORG, NOP, ... , NOT, JMP, 1]}.
+The number of \texttt{NOP} here determines the pulse width.
+Similar to the sawtooth example, the values of the remaining bytes in the heap do not affect the program execution.
+
+% livecoding as a method for exploration
+We found all these examples for classic waveforms by exploratory livecoding using the helper class \texttt{BBlockerProgram}, which implements (among other functionality) a \texttt{play} and a \texttt{plot} method to play respectively display a given Betablocker heap.
+% TODO: link to exploratory livecoding explanation
+
+While trying to find an implementation for a sawtooth with adjustable slope, a goal we failed to achieve, we came across a more complex structure that resembles the combination of a sawtooth with adjustable slope and an impulse generator: \texttt{[ORG, PSHL, 6, ADD, JMP, 1, <slope>]}. 
+Here, the decision to add probe to the Betablocker engine rather than implementing additional side-effect instructions came into play: the pulsewave in the program's output (i.e., its stack's top value) is due to an operation that seems necessary to implement the adjustable slope with a given "data" item stored in position 6.
+Note as well that this data position will never be reached by the program counter and can therefore be used as a "safe data storage" for the slope parameter.
+
+Another finding of the livecoding-supported Betablocker exploration, linking the findings made in the previous paragraph,
+% Section~\ref{sub:noise_aesthetics}
+was the sonic outcome of a combination of random "data" and a specifically designed algorithm that interprets it.
+Given the program
+\texttt{[NOP, ORG, NOP, NOP, PSH, 245, PSH, -1, SUB, DUP, POP, -1, POP, 1, JMP, 1]} 
+followed by random numbers, the topmost element in the stack varies according to values addressed in previously pushed values.
+Every set of "data" then sounds different, however, the sounds share a "root note" that depends on the execution rate.
+Note that the "program" itself is as well part of the data and can be addressed, too.
+As the point where the stack pops its topmost values to is depending on its state, it might as well destroy the original program, leading to unstable behaviour.
+% The path through the heap is initialised with something depending on the 245th element in the heap.
+
+To explore the variations in SuperCollider, we introduced the boolean flag \texttt{BBlockerProgram:fillUpRandom}.
+When set, the heap's remaining slots are filled with random values whenever a Betablocker engine is initialised with the given program:
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+a = BBlockerProgram([\NOP, \ORG, \NOP, \NOP, \PSH, 245, 
+  \PSH, -1, \SUB, \DUP, \POP, -1, \POP, 1, \JMP, 1]);
+a.fillUpRandom = true;
+x = a.play(1000, leak: true);
+\end{Verbatim}
+
+
+
+An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveforms_POPdestroy-random}.
 
 \begin{figure}
 	\centering
@@ -411,29 +422,31 @@ However, this limitation is inherent to the structure of the system itself.
 \subsubsection{Classic synthesis techniques adapted to Betablocker} % (fold)
 \label{sub:classic_synthesis_techniques_adapted_to_betablocker}
 
-The Betablocker/Audio implementation allows for alteration of calculation rate. 
-This opens the possibility to add dynamics not only in amplitude but also in pitch by FM/AM-like synth designs.
-The following listings show examples on additive synthesis, frequency modulation and amplitude modulation of several Betablocker/Audio engines.
-Implementation is done in SuperCollider.
+Classic signal synthesis techniques such as additive synthesis, frequency modulation and amplitude modulation combine several sound generating modules in order to create new sounds.
+The result depends highly on factors like the relation between the components, the signal characteristics of the base oscillators and the parameter range in which the oscillators control each other.
 
-% \begin{figure}
-% 	\centering
-% 		\includegraphics[height=3in]{Additive-Betablocker}
-% 	\caption{Additive synthesis.}
-% 	\label{fig:fig_Additive-Betablocker}
-% \end{figure}
-% \begin{figure}
-% 	\centering
-% 		\includegraphics[height=3in]{FM-Betablocker}
-% 	\caption{Frequency modulation synthesis.}
-% 	\label{fig:fig_FM-Betablocker}
-% \end{figure}
-% \begin{figure}
-% 	\centering
-% 		\includegraphics[height=3in]{AM-Betablocker}
-% 	\caption{Amplitude modulation synthesis.}
-% 	\label{fig:fig_AM-Betablocker}
-% \end{figure}
+Next to being able to modulate its output amplitude, one feature of the Betablocker/Audio implementation in SuperCollider is that it allows to alter its calculation rate on a per-cycle basis.
+This makes it possible to add dynamics not only in amplitude but also in pitch.
+In several research-oriented livecoding sessions, we explored the sonic character of assembling Betablocker engines according to the mentioned classic synthesis techniques.
+
+Figure~\ref{fig:classicSynthesisTechniquesFMAMAdditive} shows examples on additive synthesis, frequency modulation and amplitude modulation of two or more Betablocker/Audio modules.
+While implementation of these synthesis techniques is straight forward, the livecoding experimentation revealed several aspects worth mentioning:
+
+% control-rate modulator
+Adjusting the rate of the modulator in FM/AM synthesis to be below audio range results in sequencer-like monophonic synth patterns that are, mostly, pseudo-repetitive i.e., they start with a chaotic movement that is followed by repetitions of a (possibly slowly changing) pattern.
+This behaviour extends significantly the sonic qualities of a Betablocker/Audio engine, a feature Till used extensively in the livecoding performance at the SuperCollider symposium in London (see below for details).
+
+% audio-rate modulator
+As known from classical FM synthesis, modulation rates in the audio range result in a broader frequency spectrum.
+Linking the rate of all used Betablocker engines such that they are either all the same or a power of two results in harmonic additions to the (noisy) spectra.
+The sonic relation between different Betablocker programs seems to follow a specific rule, however, it is not a power of two relation.
+% TODO: fixme: power of two relation, wtf?
+
+% TODO: interrelation between car and mod: sharing a buffer
+
+% TODO: wrap-up: allows for (limited) control of the output that can be used to induce musical structure on an otherwise uncontrolled behaviour (when playing with random heaps)
+
+% TODO: should we add the listings of Additive/FM/AM, or maybe one of them as an example?
 
 \begin{figure}
 	\centering
@@ -441,92 +454,80 @@ Implementation is done in SuperCollider.
 		\includegraphics[height=4.5cm]{FM-Betablocker}
 		\includegraphics[height=4.5cm]{AM-Betablocker}
 	\caption{Betablocker synthesis techniques.}
-	\label{fig:fig_Additive-Betablocker}
+	\label{fig:classicSynthesisTechniquesFMAMAdditive}
 \end{figure}
 
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-{var output, pC, stack;
-
-var numChains = 5;
-var ctls = ['rates'.kr(1000!numChains), 'bufnums'.kr(0!numChains), 'amps'.kr(0.1!numChains)].flop;
-
-output = ctls.collect{|ctl|
-  # pC ... stack = BBlockerBuf.ar(
-    ctl[0], ctl[1]
-  );
-  LeakDC.ar(stack[0] * ctl[2]);
-};
-
-Out.ar(0, output.sum)}.play;
-\end{Verbatim}
-
-
-FM:
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-{var modulator, pC, stack, carrier;
-
-modulator = Demand.ar(
-  Impulse.ar('modRate'.kr(2000)), 
-  'reset'.tr(0),
-  DetaBlockerBuf('modBufnum'.kr(0))
-).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
-
-# pC ... stack = BBlockerBuf.ar(
-	modulator, 'carBufnum'.kr(0)
-);
-carrier = LeakDC.ar(stack[0]);
-
-Out.ar(0, carrier)}.play;
-\end{Verbatim}
-
-
-
-AM:
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-{var amp, pC, stack, output;
-
-amp = Demand.ar(
-  Impulse.ar('modRate'.kr(2000)), 
-  'reset'.tr(0),
-  DetaBlockerBuf('modBufnum'.kr(0))
-).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
-
-# pC ... stack = BBlockerBuf.ar(
-  'rate'.kr(1000), 'carBufnum'.kr(0)
-);
-output = LeakDC.ar(stack[0] * amp);
-
-Out.ar(0, output)}.play;
-\end{Verbatim}
-
-
+% Additive
+% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+% {var output, pC, stack;
+% var numChains = 5;
+% var ctls = ['rates'.kr(1000!numChains), 'bufnums'.kr(0!numChains), 'amps'.kr(0.1!numChains)].flop;
+% 
+% output = ctls.collect{|ctl|
+%   # pC ... stack = BBlockerBuf.ar(
+%     ctl[0], ctl[1]
+%   );
+%   LeakDC.ar(stack[0] * ctl[2]);
+% };
+% 
+% Out.ar(0, output.sum)}.play;
+% \end{Verbatim}
+% 
+% 
+% FM:
+% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+% {var modulator, pC, stack, carrier;
+% 
+% modulator = Demand.ar(
+%   Impulse.ar('modRate'.kr(2000)), 
+%   'reset'.tr(0),
+%   DetaBlockerBuf('modBufnum'.kr(0))
+% ).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
+% 
+% # pC ... stack = BBlockerBuf.ar(
+% 	modulator, 'carBufnum'.kr(0)
+% );
+% carrier = LeakDC.ar(stack[0]);
+% 
+% Out.ar(0, carrier)}.play;
+% \end{Verbatim}
+% 
+% 
+% 
+% AM:
+% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+% {var amp, pC, stack, output;
+% 
+% amp = Demand.ar(
+%   Impulse.ar('modRate'.kr(2000)), 
+%   'reset'.tr(0),
+%   DetaBlockerBuf('modBufnum'.kr(0))
+% ).linlin(-1, 1, 'modMinAmp'.kr(200), 'modMaxAmp'.kr(1600));
+% 
+% # pC ... stack = BBlockerBuf.ar(
+%   'rate'.kr(1000), 'carBufnum'.kr(0)
+% );
+% output = LeakDC.ar(stack[0] * amp);
+% 
+% Out.ar(0, output)}.play;
+% \end{Verbatim}
 
 
 
-
-
-\subsubsection{Genetic programming of sonic features} % (fold)
-\label{sub:genetic_programming_of_sonic_features}
-
-
-\subsection{Musical features} 
-\label{sub:musical_features}
-
-%%%%% on a rythmical level
-
-% synthesis/human creation
-%% programming sonic structures: e.g. drum pattern
 
 \section{Betablocker and livecoding practice: a report} 
 \label{sec:betablocker_and_livecoding_practice_a_report}
 
+Over the course of the last 3 years, we used Betablocker in a broad variety of livecoding practice, including both public performances and research-oriented investigations.
+
+
 \subsection{Explicit livecoding vs. meta-livecoding} 
-\label{sub:explicit_livecoding_}
+\label{sub:explicit_livecoding_meta_livecoding}
 
 % Explicit livecoding (here: on assembler level)
 % meta-livecoding (here: the machine codes itself)
 
-% listing about levels of livecoding possibilities in Betablocker
+% listing about levels of livecoding possibilities with Betablocker
 
 Livecoding with Betablocker can be done on various levels.
 \begin{description}
@@ -544,305 +545,6 @@ Although the output of a given Betablocker stack is deterministic, it still is a
 
 When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
 
-At it's core, Betablocker provides a simple virtual machine for playing with music which is 'unstoppable' (any combination of instructions can be executed). It started off originally as a Fluxus scheme program, then got rewritten in C++ for the Nintendo DS, and has now been ported to Supercollider. I've built yet another Linux commandline version, and glued it to the Java Genetic Algorithms Package via Clojure.
-
-This means I can continue with the genetic programming experiments and try evolving programs using a real genetic algorithm framework, using the betablocker instruction set. This is mainly just for kicks, but it's also partly to "grow" new strategies for livecoding betablocker and researching instruction sets more generally.
-The first test was to try and find a program to just play note 99. I would write this in betablocker like this (using a text representation of the icon interface for convenience):
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-   pshl 99 ; push the literal value 99 on to the stack
-   note    ; play the top of the stack as a note 
-\end{Verbatim}
-
-First we need a fitness function to score the results from the programs which are generated:First we need a fitness function to score the results from the programs which are generated:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(defn fitness [notes]
-    (- 255 (Math/abs (- (first notes) 99))))
-\end{Verbatim}
-
-It takes a list of the notes played by a candidate program, and measures how far away the first element is from 99 - the bigger the number, the fitter the individual program is. I gave it 8 instructions to work with and a population of 500 individuals - after just a couple of generations, this chromosome/program popped up with a top fitness of 255 - meaning it was successfully playing note 99:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-99 46 213 89 7 142 23 168
-\end{Verbatim}
-
-Which when disassembled looks something like this:
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-    99       ; <-- address 0 
-    nop
-    nop
-    nop
-    pshi 142 ; pushes contents of address at location 142 (which is 0)
-    note     ; play the note
-    nop
-\end{Verbatim}
-
-This program has grown taking advantage of the fact that the memory is initialised to zero, so if it dereferences a large address like 142 it will be zero and load the contents of the first byte - 99. It's this kind of wacked out approach genetic algorithms are great at finding/abusing.
-The next problem, something a bit more general - create a sequence of notes which are all different to one another. The fitness function:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(defn list-contains? [l i]
-  (cond
-   (empty? l) false
-   (= (first l) i) true
-   :else (recur (rest l) i)))
-
-(defn fitness [a]
-  (count
-   (reduce
-    (fn [r v]
-      (if (not (list-contains? r v))
-        (cons v r)
-        r))
-    '()
-    a)))
-\end{Verbatim}
-
-This just counts the number of unique elements in the list - again, the higher the better. This one took longer, but eventually came up with this:  
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-139 246 1 23 12 22 23 12 20 95 22 3
-\end{Verbatim}
-
-Which when disassembled:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-    nop
-    nop
-    org
-start:
-    note      ; play a note
-    inc       ; increment top stack byte
-    dup       ; duplicate top stack byte
-    note      ; play a note (consumes 1 stack byte)
-    inc       ; increment again
-    pip 95    ; increment address 95 (junk - doesn't have any effect)
-    dup       ; duplicate again
-    jmp start ; return to the start
-\end{Verbatim}
-
-Which plays a rising sequence of notes, with none repeated, so the highest fitness achievable:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21
-\end{Verbatim}
-
-This is already doing much better than the genetic programming I was mucking about with before - indeed there seems to be some literature on evolving java bytecode, but with betablocker there is an advantage that you don't need to enforce the correctness of the programs before they can be run.
-
-
-Following on from the first BetaBlocker genetic algorithm bytecode experiments, in addition to the "most different notes" fitness function I added a similar calculation for the first derivative (ie. the difference between the notes in time order). This was an attempt to steer the evolution away from simple scales and into more complex patterns.
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(defn deriv [l]
-  (cond
-   (empty? l) '()
-   (empty? (rest l)) '()
-   :else (cons (- (first (rest l)) (first l))
-               (deriv (rest l)))))
-\end{Verbatim}
-	       
-The code to find the first derivative of a sequence of notes - eg. (deriv '(1 2 3 2 6 7)) => (1 1 -1 4 1). We then add this to the fitness function which looks like this:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(+ (count (num-unique res)) ; unique notes are good
-   (count (num-unique (deriv res))) ; unique gaps between notes are good
-   (min (count res) 20)) ; lots of notes are good (stop at 20)
-\end{Verbatim}
-   
-This resulted in the following bytecode to emerge from the primordial soup: 23 17 7 6 23 21 9 23 8 212 3 2 4 2 180 124 - which disassembles to:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-	note      ; stack is empty, so plays zero
-	not       ; pushes bitwise "not" of zero => 255
-loop:
-	pshi 6    ; push the contents of address 6 (-> 9 = 212)
-	note      ; play the note (212)
-	pdp 9     ; decrement address 9 (212 becomes 211)
-	note      ; plays 255 first time, 0 after that when stack is empty
-	pop 212   ; stack is now empty so writes 0 to adress 212
-	jmp loop  ; goto loop
-	jmpz 2    ; junk, we never reach here
-	nop
-	nop
-\end{Verbatim}
-
-The arrows show the indirection which helps as this one is a bit tricky to pull apart. It's the first time I've seen self modification emerge - it decrements the "212" and uses it as a variable for the note sequence. Combining the pshi and pdp like this is a nice trick I can make use of when programming betablocker myself.
-The program is self destructive - the "pop" which otherwise does nothing of use will eventually write zeros over the program itself if it's run for a few more cycles than the 100 I'm testing the programs for.
-The output looks like this: 
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-0 212 255 211 0 210 0 209 0 208 0 207 0 206 0 205 0 204 0 203 0 202 0 201 0 200 0 199 0 198 0 197 0 196
-\end{Verbatim}
-
-According to our fitness function, the interleaved zeros give it a very high scoring derivative list:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-212 43 -44 -211 210 -210 209 -209 208 -208 207 -207 206 -206 205 -205 204 -204 203 -203 202 -202 201 -201 200 -200 199 -199 198 -198 197 -197 196
-\end{Verbatim}
-
-However the actual pattern is not so interesting, so still more work needed on the fitness criteria.
-
-For the next attempt in BetaBlocker bytecode evolution I wanted to favour patterns that had a rhythmic nature by measuring them with this function:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(defn freq [l n]
-  (defn _ [c]
-    (cond
-     (>= (+ c n) (count l)) 0
-     (= (nth l c) (nth l (+ c n))) (+ 1 (_ (+ c 1)))
-     :else (_ (+ c 1))))
-  (_ 0))
-\end{Verbatim}
-
-Which looks for repeating values spaced apart by "n" positions, so (freq '(100 1 2 3 100 4 5 6 100 7 8 9 100) 4) returns 3, as it finds 3 pairs of equal values (100) distanced by the specified 4 positions.
-With this fitness function:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(+ (* 50 (count (num-unique res))) ; unique notes are very good
-   (freq res 4) ; equal notes every 4 beats are good
-   (freq res 6)) ; equal notes every 6 beats are good
-\end{Verbatim}
-
-We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by multiplying it by 50. After some generations, we get a high scoring individual: 23 23 13 22 7 12 17 20 12 23 23 5 0 7 12 3 
-Which disassembles as:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-loop:
-    note    ; play & remove top of stack (zero when empty)
-    note    ; play & remove top of stack
-    dec     ; decrement top of stack
-    dup     ; duplicate - pushes a copy of stack top 
-    pshi 12 ; push the value pointed at by address at 12 (self read)
-    not     ; performs bitwise not on stack top
-    pip 12  ; increment value at address 12
-    note    ; play & remove top of stack
-    note    ; play & remove top of stack
-    pshl 0  ; pushes this literal number (the 0 is at address 12)
-    pshi 12 ; push the value pointed at by 12 (self read)
-    jmp loop
-\end{Verbatim}
-    
-This program creates a pattern from 4 separate sources, using all 16 bytes of code:
-
-
-The result: "0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12 5 243 250 17 6 238 249 20 7 235 248 12 8" scores poorly for it's rhythmic patterns, but it's probable that this surprising local maxima was found by the early influence of the rhythmic fitness criteria on it's ancestor populations. 
-
-\subsection{Embedded evolved code} 
-\label{sub:embedded}
-
-A system for creating an abundance of useless software for tiny devices. Spork Factory evolves programs that run on Atmel processors \u2013 the same make as found on the Arduino, in this case the ATtiny85 \u2013 a £2.50 8 pin 8bit CPU. I\u2019m currently simply using a piezo speaker as an output and evolving programs based on the frequency of the sound produced by flipping the pins up and down, so creating 2bit synths using the Fourier transform as the fitness function. With more hardware (input as well as output) perhaps we could evolve small robots, or even maybe cheap claytronics or programmable matter experiments.
-
-This project reuses the previous genetic programming experiments (including jgap as its genetic algorithm framework), and is also inspired by Till Bovermann's recent work with Betablocker in Supercollider for bytecode synthesis.
-
-The programs generated don't use the Atmel instruction set directly, but interpret a custom one derived from Betablocker for two reasons. Atmel processors separate their instruction memory from data (the Harvard architecture) which makes it difficult to modify code as it's running (either uploading new evolved code or running self modifying instructions), the other is that using a simplified custom instruction set makes it easier for genetic algorithms to create all kinds of strange programs that will always run.
-
-I've added an 'OUT' instruction, which pops the top of the stack and writes it to the pins on the ATtiny, so the first thing a program needs to do is generate and output some data. The second thing it needs to do is create an oscillator to create a tone, after that the fitness function grades the program on the amount of frequencies present in the sound, encouraging it to make richer noises.
-
-Here are two example programs from a single run, first the ancestor, a simple oscillator which evolved after 4 or 5 generations:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-    out
-    out
-    nop
-    nop
-    dec
-    nop
-    nop
-    nop
-    out
-    nop
-    jmpz 254
-    nop
-    nop
-    nop
-    dup
-\end{Verbatim}
-
-It's simply outputting 0's, then using the 'dec' to decrement the top of the stack to make a 255 which sets the rightmost bit to 1 (the one the speaker is attached to) and then loops with the 'jmpz' causing it to oscillate. This program produces this fft plot:
-
-\begin{figure}
-	\centering
-		\includegraphics[width=13cm]{spork1}
-	\caption{XOR rave}
-	\label{fig:fig_spork1}
-\end{figure}
-
-After 100 or so further generations, this descendant program emerges. The dec is replaced by \u2018pshl 81\u2032 which does the same job (pushes the literal value 81 onto the stack, setting our speaker bit to 1) but also uses a \u2018dup\u2019 (duplicate top of the stack) to shuffle the values around to make a more complex output signal with more frequencies present:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-loop:
-    out
-    out
-    not
-    nop
-    pshl 81
-    pshi 149
-    out
-    nop
-    out
-    nop
-    dup
-    psh 170
-    jmp loop
-\end{Verbatim}
-
-\begin{figure}
-	\centering
-		\includegraphics[width=13cm]{spork2}
-	\caption{XOR rave}
-	\label{fig:fig_spork2}
-\end{figure}
-
-Also robotics, an evolved light follower:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-    pshl 171 
-loop:
-    lmot 
-    leye 
-    pip 111 
-    pip 30 
-    rmot 
-    reye 
-    pshl 214 
-    nop 
-    lmot 
-    jmp loop
-\end{Verbatim}
-
-\begin{figure}
-	\centering
-		\includegraphics[width=13cm]{bbbot}
-	\caption{caption}
-	\label{fig:fig_bbbot}
-\end{figure}
-
-\subsection{Towards Amorphous livecoding} 
-\label{sub:amorphous_livecoding}
-
-\begin{figure}
-	\centering
-		\includegraphics[width=13cm]{amorphous}
-	\caption{500 betablocker CPUs}
-	\label{fig:amorphous}
-\end{figure}
-
-Departing in a new direction after evolved light follower robots, take 500 processor cores spread out in space. Give them a simple instruction set which includes a instruction to copy (DMA) 8 bytes of their code/data to nearby cores (with an error rate of 0.5%). Fill the cores with random junk and set them running. If we graph the bandwidth used (the amount of data transmitted per cycle by the whole system) we get a plot like this:
-\begin{figure}
-	\centering
-		\includegraphics[width=13cm]{amorphous-bandwidth}
-	\caption{Bandwidth}
-	\label{fig:amorphous-bandwidth}
-\end{figure}
-
-This explosion in bandwidth use is due to implicit emergence of programs which replicate themselves. There is no fitness function, it's not a genetic algorithm and there is no guided convergence to a single solution - no 'telling it what to do'. Programs may arise that cooperate with each other or may exhibit parasitic behaviour as in alife experiments like Tierra, and this could be seen as a kind of self modifying, emergent Amorphous computing - and eventually, perhaps a way of evolving programs in parallel on cheap attiny processor hardware.
-
-
-% pseudo-interaction
-%% human (behaviour) <---> computer (pseudo-proactive behaviour)
-
-% a turing-test for livecode companions
 
 \subsection{Betablocker livecoding practice}
 \label{sub:livecoding_performance_practice_influenced_by_betablocker}
@@ -976,7 +678,74 @@ Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rh
 \section{Meta}
 \label{sec:meta}
 
+\section{Appendix A}
+\label{sec:appendix_a}
+\begin{description}
+\item[\texttt{NOP}] do nothing
+\item[\texttt{ORG}] define relative origin address for this thread
+\item[\texttt{EQU}] compare first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{JMP}] jump to the address specified right after this instruction
+\item[\texttt{JMPZ}] jump only if stack returns 0
+\item[\texttt{PSHL}] push value on address specified right after this instruction to the stack
+\item[\texttt{PSH}] push value on address specified by the value on the address specified right after this instruction to the stack
+\item[\texttt{PSHI}] like push but one more encapsulation
+\item[\texttt{POP}] pop item from stack to the point in the heap following this instruction
+\item[\texttt{POPI}] pop item from stack and write the value at that address in the heap to the address following this instruction
+\item[\texttt{ADD}] perform an addition on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{SUB}] perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{INC}] increment value on stack
+\item[\texttt{DEC}] decrement value on stack
+\item[\texttt{AND}] perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{OR}] perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{XOR}] perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{NOT}] perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
+\item[\texttt{ROR}] perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{ROL}] perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
+\item[\texttt{PIP}] increments value specified by the next value on the heap
+\item[\texttt{PDP}] decrements value specified by the next value on the heap
+\item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
+\item[\texttt{NOTE}] (DS extension) play a note
+\item[\texttt{VOX}] (DS extension) play a vox
+\item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on % \item[\texttt{STOP}] stop program (here: like NOP)
+an ATtiny
+\end{description}
+This is their actual implementation:
 
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+switch(instr)
+{
+case  NOP: break;
+case  ORG: m_start=m_start+m_pc-1; m_pc=1; break;
+case  EQU: push(pop()==pop()); break;
+case  JMP: m_pc=peek(m,m_pc++); break;
+case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
+case PSHL: push(peek(m,m_pc++)); break;
+case  PSH: push(peek(m,peek(m,m_pc++))); break;
+case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
+case  POP: poke(m,peek(m,m_pc++),pop()); break;
+case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
+case  ADD: push(pop()+pop()); break;
+case  SUB: push(pop()-pop()); break;
+case  INC: push(pop()+1); break;
+case  DEC: push(pop()-1); break;
+case  AND: push(pop()&pop()); break;
+case   OR: push(pop()|pop()); break;
+case  XOR: push(pop()^pop()); break;
+case  NOT: push(~pop()); break;
+case  ROR: push(pop()>>peek(m,m_pc++)); break;
+case  ROL: push(pop()<<peek(m,m_pc++)); break;
+case  PIP: 
+{ u8 d=peek(m,m_pc++);
+  poke(m,d,peek(m,d)+1);
+} break;
+case  PDP:
+{ u8 d=peek(m,m_pc++);
+  poke(m,d,peek(m,d)-1);
+} break;
+case  DUP: push(top()); break;
+default : break;
+};
+\end{Verbatim}
 
 
 \vspace*{24pt}
