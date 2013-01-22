@@ -120,35 +120,29 @@ A state vector consisting of a heap, a stack and a program counter sufficiently 
 
 % describing the theoretical background and implementation (switch statement etc.)
 
-The Betablocker core is a simple multithreaded virtual machine following the \emph{von Neumann architecture} design pattern where there is no separation between code and data.
-It's uncrashable, so every possible program will run, although it will halt in infinite loops. 
-It has 23 instructions whose width is either 8 or 16bit for those that take operands. The heap is constrained to 256 bytes of memory, while each thread has 8 bytes of stack. 
+The core of all investigations described in this paper is the Betablocker engine, is a highly simplified multithreaded virtual machine.
+It is designed to follow the \emph{von Neumann architecture} i.e., that there is no separation between program code and data.~\cite{von-neumann1993-fir}
+The BetaBlocker engine consists of 
+(a) a \emph{heap} with  $2^8 = 256$ addressable slots to store an 8bit value (a byte), 
+(b) an \emph{instruction table} linking a byte to an atomic instruction, and
+(c) a number of independent \emph{threads}, each with a 
+	(ca) an 8bit \emph{program counter} (\texttt{pC}) pointing to an address in the heap, and (cb) a \emph{stack} of eight bytes.
 
+The heap is where all data are stored.
+Every combination of values is a valid input to Betablocker, and each of these value is interpreted either as an instruction, an address, or a data item.
+In line with the von Neumann architecture, it is possible (and intended) to alter the heap while it is running.
+This especially means that what might be considered as the "program" is possibly being altered as well.
 
-BetaBlocker has the following structure:(a) a heap of 256 8bit values, (b) an instruction table, (c) a process consisting of (ca) a program counter, pointing to an address in the heap, and (cb) a stack of eight 8bit values.
+% instruction set
+Regarding the instruction table, we differentiate between the core instruction set consisting of 22 distinct instructions\footnote{See Appendix for a list of all isntructions} and various extensions to this set, which, depending on the actual application, introduce features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
+As there is no instruction telling the engine to halt, programs will continue to run until externally terminated.
+However, they will eventually converge into a (possibly complex) stable state.
 
-\subsection{Heap} 
-\label{sub:heap}
-This is the place where the program and its data are located. In line to the von Neumann architecture, it is possible (and intended) to alter the program while it is running, i.e. interpreting it as data rather than an instruction set. The actual representation of a heap is an array of 256 8bit values. Each value can be interpreted either as an instruction, an address, or an actual number.
-
-
-\subsection{Thread} 
-\label{sub:thread}
-A thread is something that executes code stored on the heap. It has a current position (the instruction it is currently evaluating), a stack (some sort of storage, see below), and a timer, determining when it will move its program counter to the heap's next address.
-
-\subsection{Stack} 
-\label{sub:stack}
-A stack serves as a temporary storage for a thread. It can be accessed only from top by either (a) pop an item from the stack, (b) return the topmost item without removing it, and (c) push a value to the stack.
-
-
-\subsection{Instruction set} 
-\label{sub:instructions}
-
-In Betablocker, we differentiate between a core instruction set consisting of 22 distinct instructions and various add-ons that, depending on the actual application in which Betablocker is used, introduce side-effect features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
-
-
-% TODO: IMHO, we should differenciate between a core instruction set (without e.g. NOTE and VOX) and various add-ons (NOTE, VOX, OUT).
-
+% thread
+A thread is the part that executes code stored on the heap. 
+Its program counter $pC$ stores the current position (i.e., the instruction it is currently evaluating).
+A stack finally serves as a temporary storage for a thread. 
+It can be accessed only from top by either \emph{popping} an item from the stack (e.g.~\texttt{POP}), or pushing a value to the stack (e.g.~\texttt{PSH}).
 
 
 \section{Background and historical context} 
