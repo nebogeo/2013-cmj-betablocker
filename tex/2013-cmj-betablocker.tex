@@ -79,37 +79,32 @@
 % + how people imagine computation now (scary stuff) (Dave)
 
 Computation is odd. 
-In fact in many ways it's one of the strangest things that have been discovered, and 77 years on we continue to fail to fully grasp it's behaviour and so, struggle to keep unseen ramifications of our decisions under control. Faced with such a strange and yet essential beast the only sane strategy is to try and tame it. 
+In fact in many ways it's one of the strangest things we have discovered, and 77 years on we continue to fail to fully grasp it's behaviour and so, struggle to keep unseen ramifications of our decisions under control. Faced with such a strange and yet essential beast the only sane strategy is to try and tame it. 
 The field of software engineering is littered with concepts such as regression testing, type checking, white rooms, sandboxing, contracts, and encapsulation -- all attempts to cope with the fact that we can't really understand how a mundane machine of sufficient complexity will act when it is programmed by a human.
 
 Livecoders look this beast straight in the eyes. 
 When a livecoding performer takes to the stage and projects her screen, she invites us to join her in attempting to understand this intricate dance between human and machine. 
 
 % livecoding is manifold: performance, research practice
-But livecoding is more than performance practice.
-It is a broad field that can be viewed from many different angles.
-From rehearsed public performances, reaching over collaborative improvisations and individual sound explorations, to it's utilisation as a method in science, it has been utilised in a manifold of applications.
-All these derivations of the original theme share elements of live coding as they are featured in the toplap manifesto.
+Beyond performance practice, livecoding is a broad field that can be viewed from many different angles.
+From rehearsed public performances, collaborative improvisations and individual sound explorations, to it's utilisation as a method in science, it has been utilised in a manifold of applications.
+All these derivations of the original theme share elements of live coding as they are featured in the Toplap manifesto [ref].
 % livecoding definition/classification
-So livecoding is attempting to treat computation as a material on it's own terms, pick it up and feel what shapes it has.
+Livecoding attempts to treat computation as a material on it's own terms, to pick it up and feel what shapes it has.
 
 Betablocker is an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making this process as much part of the performance as the code that describes it.
-Built around this element is a variety of applications for testing, performing and scientific as well as artistic investigations.
+Built around this element is a variety of applications for testing, performing scientific as well as artistic investigations.
 
 Three levels: (a) technology, (b) unfolding as performance/research practice/method (conceptual and descriptive) and (c) aesthetic qualities.
 
-
-This paper collects experiences, challenges and insights gathered by the two authors over the course of 3 years while investigating the combination of live coding techniques with virtual chips.
-
-Soon after starting the project, it became evident that complex behaviour can emerge out of simple instructions and self-alteration of code.
-Leading to a bunch of different insights
+This paper collects experiences, challenges and insights gathered by the two authors over the course of 3 years while investigating the combination of live coding techniques and designing imaginary CPU architectures. Central to the research presented here is the use of livecoding cultures, performance contexts and exploration strategies in order to gain understandings of behaviour emerging from simple instructions sets when given self-alteration abilities. This leads us towards a kind of second-order livecoding, where starting with nothing, programs written a few minutes ago interact and interfere with the programming of subsequent programs or even write programs all of their own.
 
 \subsection{disclaimers}
 \label{sub:disclaimers}
 
-The Betablocker computation does not make any distinction between a program (i.e., an instruction set) and data (i.e., data on which the program operates). 
+Following \emph{von Neumann architecture}~\cite{von-neumann1993-fir}, Betablocker computation does not make any distinction between a program (i.e., an instruction set) and data (i.e., data on which the program operates). 
 The notions of code, data and program are therefore synonyms, however they represent semantical meaning rather than systematical/structural meaning.
-Particular attention has to be given to the fact that, although a specific part of data stored on Betablocker's heap is meant to be a program, it is by definition possible that it is altered (e.g., by a separate process running independently on the same heap).
+Particular attention has to be given to the fact that, although a specific part of data stored on Betablocker's heap is meant to be a program, it may play it's own code as music, or by definition the possibiliy exists that it is altered (e.g., by a separate process running independently on the same heap).
 
 A state vector consisting of a heap, a stack and a program counter sufficiently represents the state of a Betablocker engine.
 
@@ -121,36 +116,32 @@ A state vector consisting of a heap, a stack and a program counter sufficiently 
 % describing the theoretical background and implementation (switch statement etc.)
 
 The core of all investigations described in this paper is the Betablocker engine, is a highly simplified multithreaded virtual machine.
-It is designed to follow the \emph{von Neumann architecture} i.e., that there is no separation between program code and data.~\cite{von-neumann1993-fir}
+
 The BetaBlocker engine consists of 
 (a) a \emph{heap} with  $2^8 = 256$ addressable slots to store an 8bit value (a byte), 
 (b) an \emph{instruction table} linking a byte to an atomic instruction, and
 (c) a number of independent \emph{threads}, each with a 
 	(ca) an 8bit \emph{program counter} (\texttt{pC}) pointing to an address in the heap, and (cb) a \emph{stack} of eight bytes.
 
-The heap is where all data are stored.
-Every combination of values is a valid input to Betablocker, and each of these value is interpreted either as an instruction, an address, or a data item.
-In line with the von Neumann architecture, it is possible (and intended) to alter the heap while it is running.
-This especially means that what might be considered as the "program" is possibly being altered as well.
+The heap is where all data is stored. A critical differentiation with other virtual machines (eg. Java VM, the .NET CLR) is that every possible combination of values is a valid program, and that each of these values is interpreted either as an instruction, an address, or a data item - with previously mentioned self modification properties.
 
 % instruction set
-Regarding the instruction table, we differentiate between the core instruction set consisting of 22 distinct instructions\footnote{See Appendix for a list of all isntructions} and various extensions to this set, which, depending on the actual application, introduce features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
-As there is no instruction telling the engine to halt, programs will continue to run until externally terminated.
+Regarding the instruction table, we differentiate between the core set which consists of 22 distinct instructions\footnote{See Appendix for a list of all isntructions} and various extensions to this set, which, depending on the actual application, introduce features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
+As there is no instructions, interrupts or error states telling the engine to halt, programs will continue to run (possibly in infinite loops) until externally terminated.
 However, they will eventually converge into a (possibly complex) stable state.
 
 % thread
-A thread is the part that executes code stored on the heap. 
+A thread executes code stored on the heap. 
 Its program counter $pC$ stores the current position (i.e., the instruction it is currently evaluating).
-A stack finally serves as a temporary storage for a thread. 
-It can be accessed only from top by either \emph{popping} an item from the stack (e.g.~\texttt{POP}), or pushing a value to the stack (e.g.~\texttt{PSH}).
-
+The stack serves as a temporary private storage for a thread, not addressable by other threads. 
+It is accessed by either \emph{popping} an item from the stack to an adress or the indirect location specified by an address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in immediate/literal, address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than using registers, so the resulting language is close to Forth[ref needed].
 
 \section{Background and historical context} 
 \label{sec:background}
 
 % musical and computational
 
-Betablocker came to live as the first attempt at a game pad programmable live coding system in fluxus.\footnote{
+Betablocker first came to life as an attempt at a game pad programmable live coding system in fluxus.\footnote{
 % TODO: add fluxus link
 (Fluxus link)
 } 
@@ -158,15 +149,13 @@ It was inspired by a discussion on the TOPLAP mailing list about virtual machine
 % TODO: add Mr Driller link
 (Mr Driller link)
 }
-
-Betablocker originally was a virtual machine running inside fluxus.
-It visualised the simulation of a fictional CPU with 256 bytes of memory, and allowed multiple threads of execution to be run sharing the same address space. 
-The Betablocker language is very much based on the ideas in Core Wars.\footnote{
+ 
+Core Wars\footnote{
 % TODO: add Code Wars link
 (Code Wars link)
-}
+}, a game where programmer/contestants write simple programs that battle to gain memory footprint over each other was also an important inspiration, both in terms of domain specific low level languages, and imaginary hardware.
 
-From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}).
+From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}) and simultaneous sonification and visualisation of process.
 
 Betablocker/Audio: Formalized Music: mathematical/stochastic sound synthesis, Gendy (\cite{Xenakis:1971}, \cite{luque2009-the}).
 
@@ -175,7 +164,6 @@ Betablocker/Audio: Formalized Music: mathematical/stochastic sound synthesis, Ge
 \section{Distinct character of Betablocker and its influence on sound and performance practice} 
 \label{sec:distinct_character}
 
-
 % \subsection{Computational features} 
 % \label{sub:computational_features}
 
@@ -183,39 +171,38 @@ BetaBlocker is distinct to other approaches of computational machines in several
 In the design of Betablocker, the ability to observe computational behaviour was an essential goal, whereas the result of the computation (and therefore process optimisation) played a minor role.  
 Furthermore, Betablocker is implemented as a software emulation and can be modified easily.
 This allows for its alteration regarding introspection (by adding probes) and customisation (by altering the instruction set).
-Last not least, compared to common microprocessor architectures such as the x86\footnote{\url{http://en.wikipedia.org/wiki/X86}}, AVR\footnote{\url{http://en.wikipedia.org/wiki/Atmel_AVR}} or RISC\footnote{\url{http://en.wikipedia.org/wiki/Reduced_instruction_set_computing}}, Betablocker's architecture is simplistic.
+Last not least, compared to common microprocessor architectures such as the x86\footnote{\url{http://en.wikipedia.org/wiki/X86}} or even RISC\footnote{\url{http://en.wikipedia.org/wiki/Reduced_instruction_set_computing}} microcontrollers such as AVR\footnote{\url{http://en.wikipedia.org/wiki/Atmel_AVR}}, Betablocker's architecture is extremely simplistic.
 Operational complexity arises from the induced data and its processing rather than from the system's architectural features.
 
 The character of Betablocker influences not only the sonic results of a livecoding session but also its overall structuring.
 Due to its potential process complexity, it is e.g. possible to start with a blank page\footnote{As proposed in the TOPLAP Manifesto draft published at \url{http://toplap.org/wiki/ManifestoDraft}.}
-and add a fairly complicated pattern as the next step.
+and build complicated patterns which remain controllable as the next step.
 
 We describe our findings and explorations with regard to Betablocker in the next paragraphs and give insights on how its behaviour influenced our livecoding sessions.
-As we used Betablocker mainly in two perceptional contrasting settings, rhythmic and sonic, we differentiate in the following between Betablocker/Slow and Betablocker/Audio.
-
+As we used Betablocker mainly in two perceptional contrasting settings, \emph{rhythmic}, which slowed down processing in order to percieve it and \emph{sonic}, speeding up processing in order to hear it's sonic properties directly, we differentiate in the following between Betablocker/Rhythm and Betablocker/Audio.
 
 % rythmical patterns vs. audiosynthesis
-\subsubsection{Slow computing -- Betablocker/Slow}
+\subsubsection{Slow computing -- Betablocker/Rhythm}
 \label{sub:slow_computing}
 %  describing the nintendoDS part of the implementation
 
 % TODO: more detail, also technical level... graphical interface, why you chose the grid gui etc.
 
-Betablocker/Slow (the Fluxus/DS version) makes computation tangible by slowing down processes by many orders of magnitude compared to typical scenarios. 
-The smallest musical loop in Betablocker/Slow is 3 instructions long -- push a value onto the stack (\texttt{PSH, 123}), play it as a note (\texttt{NOTE}), jump back to start (\texttt{JMP 0}). 
-In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents - forming a complete state vector of the processor.
+Betablocker/Rhythm (the Fluxus and Gameboy DS version) makes computation tangible by slowing down processes by many orders of magnitude compared to typical scenarios. 
+The smallest musical loop in Betablocker/Rhythm is 3 instructions long -- push a value onto the stack (\texttt{PSH, 123}), play it as a note (\texttt{NOTE}), jump back to start (\texttt{JMP 0}). 
+In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents.
 
-Performing with Betablocker/Slow consists of starting with empty memory and manually entering programs byte by byte that modify themselves and each other. Bytes used as address locations are visualised literally as pointers - arrows indicating the address in memory they are referencing. 
-Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a Turing soup which is happily writing it's own code. 
-At this point the decision is whether to collaborate or compete.
-Collaboration involves looking for interesting bits of code that emerge and manually modifying them, while the best strategy for competing is attempting to find a space to write a program that gradually clears memory so you can start again. 
+Performing with Betablocker/Rhythm consists of starting with empty memory and manually entering programs byte by byte that modify themselves and each other. Bytes used as address locations are visualised literally as pointers - arrows indicating the address in memory they are referencing. 
+Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a kind of 'Turing soup' which is happily writing it's own code. 
+At this point the decision is whether to take advantage of this situation or in some way gain control over it.
+Taking advantage of it involves looking for interesting sections of code that emerge and manually modifying them, while the best strategy for getting complete control back is attempting to find a space to write a program that gradually clears memory so you can start again. 
 In most successful performances both choices are made over the course of the concert.
 
-It is this gradual cessation of control, with immediacy and totality of the understanding (or at least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between the audience and performer and the music they hear.
+It is this gradual cessation of control, with immediacy and totality of the understanding (or at very least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between the audience and performer and process creating the music they hear.
 
-In order to further illustrate the kinds of programs and livecoding strategies, here are some concrete 'code patterns' which are used in common live coding situations.
+In order to further illustrate the kinds of programs and livecoding strategies, we list some concrete 'code patterns' which are used in common live coding situations.
 
-Firstly, a program which will play all the sounds in a sound bank at all frequencies. Multiple threads can be issued to play this program at the same time to provide more complexity. Values interpreted as pointers are visualised as arrows:
+Firstly, a program which will play all the sounds in a sound bank at all frequencies availible. Multiple threads can be issued to play this program at the same time to provide more complexity. Values interpreted as pointers are visualised as arrows:
 
 \begin{figure}
 	\centering
@@ -224,7 +211,7 @@ Firstly, a program which will play all the sounds in a sound bank at all frequen
 	\label{fig:fig_bbds-sndchk1}
 \end{figure}
 
-In betablocker/slow the beat is always locked to the instruction cycle rate, so fast changing sounds are a matter of optimisation. Fast loop programs can be used for playing sounds while another slower program modifies the first by overwriting parts of it as it's running, as in this example. 
+In Betablocker/Rhythm the beat is always locked to the instruction cycle, so faster melodies or beats are a matter of optimisation. Fast inner loop programs can be used for playing sounds while another slower program modifies the first by overwriting parts of it while it's running, as in this example. 
 
 \begin{figure}
 	\centering
@@ -233,7 +220,7 @@ In betablocker/slow the beat is always locked to the instruction cycle rate, so 
 	\label{fig:fig_bbds-xorrave}
 \end{figure}
 
-The following programs are both 16 bytes long, and require 3 concurrent threads to be running over different parts of the program. The first thread loads a byte and plays it as a sound repeatedly, the second one increments the byte that the first is loading, and the third periodically resets the byte to a constant value.
+The following programs are both 16 bytes long, and require 3 concurrent threads to be running over different parts of the program. From left to right, the first thread loads an immediate byte and plays it as a sound repeatedly, the second one increments the byte that the first is loading, and the third periodically resets the byte to a constant value.
  
 \begin{figure}
 	\centering
@@ -252,7 +239,9 @@ The first example simply plays the byte as a note - resulting in an arpeggiator 
 	\label{fig:fig_bbds-seq}
 \end{figure}
 
-The second example is very similar, but is slightly modified to play a sequence of different sounds rather than notes, in order to become a percussion sequencer. In order to do this the second instruction is changed from a "push literal" to a "push contents of address" which results in the program playing a part of memory as a sequence. We can control the start address location with the reset byte, write directly to this part of memory, and fiddle with the other thread's speed to get even more complexity.
+The second example is very similar, but is slightly modified to play a sequence of different sounds rather than notes, in order to become a percussion sequencer. The second instruction is changed from a "push literal" to a "push contents of address" which results in the program playing a part of memory as a sequence. We can control the start address location with the reset byte, write directly to this part of memory, and fiddle with the other thread's speed to get even more complexity.
+
+Other types of program alter the memory rather than focus on sound, for example given two addresses a program may increment one and decrement the other copying bytes from the source to the destination, resulting in the entire CPU memory to be reversed. Another type of program is a self replicating fork bomb that copies its code to a other locations capturing parallel threads of execution.
 
 \subsubsection{Sound computing -- Betablocker/Audio} 
 \label{sub:sound_computing}
@@ -269,7 +258,7 @@ As shown below, signal variety is therefore limited and influenced by its comput
 % TODO: cite to Audio Sniffer
 Analog to the Audio Sniffer.\footnote{\url{http://www.openmusiclabs.com/projects/audio-sniffer/}}
 
-In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack.
+In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack to the pins of a microcontroller to be converted to sound.
 In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
 In the next paragraphs, we will describe the implementation and implications of the first attempt.
 
@@ -301,11 +290,16 @@ x = { // BBlockerBuf example
 \end{Verbatim}
 
 
-\subsubsection{Genetic programming} % (fold)
+\subsubsection{Use of Genetic Algorithms and darwinistic code environments in livecoding} % (fold)
 \label{sub:genetic_programming}
 
-An introduction to genetic programming with Betablocker that explains its value regarding lifecoding practice.
-E.g. a method to find interesting patterns/sounds before doing a livecoding performance.
+The same features that makes the Betablocker approach suitable for exploratory artistic and musical applications (lack of error states and code/data isomorphism) also make it a highly convenient environment for employing evolutionary strategies.
+
+The use of Genetic Algorithms[ref] in livecoding presents different purposes than producing efficient and novel solutions to problems specified by a fitness function. In the case of Betablocker/Rhythm the desire initially to use GA's arose from the need to learn new, optimal coding patterns for use in livecoding performances. The use of a GA in this case it to provide \emph{new ideas} for artistic use - not final programs for their own sake.
+
+The success of an algorithm used for livecoding is to some extent how easy it is to change, how malleable it is, and one of the features of evolutionary strategies is that programs are automatically converged on that may present extremely unorthodox approaches - especially when optimisation is linked to fitness criteria and architectures are used where self modification is possible.
+
+EXAMPLE HERE
 
 % Description of genetic programming:
 A randomly chosen seed, i.e., one or more prototypes (here: heap) are avaluated according to a fitness function.
