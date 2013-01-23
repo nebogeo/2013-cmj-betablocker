@@ -304,7 +304,7 @@ x = { // BBlockerBuf example
 
 The same features that makes the Betablocker approach suitable for exploratory artistic and musical applications (lack of error states and code/data isomorphism) also make it a highly convenient environment for employing evolutionary strategies.
 
-The use of Genetic Algorithms[ref] in livecoding presents different purposes than producing efficient and novel solutions to problems specified by a fitness function. In the case of Betablocker/Rhythm the desire initially to use GA's arose from the need to learn new, optimal coding patterns for use in livecoding performances, a way of escaping a feeling on being 'stuck in a creative rut'. The use of a GA in this case it to provide \emph{new ideas for artistic use} - not final programs for their own sake.
+The use of Genetic Algorithms[ref] in livecoding presents different purposes to producing efficient and novel solutions to problems specified by a fitness function. In the case of Betablocker/Rhythm the desire initially to use GA's arose from the need to learn new, optimal coding patterns for use in livecoding performances, a way of escaping a feeling of being 'stuck in a creative rut'. The use of a GA in this case it to provide \emph{new ideas for artistic use} - not final programs for their own sake.
 
 The success of an algorithm used for livecoding is to some extent how easy it is to change, how malleable it is, and one of the features of evolutionary strategy is that programs are automatically converged on that may present extremely unorthodox approaches - especially when optimisation is linked to fitness criteria and architectures are used where self modification is possible. In this case we use want to unpick these approaches in order to employ them musically in hand written code.
 
@@ -358,7 +358,7 @@ The result: “0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12
 
 The evolved programs provided many new ideas used for livecoding performances,  including self playing programs like the one above, greater use of stack (evolved programs showed less reliance on storing values on the heap, leading to more robust programs) and more importantly, a general reappraisal of the potential scope of programs possible in this restricted framework.
 
-Following this work, Betablocker was ported to the ATtiny processor as part of an ongoing investigation of physical, livecoding objects. The first test of this involved a similar GA approach to evolving programs to create sounds in the same way as 
+Following this work, Betablocker was ported to the ATtiny processor as part of an ongoing investigation of physical, livecodable objects. The instruction set included IN and OUT instructions, for accessing the pins of the microcontroller. This enabled audio programs to be evolved for the processor, using FFT analysis on the resulting sounds as the data to provide fitness metrics for. 
 
 \subsection{Musical features} 
 \label{sub:musical_features}
