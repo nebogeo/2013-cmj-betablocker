@@ -320,10 +320,10 @@ In a GA, in order to select promising individual programs from a population, we 
   (_ 0))
 \end{Verbatim}
 
-Which looks for repeating values spaced apart by “n” positions, so:
+Which looks for repeating values spaced apart by "n" positions, so:
 
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-(freq ‘(100 1 2 3 100 4 5 6 100 7 8 9 100) 4) 
+(freq '(100 1 2 3 100 4 5 6 100 7 8 9 100) 4) 
 \end{Verbatim}
 
 Returns 3, as it finds 3 pairs of equal values (100) distanced by the specified 4 positions.
@@ -347,14 +347,14 @@ We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by 
 
 This program creates a pattern from 4 separate sources:
 
-\begin{itemise}
-A descending scale using the stack to store the current position.
-A rising scale by self modifying address 12 (the 0 in “pshl 0″).
-Playing it’s own code as a pattern of notes by using address 12 as a pointer.
-Playing the bitwise NOT of it’s own code at the same time.
-\end
+\begin{enumerate}
+\item A descending scale using the stack to store the current position.
+\item A rising scale by self modifying address 12 (the 0 in \texttt{PSHL 0}).
+\item Playing it's own code as a pattern of notes by using address 12 as a pointer.
+\item Playing the bitwise \texttt{NOT} of it's own code at the same time.
+\end{enumerate}
 
-The result: “0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12 5 243 250 17 6 238 249 20 7 235 248 12 8″ scores poorly for it’s rhythmic patterns, but it’s probable that this surprising local maxima was found by the early influence of the rhythmic fitness criteria on it’s ancestor populations. 
+The result: \texttt{0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12 5 243 250 17 6 238 249 20 7 235 248 12 8} scores poorly for its rhythmic patterns, but it is probable that this surprising local maxima was found by the early influence of the rhythmic fitness criteria on its ancestor populations. 
 
 The evolved programs provided many new ideas used for livecoding performances,  including self playing programs like the one above, greater use of stack (evolved programs showed less reliance on storing values on the heap, leading to more robust programs) and more importantly, a general reappraisal of the potential scope of programs possible in this restricted framework.
 
@@ -636,13 +636,10 @@ Dave's aesthetic goal for the performance was to \dots
 \subsubsection{Oulipop -- translation of codes [5.2012]}
 \label{sub:oulipop}
 
-This performance for two performers and one laptop on the relation between written text, code and sound was conceptualised and realised by Till Bovermann and Sara Hildebrand Marques Lopes.
-, Till played together with Sara Hildebrand Marques Lopes.
+This performance for two performers and one laptop was conceptualised and realised by Till Bovermann and Sara Hildebrand Marques Lopes.
+By manipulating texts according to Oulipo rules (\cite{mathews2005-oul}), it deals with the relation between writing and manipulating text, code and sound.
 
-
-Manipulating texts according to Oulipo rules (\cite{mathews2005-oul}).
-Meta-level live-coding. 
-Each keystroke triggers a process that translates the current text's characters into a set of commands for a fictional CPU. 
+Each keystroke triggers a process that translates the current text's characters into a set of Betablocker/sound instructions. 
 Treated as a sound signal, the ever-changing output of that CPU is played back, and thereby influences the performers' decisions on how to further alter the text. 
 Over the course of the performance, an initially meaningful text turns into nonsense before it eventually settles into a new and often surprising semantical meaning.\footnote{For more information and a documentation video, see \url{http://www.tai-studio.org/oulipop/}.}
 \begin{figure}
