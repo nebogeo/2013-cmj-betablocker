@@ -10,7 +10,7 @@
 			<key>filename</key>
 			<string>2013-cmj-betablocker.tex</string>
 			<key>lastUsed</key>
-			<date>2013-01-21T17:57:34Z</date>
+			<date>2013-01-22T08:21:11Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -18,7 +18,7 @@
 			<key>filename</key>
 			<string>allTheOtherStuff.tex</string>
 			<key>lastUsed</key>
-			<date>2013-01-21T17:33:52Z</date>
+			<date>2013-01-22T08:21:11Z</date>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -40,42 +40,26 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>146</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>0</integer>
+			<integer>84</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>123</integer>
 		</dict>
 		<key>allTheOtherStuff.tex</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>227</integer>
+				<integer>608</integer>
 				<key>line</key>
-				<integer>271</integer>
+				<integer>269</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>-1</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>209</integer>
-				<key>line</key>
-				<integer>271</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>227</integer>
-				<key>line</key>
-				<integer>271</integer>
-			</dict>
+			<integer>0</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>

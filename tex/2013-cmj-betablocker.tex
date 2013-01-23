@@ -97,7 +97,9 @@ Built around this element is a variety of applications for testing, performing s
 
 Three levels: (a) technology, (b) unfolding as performance/research practice/method (conceptual and descriptive) and (c) aesthetic qualities.
 
-This paper collects experiences, challenges and insights gathered by the two authors over the course of 3 years while investigating the combination of live coding techniques and designing imaginary CPU architectures. Central to the research presented here is the use of livecoding cultures, performance contexts and exploration strategies in order to gain understandings of behaviour emerging from simple instructions sets when given self-alteration abilities. This leads us towards a kind of second-order livecoding, where starting with nothing, programs written a few minutes ago interact and interfere with the programming of subsequent programs or even write programs all of their own.
+This paper collects experiences, challenges and insights gathered by the two authors over the course of 3 years while investigating the combination of live coding techniques and designing imaginary CPU architectures. 
+Central to the research presented here is the use of livecoding cultures, performance contexts and exploration strategies in order to gain understandings of behaviour emerging from simple instructions sets when given self-alteration abilities. 
+This leads us towards a novel kind of second-order livecoding, where starting with nothing, programs written a few minutes ago interact and interfere with the programming of subsequent programs or even write programs all of their own.
 
 \subsection{disclaimers}
 \label{sub:disclaimers}
@@ -126,7 +128,9 @@ The BetaBlocker engine consists of
 The heap is where all data is stored. A critical differentiation with other virtual machines (eg. Java VM, the .NET CLR) is that every possible combination of values is a valid program, and that each of these values is interpreted either as an instruction, an address, or a data item - with previously mentioned self modification properties.
 
 % instruction set
-Regarding the instruction table, we differentiate between the core set which consists of 22 distinct instructions\footnote{See Appendix for a list of all isntructions} and various extensions to this set, which, depending on the actual application, introduce features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
+Regarding the instruction table, we differentiate between the core set which consists of 22 distinct instructions\footnote{
+	See Appendix for a list of all instructions.
+} and various extensions to this set, which, depending on the actual application, introduce features like playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR chip (\texttt{OUT}).
 As there is no instructions, interrupts or error states telling the engine to halt, programs will continue to run (possibly in infinite loops) until externally terminated.
 However, they will eventually converge into a (possibly complex) stable state.
 
@@ -134,7 +138,8 @@ However, they will eventually converge into a (possibly complex) stable state.
 A thread executes code stored on the heap. 
 Its program counter $pC$ stores the current position (i.e., the instruction it is currently evaluating).
 The stack serves as a temporary private storage for a thread, not addressable by other threads. 
-It is accessed by either \emph{popping} an item from the stack to an adress or the indirect location specified by an address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in immediate/literal, address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than using registers, so the resulting language is close to Forth[ref needed].
+It is accessed by either \emph{popping} an item from the stack to an adress or the indirect location specified by an address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in immediate/literal, address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than using registers, so the resulting language is close to Forth.
+% TODO: cite Forth
 
 \section{Background and historical context} 
 \label{sec:background}
@@ -155,7 +160,7 @@ Core Wars\footnote{
 (Code Wars link)
 }, a game where programmer/contestants write simple programs that battle to gain memory footprint over each other was also an important inspiration, both in terms of domain specific low level languages, and imaginary hardware.
 
-From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}) and simultaneous sonification and visualisation of process.
+From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition (\cite{maurer1999-a-b}) and simultaneous sonification and visualisation of the process.
 
 Betablocker/Audio: Formalized Music: mathematical/stochastic sound synthesis, Gendy (\cite{Xenakis:1971}, \cite{luque2009-the}).
 
@@ -193,16 +198,19 @@ The smallest musical loop in Betablocker/Rhythm is 3 instructions long -- push a
 In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Slow. This makes computation audible as techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents.
 
 Performing with Betablocker/Rhythm consists of starting with empty memory and manually entering programs byte by byte that modify themselves and each other. Bytes used as address locations are visualised literally as pointers - arrows indicating the address in memory they are referencing. 
-Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a kind of 'Turing soup' which is happily writing it's own code. 
-At this point the decision is whether to take advantage of this situation or in some way gain control over it.
-Taking advantage of it involves looking for interesting sections of code that emerge and manually modifying them, while the best strategy for getting complete control back is attempting to find a space to write a program that gradually clears memory so you can start again. 
-In most successful performances both choices are made over the course of the concert.
+Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion synth triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a kind of 'Turing soup' which is writing it's own code. 
+At this point the decision is whether to take advantage of this situation or rather gain control over it.
+Taking advantage of it involves looking for interesting sections of code that emerge and manually modifying them, while the best strategy for getting back control is attempting to find a space to write a program that gradually clears memory so you can start again. 
+In most successful performances both options were taken over the course of the concert.
 
 It is this gradual cessation of control, with immediacy and totality of the understanding (or at very least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between the audience and performer and process creating the music they hear.
 
-In order to further illustrate the kinds of programs and livecoding strategies, we list some concrete 'code patterns' which are used in common live coding situations.
+In order to further illustrate the kinds of programs and livecoding strategies, we list concrete 'code patterns' which are used in common live coding situations.
 
-Firstly, a program which will play all the sounds in a sound bank at all frequencies availible. Multiple threads can be issued to play this program at the same time to provide more complexity. Values interpreted as pointers are visualised as arrows:
+Firstly, a program which will play all the sounds in a sound bank at all frequencies available. 
+Multiple threads can be issued to play this program at the same time to provide more complexity. 
+Values interpreted as pointers are visualised as arrows:
+% TODO: figures are floats and not inline. Fix ":"
 
 \begin{figure}
 	\centering
@@ -241,7 +249,9 @@ The first example simply plays the byte as a note - resulting in an arpeggiator 
 
 The second example is very similar, but is slightly modified to play a sequence of different sounds rather than notes, in order to become a percussion sequencer. The second instruction is changed from a "push literal" to a "push contents of address" which results in the program playing a part of memory as a sequence. We can control the start address location with the reset byte, write directly to this part of memory, and fiddle with the other thread's speed to get even more complexity.
 
-Other types of program alter the memory rather than focus on sound, for example given two addresses a program may increment one and decrement the other copying bytes from the source to the destination, resulting in the entire CPU memory to be reversed. Another type of program is a self replicating fork bomb that copies its code to a other locations capturing parallel threads of execution.
+Other types of program alter the memory rather than focus on sound. 
+For example given two addresses, a program may increment one and decrement the other copying bytes from the source to the destination, which results in the entire CPU memory to be reversed. 
+Another type of program is might be called "self replicating fork bomb": It copies its code to a other locations and therefore captures parallel threads of execution.
 
 \subsubsection{Sound computing -- Betablocker/Audio} 
 \label{sub:sound_computing}
