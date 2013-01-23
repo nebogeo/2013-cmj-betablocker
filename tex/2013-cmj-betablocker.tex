@@ -385,10 +385,10 @@ Due to it's complexity a valid and, as it turned out, fruitful approach is to wo
 To investigate into this, we implemented a cluster generator for synthesising Betablocker operations of randomly generated heaps:
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
 {var srcs = ({BBlockerBuf.ar(
-			s.sampleRate * 0.5, 
-			BBlockerProgram({rrand(0, 24)}!256).makeLocalBuf
-		)[1]}!20);
-		Splay.ar(srcs.collect{|src| LeakDC.ar(src)}, 1, 0.4);
+    s.sampleRate * 0.5, 
+    BBlockerProgram({rrand(0, 24)}!256).makeLocalBuf
+  )[1]}!20);
+  Splay.ar(srcs.collect{|src| LeakDC.ar(src)}, 1, 0.4);
 }.play
 \end{Verbatim}
 After extensive listening, we found out that they often sound like airily high-pitched and infinitely sustained sound clouds, broken up occasionally by a rhythmical pattern. 
@@ -568,46 +568,10 @@ The sonic relation between different Betablocker programs seems to follow a spec
 \label{sec:betablocker_and_livecoding_practice_a_report}
 
 Over the course of the last 3 years, we used Betablocker in a broad variety of livecoding practice, including both public performances and research-oriented investigations.
-
-
-\subsection{Explicit livecoding vs. meta-livecoding} 
-\label{sub:explicit_livecoding_meta_livecoding}
-
-% Explicit livecoding (here: on assembler level)
-% meta-livecoding (here: the machine codes itself)
-
-% listing about levels of livecoding possibilities with Betablocker
-
-Livecoding with Betablocker can be done on various levels.
-\begin{description}
-	\item[Assembler-level programming] having full control over the program, apart of that it might modify itself at runtime, leading to
-	\item[Self-modification] the engine itself modifies its heap and therefore its behavior
-	\item[Structural programming] program interplay between several Betablocker engines (see also Section~\ref{sub:classic_synthesis_techniques_adapted_to_betablocker})
-	\item[Amorphous/Genetic livecoding] determine intended machine output and have a genetic/learing algorithm solve that problem for you
-\end{description}
-
-
-\subsection{Unfolding self modification to livecode pseudo-collaboration} 
-\label{sec:unfolding_self_modification_to_livecode_collaboration}
-
-Although the output of a given Betablocker stack is deterministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
-
-When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
-
-
-\subsection{Betablocker livecoding practice}
-\label{sub:livecoding_performance_practice_influenced_by_betablocker}
-
-% \subsubsection{Dave's Betablocker practice}
-% \label{sub:daves_performance_style}
-% 
-% 
-% \subsubsection{Till's Betablocker practice}
-% \label{sub:tills_performance_style}
-
+The result of the research process is reported in the above section.
 Subsequent, we describe relevant Betablocker-based public performances in their order of appearance.
 
-\subsubsection{SuperCollider symposium London -- livecoding and visuals [4.2012]}
+\subsection{SuperCollider symposium London -- livecoding and visuals [4.2012]}
 \label{sub:livecoding_and_visuals}
 
 For the livecoding gig at the SuperCollider Symposium 2012, London, the two authors performed together for the first time. 
@@ -644,14 +608,16 @@ Dave's aesthetic goal for the performance was to \dots
 % TODO: dave describes his livecoding setup for the london performance
 
 
-\subsubsection{Oulipop -- translation of codes [5.2012]}
+\subsection{Oulipop -- translation of codes [5.2012]}
 \label{sub:oulipop}
 
-This performance for two performers and one laptop was conceptualised and realised by Till Bovermann and Sara Hildebrand Marques Lopes.
+This piece for two performers and one laptop was conceptualised and realised by Till Bovermann and Sara Hildebrand Marques Lopes.
 By manipulating texts according to Oulipo rules (\cite{mathews2005-oul}), it deals with the relation between writing and manipulating text, code and sound.
 
-Each keystroke triggers a process that translates the current text's characters into a set of Betablocker/sound instructions. 
-Treated as a sound signal, the ever-changing output of that CPU is played back, and thereby influences the performers' decisions on how to further alter the text. 
+While editing text in one of two text panes, each keystroke also triggers a process that translates the current text's characters into a set of Betablocker/audio instructions. 
+Each line in the editor is treated as input to one Betablocker module.
+The output of these Betablocker engines is organised in an FM-like structure. 
+The resulting sound, an ever-changing blend of noisy texture and rhythmical patterns, influences the performers' decisions on how to further alter the text. 
 Over the course of the performance, an initially meaningful text turns into nonsense before it eventually settles into a new and often surprising semantical meaning.\footnote{For more information and a documentation video, see \url{http://www.tai-studio.org/oulipop/}.}
 \begin{figure}
 	\centering
@@ -662,49 +628,34 @@ Over the course of the performance, an initially meaningful text turns into nons
 
 
 
-
-
-To illustrate the research journey, we will now list key events that happened:
-
-
-
-\begin{itemize}	 
-\item Implemented access to heap's data. This means that it can be set, read and manipulated while running. Also, several engines can share a heap. 
-	% http://tai-studio.org/index.php/2011/08/detablockerbuf-8channel/ 
-\item helper classes facilitating the generation of BBlocker programs 
-	% http://tai-studio.org/index.php/2011/08/twentydblockers/ 
-\item further sonic exploration, listening sessions 
-	% http://tai-studio.org/index.php/2011/10/betablocker-pieces/
-
-	For now, the layout is always additive, i.e., several BBlocker engines next to each other
-
-\item Idea generation
-	% http://tai-studio.org/index.php/2011/10/betablocker-theory-day/ 
-\item Visual representation
-	% http://tai-studio.org/index.php/2011/11/attempt-for-representing-2x8bit/
-\item public demo video
-	% http://tai-studio.org/index.php/2011/12/dblockerintro/ 
-\item adding convenience methods play/scope/plot to BBlockerProgram based on feedback of first introduction to a non-programmer
-	% http://tai-studio.org/index.php/2011/12/cambridge-day-4/ 
-\item New iteration of the BetaBlocker wrapper, adding more output (pos and whole stack) and removing the possibility to control it with demand rate,
-	% http://tai-studio.org/index.php/2011/12/60-panned/ 
-	includes a sound study.
-\item Multi-out UGen with audio-rate input
-	% http://tai-studio.org/index.php/2011/12/cambridge-day-8/
-\item Decision to focus on sonic aspects. Therefore tried to write/design programs with specific sonic features in mind.
-	% http://tai-studio.org/index.php/2011/12/cambridge-days-912/
-\item FM-like synthesis strategy added
-\item Performance at Cambridge, fixed setup
-\item Rehearsal for SuperCollider Symposium
-\item Concert at SuperCollider Symposium
-\item Workshop at UdK.
-\item Oulipop performance
-\end{itemize}
-
-
-
-\section{Meta}
+\section{Meta-Discussion}
 \label{sec:meta}
+
+\subsection{Explicit livecoding vs. meta-livecoding} 
+\label{sub:explicit_livecoding_meta_livecoding}
+
+% Explicit livecoding (here: on assembler level)
+% meta-livecoding (here: the machine codes itself)
+
+% listing about levels of livecoding possibilities with Betablocker
+
+Livecoding with Betablocker can be done on various levels.
+\begin{description}
+	\item[Assembler-level programming] having full control over the program, apart of that it might modify itself at runtime, leading to
+	\item[Self-modification] the engine itself modifies its heap and therefore its behavior
+	\item[Structural programming] program interplay between several Betablocker engines (see also Section~\ref{sub:classic_synthesis_techniques_adapted_to_betablocker})
+	\item[Amorphous/Genetic livecoding] determine intended machine output and have a genetic/learing algorithm solve that problem for you
+\end{description}
+
+
+\subsection{Unfolding self modification to livecode pseudo-collaboration} 
+\label{sec:unfolding_self_modification_to_livecode_collaboration}
+
+Although the output of a given Betablocker stack is deterministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
+
+When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
+
+
 
 \section{Appendix A}
 \label{sec:appendix_a}
