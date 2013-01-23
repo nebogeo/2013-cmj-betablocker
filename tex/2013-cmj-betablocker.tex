@@ -166,11 +166,16 @@ Betablocker/Audio: Formalized Music: mathematical/stochastic sound synthesis, Ge
 
 
 
-\section{Distinct character of Betablocker and its influence on sound and performance practice} 
+\section{Betablocker livecoding philosophy}
 \label{sec:distinct_character}
 
 % \subsection{Computational features} 
 % \label{sub:computational_features}
+
+% a particular take on livecoding
+% grounding it in process rather than code
+% and
+% computation as material
 
 BetaBlocker is distinct to other approaches of computational machines in several aspects:
 In the design of Betablocker, the ability to observe computational behaviour was an essential goal, whereas the result of the computation (and therefore process optimisation) played a minor role.  
@@ -187,7 +192,7 @@ We describe our findings and explorations with regard to Betablocker in the next
 As we used Betablocker mainly in two perceptional contrasting settings, \emph{rhythmic}, which slowed down processing in order to percieve it and \emph{sonic}, speeding up processing in order to hear it's sonic properties directly, we differentiate in the following between Betablocker/Rhythm and Betablocker/Audio.
 
 % rythmical patterns vs. audiosynthesis
-\subsubsection{Slow computing -- Betablocker/Rhythm}
+\subsection{Slow computing -- Betablocker/Rhythm}
 \label{sub:slow_computing}
 %  describing the nintendoDS part of the implementation
 
@@ -253,51 +258,6 @@ Other types of program alter the memory rather than focus on sound.
 For example given two addresses, a program may increment one and decrement the other copying bytes from the source to the destination, which results in the entire CPU memory to be reversed. 
 Another type of program is might be called "self replicating fork bomb": It copies its code to a other locations and therefore captures parallel threads of execution.
 
-\subsubsection{Sound computing -- Betablocker/Audio} 
-\label{sub:sound_computing}
-%   + SuperCollider (Till)
-
-% bytecode synthesis
-
-Betablocker/Audio utilises the Betablocker engine to render sound directly by running it in the range of audio rate.
-Over the course of the project, we implemented two versions of Betablocker/Audio.
-The first version is a SuperCollider UGen implementation which renders sound according to the actual Betablocker operation; however, there is no separate instruction or structural enhancement involved.
-Instead, we added (software) probes to specific parts.
-As shown below, signal variety is therefore limited and influenced by its computation.
-
-% Analog to the Audio Sniffer.\footnote{\url{http://www.openmusiclabs.com/projects/audio-sniffer/}}
-
-In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack to the pins of a microcontroller to be converted to sound.
-In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
-In the next paragraphs, we will describe the implementation and implications of the first attempt.
-
-We implemented Betablocker/Audio in SuperCollider for easy access not only in livecoding settings.\footnote{Available as open source code at \url{https://github.com/supercollider/sc3-plugins}.}
-To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (\texttt{DetaBlockerBuf}) exposing the topmost value of the stack by means of SuperCollider's demand chain implementation and a multi-out version (\texttt{BBlockerBuf}) that exposes the position of the program counter as well as all 8 elements of the stack.
-A basic example for their usage is given in the following listings.\footnote{It is assumed that the heap to be operated on is pre-loaded into a Buffer object.}
-By adding the LeakDC operator to the stack values, possible DC offsets are prevented to affect the speaker system.
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-x = { // BBlockerBuf example
-	var signal = Demand.ar(
-	  Impulse.ar('bbRate'.kr(22100)), 
-	  'reset'.tr(0),
-	  DetaBlockerBuf('heapBuf'.kr(0))
-	);
-	LeakDC.ar(signal);
-}.play;
-\end{Verbatim}
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-x = { // BBlockerBuf example
-	var pC, stack;
-	#pC ... stack = BBlockerBuf.ar('bbRate'.kr(22100), 
-		'heapBuf'.kr(0), 'startpoint'.kr(0));
-	stack = LeakDC.ar(stack);
-	 // use information on program counter to place sound output
-	Splay.ar(stack, spread: 0.1, center: pC);
-}.play;
-\end{Verbatim}
-
 
 \subsubsection{Use of Genetic Algorithms as creative augmentation in livecoding} % (fold)
 \label{sub:genetic_programming}
@@ -360,19 +320,50 @@ The evolved programs provided many new ideas used for livecoding performances,  
 
 Following this work, Betablocker was ported to the ATtiny processor as part of an ongoing investigation of physical, livecodable objects and robots (Spork Factory). The instruction set includes \texttt{IN} and \texttt{OUT} instructions, for accessing the pins of the microcontroller. This enabled audio programs to be evolved for the processor, using FFT analysis on the resulting sounds as the data to provide fitness metrics for. 
 
-\subsection{Musical features} 
-\label{sub:musical_features}
+\subsection{Sound computing -- Betablocker/Audio} 
+\label{sub:sound_computing}
+%   + SuperCollider (Till)
 
-%%%%% on a rythmical level
+% bytecode synthesis
 
-% synthesis/human creation
-%% programming sonic structures: e.g. drum pattern
+Betablocker/Audio utilises the Betablocker engine to render sound directly by running it in the range of audio rate.
+Over the course of the project, we implemented two versions of Betablocker/Audio.
+The first version is a SuperCollider UGen implementation which renders sound according to the actual Betablocker operation; however, there is no separate instruction or structural enhancement involved.
+Instead, we added (software) probes to specific parts.
+As shown below, signal variety is therefore limited and influenced by its computation.
 
+% Analog to the Audio Sniffer.\footnote{\url{http://www.openmusiclabs.com/projects/audio-sniffer/}}
 
-\subsection{Sonic features} 
-\label{sub:sonic_features}
+In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack to the pins of a microcontroller to be converted to sound.
+In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
+In the next paragraphs, we will describe the implementation and implications of the first attempt.
 
-% synthesis/human creation
+We implemented Betablocker/Audio in SuperCollider for easy access not only in livecoding settings.\footnote{Available as open source code at \url{https://github.com/supercollider/sc3-plugins}.}
+To facilitate typical usage, we decided to provide two different interfaces, a demand-rate UGen (\texttt{DetaBlockerBuf}) exposing the topmost value of the stack by means of SuperCollider's demand chain implementation and a multi-out version (\texttt{BBlockerBuf}) that exposes the position of the program counter as well as all 8 elements of the stack.
+A basic example for their usage is given in the following listings.\footnote{It is assumed that the heap to be operated on is pre-loaded into a Buffer object.}
+By adding the LeakDC operator to the stack values, possible DC offsets are prevented to affect the speaker system.
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+x = { // BBlockerBuf example
+	var signal = Demand.ar(
+	  Impulse.ar('bbRate'.kr(22100)), 
+	  'reset'.tr(0),
+	  DetaBlockerBuf('heapBuf'.kr(0))
+	);
+	LeakDC.ar(signal);
+}.play;
+\end{Verbatim}
+
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+x = { // BBlockerBuf example
+	var pC, stack;
+	#pC ... stack = BBlockerBuf.ar('bbRate'.kr(22100), 
+		'heapBuf'.kr(0), 'startpoint'.kr(0));
+	stack = LeakDC.ar(stack);
+	 // use information on program counter to place sound output
+	Splay.ar(stack, spread: 0.1, center: pC);
+}.play;
+\end{Verbatim}
 
 \subsubsection{Noise aesthetics -- on texture and rhythm} 
 \label{sub:noise_aesthetics}
@@ -562,9 +553,7 @@ The sonic relation between different Betablocker programs seems to follow a spec
 % \end{Verbatim}
 
 
-
-
-\section{Betablocker and livecoding practice: a report} 
+\section{Betablocker and livecoding performance practice} 
 \label{sec:betablocker_and_livecoding_practice_a_report}
 
 Over the course of the last 3 years, we used Betablocker in a broad variety of livecoding practice, including both public performances and research-oriented investigations.
@@ -631,6 +620,9 @@ Over the course of the performance, an initially meaningful text turns into nons
 \section{Meta-Discussion}
 \label{sec:meta}
 
+% conclusions I think could be about the applicability over broad and general systems
+% % fluxus/supercollider/gameboy ds/attiny
+
 \subsection{Explicit livecoding vs. meta-livecoding} 
 \label{sub:explicit_livecoding_meta_livecoding}
 
@@ -656,85 +648,85 @@ Although the output of a given Betablocker stack is deterministic, it still is a
 When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
 
 
-
-\section{Appendix A}
-\label{sec:appendix_a}
-\begin{description}
-\item[\texttt{NOP}] do nothing
-\item[\texttt{ORG}] define relative origin address for this thread
-\item[\texttt{EQU}] compare first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{JMP}] jump to the address specified right after this instruction
-\item[\texttt{JMPZ}] jump only if stack returns 0
-\item[\texttt{PSHL}] push value on address specified right after this instruction to the stack
-\item[\texttt{PSH}] push value on address specified by the value on the address specified right after this instruction to the stack
-\item[\texttt{PSHI}] like push but one more encapsulation
-\item[\texttt{POP}] pop item from stack to the point in the heap following this instruction
-\item[\texttt{POPI}] pop item from stack and write the value at that address in the heap to the address following this instruction
-\item[\texttt{ADD}] perform an addition on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{SUB}] perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{INC}] increment value on stack
-\item[\texttt{DEC}] decrement value on stack
-\item[\texttt{AND}] perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{OR}] perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{XOR}] perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{NOT}] perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
-\item[\texttt{ROR}] perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{ROL}] perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
-\item[\texttt{PIP}] increments value specified by the next value on the heap
-\item[\texttt{PDP}] decrements value specified by the next value on the heap
-\item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
-\item[\texttt{NOTE}] (DS extension) play a note
-\item[\texttt{VOX}] (DS extension) play a vox
-\item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on % \item[\texttt{STOP}] stop program (here: like NOP)
-an ATtiny
-\end{description}
-This is their actual implementation:
-
-\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-switch(instr)
-{
-case  NOP: break;
-case  ORG: m_start=m_start+m_pc-1; m_pc=1; break;
-case  EQU: push(pop()==pop()); break;
-case  JMP: m_pc=peek(m,m_pc++); break;
-case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
-case PSHL: push(peek(m,m_pc++)); break;
-case  PSH: push(peek(m,peek(m,m_pc++))); break;
-case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
-case  POP: poke(m,peek(m,m_pc++),pop()); break;
-case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
-case  ADD: push(pop()+pop()); break;
-case  SUB: push(pop()-pop()); break;
-case  INC: push(pop()+1); break;
-case  DEC: push(pop()-1); break;
-case  AND: push(pop()&pop()); break;
-case   OR: push(pop()|pop()); break;
-case  XOR: push(pop()^pop()); break;
-case  NOT: push(~pop()); break;
-case  ROR: push(pop()>>peek(m,m_pc++)); break;
-case  ROL: push(pop()<<peek(m,m_pc++)); break;
-case  PIP: 
-{ u8 d=peek(m,m_pc++);
-  poke(m,d,peek(m,d)+1);
-} break;
-case  PDP:
-{ u8 d=peek(m,m_pc++);
-  poke(m,d,peek(m,d)-1);
-} break;
-case  DUP: push(top()); break;
-default : break;
-};
-\end{Verbatim}
-
-
-\vspace*{24pt}
-
-
-
-
-
-\vspace*{24pt}
-
+% 
+% \section{Appendix A}
+% \label{sec:appendix_a}
+% \begin{description}
+% \item[\texttt{NOP}] do nothing
+% \item[\texttt{ORG}] define relative origin address for this thread
+% \item[\texttt{EQU}] compare first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{JMP}] jump to the address specified right after this instruction
+% \item[\texttt{JMPZ}] jump only if stack returns 0
+% \item[\texttt{PSHL}] push value on address specified right after this instruction to the stack
+% \item[\texttt{PSH}] push value on address specified by the value on the address specified right after this instruction to the stack
+% \item[\texttt{PSHI}] like push but one more encapsulation
+% \item[\texttt{POP}] pop item from stack to the point in the heap following this instruction
+% \item[\texttt{POPI}] pop item from stack and write the value at that address in the heap to the address following this instruction
+% \item[\texttt{ADD}] perform an addition on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{SUB}] perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{INC}] increment value on stack
+% \item[\texttt{DEC}] decrement value on stack
+% \item[\texttt{AND}] perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{OR}] perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{XOR}] perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{NOT}] perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
+% \item[\texttt{ROR}] perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{ROL}] perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
+% \item[\texttt{PIP}] increments value specified by the next value on the heap
+% \item[\texttt{PDP}] decrements value specified by the next value on the heap
+% \item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
+% \item[\texttt{NOTE}] (DS extension) play a note
+% \item[\texttt{VOX}] (DS extension) play a vox
+% \item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on % \item[\texttt{STOP}] stop program (here: like NOP)
+% an ATtiny
+% \end{description}
+% This is their actual implementation:
+% 
+% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+% switch(instr)
+% {
+% case  NOP: break;
+% case  ORG: m_start=m_start+m_pc-1; m_pc=1; break;
+% case  EQU: push(pop()==pop()); break;
+% case  JMP: m_pc=peek(m,m_pc++); break;
+% case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
+% case PSHL: push(peek(m,m_pc++)); break;
+% case  PSH: push(peek(m,peek(m,m_pc++))); break;
+% case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
+% case  POP: poke(m,peek(m,m_pc++),pop()); break;
+% case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
+% case  ADD: push(pop()+pop()); break;
+% case  SUB: push(pop()-pop()); break;
+% case  INC: push(pop()+1); break;
+% case  DEC: push(pop()-1); break;
+% case  AND: push(pop()&pop()); break;
+% case   OR: push(pop()|pop()); break;
+% case  XOR: push(pop()^pop()); break;
+% case  NOT: push(~pop()); break;
+% case  ROR: push(pop()>>peek(m,m_pc++)); break;
+% case  ROL: push(pop()<<peek(m,m_pc++)); break;
+% case  PIP: 
+% { u8 d=peek(m,m_pc++);
+%   poke(m,d,peek(m,d)+1);
+% } break;
+% case  PDP:
+% { u8 d=peek(m,m_pc++);
+%   poke(m,d,peek(m,d)-1);
+% } break;
+% case  DUP: push(top()); break;
+% default : break;
+% };
+% \end{Verbatim}
+% 
+% 
+% \vspace*{24pt}
+% 
+% 
+% 
+% 
+% 
+% \vspace*{24pt}
+% 
 
 % % format for Heading-B style
 % \subsection{Format for Heading-B Style; Use This for Subsection Headings}
