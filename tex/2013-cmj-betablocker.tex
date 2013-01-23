@@ -265,8 +265,7 @@ The first version is a SuperCollider UGen implementation which renders sound acc
 Instead, we added (software) probes to specific parts.
 As shown below, signal variety is therefore limited and influenced by its computation.
 
-% TODO: cite to Audio Sniffer
-Analog to the Audio Sniffer.\footnote{\url{http://www.openmusiclabs.com/projects/audio-sniffer/}}
+% Analog to the Audio Sniffer.\footnote{\url{http://www.openmusiclabs.com/projects/audio-sniffer/}}
 
 In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack to the pins of a microcontroller to be converted to sound.
 In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
@@ -471,8 +470,9 @@ Figure~\ref{fig:classicSynthesisTechniquesFMAMAdditive} shows examples on additi
 While implementation of these synthesis techniques is straight forward, the livecoding experimentation revealed several aspects worth mentioning:
 
 % control-rate modulator
-Adjusting the rate of the modulator in FM/AM synthesis to be below audio range results in sequencer-like monophonic synth patterns that are, mostly, pseudo-repetitive i.e., they start with a chaotic movement that is followed by repetitions of a (possibly slowly changing) pattern.
-This behaviour extends significantly the sonic qualities of a Betablocker/Audio engine, a feature Till used extensively in the livecoding performance at the SuperCollider symposium in London (see below for details).
+Adjusting the rate of the modulator in FM/AM synthesis to be below audio range results in sequencer-like monophonic synth patterns that are mostly pseudo-repetitive. 
+I.e., they start with a chaotic movement that is followed by repetitions of a possibly slowly changing pattern.
+This behaviour extends significantly the sonic qualities of a Betablocker/Audio engine, a feature Till used extensively in the livecoding performance at the SuperCollider symposium in London (see below report on Betablocker livecoding practice for details).
 
 % audio-rate modulator
 As known from classical FM synthesis, modulation rates in the audio range result in a broader frequency spectrum.
@@ -594,14 +594,13 @@ When working mostly with random data input, the pseudo-unpredicability kicks in 
 % \subsubsection{Till's Betablocker practice}
 % \label{sub:tills_performance_style}
 
-Subsequent, we describe Betablocker-based performances in their order of appearance.
+Subsequent, we describe relevant Betablocker-based public performances in their order of appearance.
 
 \subsubsection{SuperCollider symposium London -- livecoding and visuals [4.2012]}
 \label{sub:livecoding_and_visuals}
 
 For the livecoding gig at the SuperCollider Symposium 2012, London, the two authors performed together for the first time. 
-As they lived at that time already in different countries, they developed a remote rehearsal routine, i.e. each of them prepared his part as a sound recording and the other performed on top of it.
-
+As they are not located at the same place, they developed a remote rehearsal routine in which each performer prepared his part as a sound recording and the other performed on top of it.
 At the same time, both authors prepared their life sets.
 
 Till's aesthetic goal for the performance was to play poly-rhythmical layers of coloured, noisy sounds with a setup purely based around his SuperCollider Betablocker implementation. 
@@ -613,7 +612,6 @@ This meant
 
 %%% a visual language
 different approaches to visual patterning (8bit display, scopes and buffer-iris)
-
 
 \begin{figure}
 	\centering
@@ -631,22 +629,16 @@ different approaches to visual patterning (8bit display, scopes and buffer-iris)
 	\label{fig:fig_2013-heapIris-white}
 \end{figure}
 
-% \begin{figure}
-% 	\centering
-% 		\includegraphics[width=2in]{binaryRepresentation-01}
-% 		\includegraphics[width=2in]{binaryRepresentation-02}
-% 		\includegraphics[width=2in]{binaryRepresentation-03}
-% 	\caption{Visual representation of 2x8-bit.}
-% 	\label{fig:fig_2013-heapIris-white}
-% \end{figure}
+Dave's aesthetic goal for the performance was to \dots
+% TODO: dave describes his livecoding setup for the london performance
 
 
 \subsubsection{Oulipop -- translation of codes [5.2012]}
 \label{sub:oulipop}
-2 Performers, 1 laptop, 20 minutes. Till Bovermann and Sara Hildebrand Marques Lopes.
 
-%%% translation of codes: Oulipop
-Relation between written text, code and sound.
+This performance for two performers and one laptop on the relation between written text, code and sound was conceptualised and realised by Till Bovermann and Sara Hildebrand Marques Lopes.
+, Till played together with Sara Hildebrand Marques Lopes.
+
 
 Manipulating texts according to Oulipo rules (\cite{mathews2005-oul}).
 Meta-level live-coding. 
@@ -661,12 +653,6 @@ Over the course of the performance, an initially meaningful text turns into nons
 \end{figure}
 
 
-\section{Research in computing processes (Till's junkyard)}
-\label{sub:research_in_computing_processes}
-
-Based on phenomenological methods/maxims, treating the subject of investigation (here: BetaBlocker) as being only perceivable \emph{through} phenomena (things "present to the mind"). 
-As we are interested in sonic qualities, the selected modality of the observed phenomena are mainly of sonic nature.
-On our way through the system, though, other introspective as well as extrospective data emerged and was taken into account.
 
 To illustrate the research journey, we will now list key events that happened:
 
