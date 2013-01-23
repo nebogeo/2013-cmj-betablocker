@@ -382,9 +382,20 @@ Although the system is deterministic, i.e., its outcome can be calculated suppos
 Due to it's complexity a valid and, as it turned out, fruitful approach is to work with randomness and empirical observations rather than with analytical approaches.
 
 % analysis/findings
-Random programs settle into a local stability. there is less high frequencies in the output signal. 
-Sonic variation in random synthesis depends on time: 
-first 1000 computation steps could be seen as transiental, whereas a longterm adaption takes place as sound settles over the course of several minutes to be less sharp/rough.
+To investigate into this, we implemented a cluster generator for synthesising Betablocker operations of randomly generated heaps:
+\begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
+{var srcs = ({BBlockerBuf.ar(
+			s.sampleRate * 0.5, 
+			BBlockerProgram({rrand(0, 24)}!256).makeLocalBuf
+		)[1]}!20);
+		Splay.ar(srcs.collect{|src| LeakDC.ar(src)}, 1, 0.4);
+}.play
+\end{Verbatim}
+After extensive listening, we found out that they often sound like airily high-pitched and infinitely sustained sound clouds, broken up occasionally by a rhythmical pattern. 
+Typically, they settle either to a constant pitch or to silence after about 0.1 seconds.
+In the long run (range of 4 minutes), such clusters settle into a local stability with much less high frequencies than at the beginning. 
+
+The first 1000 computation steps could therefore be called transiental, whereas the longterm variation can be considered a timbral decay.
 
 \subsubsection{Lessons learned from manually programming sonic structures}
 \label{sub:manual_programming_sonic_structures}
@@ -651,14 +662,10 @@ Over the course of the performance, an initially meaningful text turns into nons
 
 
 
+
+
 To illustrate the research journey, we will now list key events that happened:
 
-Starting point was a collection of C files that defined the BetaBlocker core.
-To keep things simple at the beginning, a crucial strategy in implementations, we decided to fill the heap with a very simple program resembling a sawtooth \texttt{[ORG, INC, JMP, 0]}. 
-After successfully listening to this basic setup, we replaced the hardcoded heap with one that gets initialised with random values between $0$ and $255$.\footnote{\url{http://tai-studio.org/index.php/2011/05/betablocker-ugen/}}
-
-
-Airy, sustained sound clouds; mostly high-pitched broken up occasionally by a rhythmical pattern
 
 
 \begin{itemize}	 
