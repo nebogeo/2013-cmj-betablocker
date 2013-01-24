@@ -79,8 +79,9 @@ It covers the themes of algorithmic composition, sound generation, genetic progr
 % TODO write discussion
 % TODO collecting cites
 % TODO Daves performance part
-% TODO ~\cite{mclean2010-vis,ward2004-liv} ~\cite{2006-the} << cites to be built into the text
+% TODO ~\cite{mclean2010-vis} ~\cite{2006-the} << cites to be built into the text
 
+\nocite{mclean2010-vis,2006-the}
 
 % \section{}
 
@@ -98,7 +99,7 @@ When a livecoding performer takes to the stage and projects her screen, she invi
 Beyond performance practice, livecoding is a broad field that can be viewed from many different angles.
 From rehearsed public performances, collaborative improvisations and individual sound explorations, to it's utilisation as a method in science, it has been utilised in a manifold of applications.
 All these derivations of the original theme share elements of live coding as they are featured in the Toplap manifesto draft.\footnote{\url{http://toplap.org/wiki/ManifestoDraft}}
-Livecoding attempts to treat computation as a material on it's own terms, to pick it up and feel what shapes it has.
+Livecoding attempts to treat computation as a material on it's own terms, to pick it up and feel what shapes it has \citep{ward2004-liv}.
 
 Based on this ground, we introduce Betablocker, an approach to livecoding which has brought to light many different strategies for presenting computation as a tangible material -- and it does this by making this process as much part of the performance as the code that describes it.
 Built around this element is a variety of applications for testing, exploring and performing scientific as well as artistic investigations.
@@ -430,7 +431,7 @@ When interacting with a low-level computational system, it is crucial to  unders
 It is possible to gain such knowledge by manually programming (simple) algorithms in the system's native language and observe its resulting behaviour.
 In order to understand the Betablocker engines specifics regarding it's sonic characteristic, we hand-crafted algorithms using the SuperCollider implementation to render given waveforms as close as possible.
 
-We found out that a sawtooth wave can be modelled by setting the initial 4 bytes of the heap to
+We found that a sawtooth wave can be modelled by setting the initial 4 bytes of the heap to
 \texttt{[ORG, INC, JMP, 1]}.
 Supposed that computation will start with \texttt{pC = 0}, the remaining 252 bytes can be set arbitrarily as they will never be reached by the engine.
 Rendering an impulse at nearly Nyquist frequency can be achieved by executing the program \texttt{[ORG, NOT, JMP, 1]} whereas a pulse wave can be implemented with \texttt{[ORG, NOP, ... , NOT, JMP, 1]}.
@@ -438,12 +439,15 @@ The number of \texttt{NOP} here determines the pulse width.
 Similar to the sawtooth example, the values of the remaining bytes in the heap do not affect the program execution.
 
 % livecoding as a method for exploration
-We found all these examples for classic waveforms by exploratory livecoding using the helper class \texttt{BBlockerProgram}, which implements (among other functionality) a \texttt{play} and a \texttt{plot} method to play respectively display a given Betablocker heap.
-% TODO: link to exploratory livecoding explanation
+We developed all the example codes for classic waveforms by exploratory livecoding using the helper class \texttt{BBlockerProgram}, which implements (among other functionality) a \texttt{play} and a \texttt{plot} method to play, respectively display, a given Betablocker heap.
+An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveforms_POPdestroy-random}.
 
-While trying to find an implementation for a sawtooth with adjustable slope, a goal we failed to achieve, we came across a more complex structure that resembles the combination of a sawtooth with adjustable slope and an impulse generator: \texttt{[ORG, PSHL, 6, ADD, JMP, 1, <slope>]}. 
-Here, the decision to add probe to the Betablocker engine rather than implementing additional side-effect instructions came into play: the pulsewave in the program's output (i.e., its stack's top value) is due to an operation that seems necessary to implement the adjustable slope with a given "data" item stored in position 6.
-Note as well that this data position will never be reached by the program counter and can therefore be used as a "safe data storage" for the slope parameter.
+
+While investigating possibilities to implement a sawtooth with adjustable slope, we came across a more complex structure that resembles such a sawtooth combined with a pulse: \texttt{[ORG, PSHL, 6, ADD, JMP, 1, <slope>]}. 
+Here, the decision to add a probe to the stack rather than implementing additional side-effect instructions came into play: the pulsewave in the program's output (i.e., its stack's top value) is caused by an operation that seems necessary to implement the adjustable slope with a given "data" item.
+The shape of the waveform is therefore limited due to the way the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts.
+Note that the slot in which the slope parameter is stored will never be reached by the program counter and can therefore be used as a "safe data storage" for the slope parameter.
+
 
 Another finding of the livecoding-supported Betablocker exploration linking the results of the noise exploration described in the previous paragraph with explicitly writing code
 % Section~\ref{sub:noise_aesthetics}
@@ -466,10 +470,6 @@ a.fillUpRandom = true;
 x = a.play(1000, leak: true);
 \end{Verbatim}
 
-
-
-An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveforms_POPdestroy-random}.
-
 \begin{figure}
 	\centering
 		\includegraphics[width=5cm]{wv-sawtooth}
@@ -482,10 +482,6 @@ An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveform
 \end{figure}
 
 
-%   + limitations and sonic characteristics of betablocker assembler programs
-% TODO: find appropriate link to upper part
-Findings: The shape of the waveform is limited due to the way the sound signal is derived from the Betablocker engine, namely probing the items on one of its functional parts, the stack. 
-However, this limitation is inherent to the structure of the system itself.
 
 \parskip 18pt
 
@@ -510,11 +506,10 @@ This behaviour extends significantly the sonic qualities of a Betablocker/Audio 
 % audio-rate modulator
 As known from classical FM synthesis, modulation rates in the audio range result in a broader frequency spectrum.
 Linking the rates of all used Betablocker engines results in harmonic additions to the (noisy) spectra.
-The sonic relation between different Betablocker programs seems to follow a specific rule, however, it is not a power of two relation.
+The sonic relation between different Betablocker programs seems to follow a specific rule, however, it does not seem to be a straight forward.
+Another way to generate aesthetically interesting patterns with complex rhythmical interrelations can be achieved by letting botj engines run on the same heap.
 
-% TODO interrelation between car and mod: sharing a buffer
-
-% TODO wrap-up: allows for (limited) control of the output that can be used to induce musical structure on an otherwise uncontrolled behaviour (when playing with random heaps)
+To summarise, the application of classic synthesis techniques allows for additional control and variation of the sonic output and, depending on the actual code on which the engines are running on, may even induce musical structures.
 
 % FIXME should we add the listings of Additive/FM/AM, or maybe one of them as an example?
 
