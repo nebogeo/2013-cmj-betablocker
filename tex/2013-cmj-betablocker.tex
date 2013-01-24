@@ -650,179 +650,20 @@ Over the course of the performance, an initially meaningful text turns into nons
 \section{Meta-Discussion}
 \label{sec:meta}
 
-% conclusions I think could be about the applicability over broad and general systems
-% % fluxus/supercollider/gameboy ds/attiny
 
+Int his paper, we presented our work on and with Betablocker, an imaginary CPU architecture, specifically designed and implemented for livecoding purposes.
+
+Livecoding with Betablocker can be undertaken in various forms and on different levels; ranging from assembler-level programming over recursive livecoding based on the engine's capability of self-modification up to genetical algorithms and structural programming.
+We shared our insights on the system-inherent aesthetic possibilities and presented our performance practice around livecoding with Betablocker in its various flavours.
+
+Over the course of the project, our preconception that the beast of computation with all its complexity is not to be tamed with our approach. 
+So is it with Betablocker: Although the output of a Betablocker engine is deterministic, it still is a mystery (i.e., not determinable) for the human mind; we want them to be like us so we suspend disbelief as a way to gain a tangible understanding.
+However, we started to recognise that, with its ability of self-modification and inherent complexity, Betablocker can be viewed as a companion for livecoding that one has the opportunity to get to know, collaborate with and, sometimes, work against.
+In our endeavour to find out specifics of digital processing and using Betablocker in performances as well as the object of investigation itself, we saw Betablocker unfolding as a digital object with an intrinsic character.
+
+In the future, we imagine Betablocker being implemented as a part of a broad range of systems, and being at the heart of an extended set of interpretations of (pseudo-)historical breakthroughs in computation such as mastering the P-NP problem, artificial intelligence, neuroinformatics or theoretical swarm robotics.
 \parskip 18pt
 
-\subsection{Explicit livecoding vs. meta-livecoding} 
-\label{sub:explicit_livecoding_meta_livecoding}
-
-% Explicit livecoding (here: on assembler level)
-% meta-livecoding (here: the machine codes itself)
-
-% listing about levels of livecoding possibilities with Betablocker
-
-Livecoding with Betablocker can be done on various levels.
-\begin{description}
-	\item[Assembler-level programming] having full control over the program, apart of that it might modify itself at runtime, leading to
-	\item[Self-modification] the engine itself modifies its heap and therefore its behavior
-	\item[Structural programming] program interplay between several Betablocker engines (see also Section~\ref{sub:classic_synthesis_techniques_adapted_to_betablocker})
-	\item[Amorphous/Genetic livecoding] determine intended machine output and have a genetic/learing algorithm solve that problem for you
-\end{description}
-
-
-\parskip 18pt
-
-\subsection{Unfolding self modification to livecode pseudo-collaboration} 
-\label{sec:unfolding_self_modification_to_livecode_collaboration}
-
-Although the output of a given Betablocker stack is deterministic, it still is a mystery (i.e., not determinable) for the human mind - we want them to be like us so we suspend disbelief as a way to gain a tangible understanding
-
-When working mostly with random data input, the pseudo-unpredicability kicks in quite heavily. 
-
-
-% 
-% \section{Appendix A}
-% \label{sec:appendix_a}
-% \begin{description}
-% \item[\texttt{NOP}] do nothing
-% \item[\texttt{ORG}] define relative origin address for this thread
-% \item[\texttt{EQU}] compare first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{JMP}] jump to the address specified right after this instruction
-% \item[\texttt{JMPZ}] jump only if stack returns 0
-% \item[\texttt{PSHL}] push value on address specified right after this instruction to the stack
-% \item[\texttt{PSH}] push value on address specified by the value on the address specified right after this instruction to the stack
-% \item[\texttt{PSHI}] like push but one more encapsulation
-% \item[\texttt{POP}] pop item from stack to the point in the heap following this instruction
-% \item[\texttt{POPI}] pop item from stack and write the value at that address in the heap to the address following this instruction
-% \item[\texttt{ADD}] perform an addition on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{SUB}] perform a subtraction on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{INC}] increment value on stack
-% \item[\texttt{DEC}] decrement value on stack
-% \item[\texttt{AND}] perform a bit-wise "and" on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{OR}] perform a bit-wise "or"" on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{XOR}] perform a bit-wise "xor" on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{NOT}] perform a bit-wise "not" on the first element on the stack, pop it off the stack, and push the result
-% \item[\texttt{ROR}] perform a right shift operation on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{ROL}] perform a left shift operation on the first two elements on the stack, pop them off the stack, and push the result
-% \item[\texttt{PIP}] increments value specified by the next value on the heap
-% \item[\texttt{PDP}] decrements value specified by the next value on the heap
-% \item[\texttt{DUP}] push a duplicate of the topmost value of the stack to the stack
-% \item[\texttt{NOTE}] (DS extension) play a note
-% \item[\texttt{VOX}] (DS extension) play a vox
-% \item[\texttt{OUT}] (spork factory extension) pops the top of the stack and writes it to the pins on % \item[\texttt{STOP}] stop program (here: like NOP)
-% an ATtiny
-% \end{description}
-% This is their actual implementation:
-% 
-% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-% switch(instr)
-% {
-% case  NOP: break;
-% case  ORG: m_start=m_start+m_pc-1; m_pc=1; break;
-% case  EQU: push(pop()==pop()); break;
-% case  JMP: m_pc=peek(m,m_pc++); break;
-% case JMPZ: m_pc++; if (pop()==0) m_pc=peek(m,m_pc); break;
-% case PSHL: push(peek(m,m_pc++)); break;
-% case  PSH: push(peek(m,peek(m,m_pc++))); break;
-% case PSHI: push(peek(m,peek(m,peek(m,m_pc++)))); break;
-% case  POP: poke(m,peek(m,m_pc++),pop()); break;
-% case POPI: poke(m,peek(m,peek(m,m_pc++)),pop()); break;
-% case  ADD: push(pop()+pop()); break;
-% case  SUB: push(pop()-pop()); break;
-% case  INC: push(pop()+1); break;
-% case  DEC: push(pop()-1); break;
-% case  AND: push(pop()&pop()); break;
-% case   OR: push(pop()|pop()); break;
-% case  XOR: push(pop()^pop()); break;
-% case  NOT: push(~pop()); break;
-% case  ROR: push(pop()>>peek(m,m_pc++)); break;
-% case  ROL: push(pop()<<peek(m,m_pc++)); break;
-% case  PIP: 
-% { u8 d=peek(m,m_pc++);
-%   poke(m,d,peek(m,d)+1);
-% } break;
-% case  PDP:
-% { u8 d=peek(m,m_pc++);
-%   poke(m,d,peek(m,d)-1);
-% } break;
-% case  DUP: push(top()); break;
-% default : break;
-% };
-% \end{Verbatim}
-% 
-% 
-% \vspace*{24pt}
-% 
-% 
-% 
-% 
-% 
-% \vspace*{24pt}
-% 
-
-% % format for Heading-B style
-% \subsection{Format for Heading-B Style; Use This for Subsection Headings}
-% 
-% Insert body text here.  
-% 
-% % format for Heading-C style
-% \subsubsection{Format for Heading-C Style; Use This for Minor Sub-subsection Headings}
-% 
-% Insert body text here.
-% 
-% In the initial manuscript submission, you are encouraged to include figures (with captions) inline with the text, for ease of reading during the review process. For example, like this:
-% 
-% % include figures in text with captions for initial submission, like this:
-% \begin{figure}[htpb]
-% \begin{center}
-% \includegraphics{myFigure.pdf}
-% \caption{Insert Figure caption here.}
-% \label{fig:myFigure}
-% \end{center}
-% \end{figure}
-% 
-% However, for the final version after the manuscript has been accepted, all figures should be moved to the end so that the text only contain markers like ``[Figure 1 about here]'' near where the figure would normally have occurred. You can rearrange the text to this effect simply by enabling the package {\tt endfloat} as suggested in the header of this document.
-% 
-% 
-% % equations
-% You can insert equations inline with the text like this:
-% 
-% \begin{equation}
-% 	\label{radupdate}
-% 		\Psi_{N}^{n+1} = m_{N}^{(-)}\Psi_{N-1}^{n}+m_{N}^{(0)}\Psi_{N}^{n} + q_{N}\Psi_{N}^{n-1}
-% \end{equation}
-% where
-% \begin{eqnarray*}
-% 	m_{N}^{(-)} &=& \frac{\lambda^2}{2\tau}\left(S_{N+1}+2S_{N}+S_{N-1}\right)\\
-% 	m_{N}^{(0)} &=& \frac{1}{\tau}\left(2-\frac{\lambda^2}{2}\left(S_{N+1}+2S_{N}+S_{N-1}\right)\right)\\
-% 	q_{N} &=& \frac{1}{\tau}\left(\frac{\gamma^2 k^2}{2h}\left(S_{N+1}+S_{N}\right)\left(\frac{\alpha_{1}}{k}-	\alpha_{2}\right)-1\right)
-% \end{eqnarray*}
-% and where 
-% \begin{equation*}
-% 	\tau = \frac{\gamma^2 k^2}{2h}\left(S_{N+1}+S_{N}\right)\left(\frac{\alpha_{1}}{k}+\alpha_{2}\right)+1
-% \end{equation*}
-% 
-% % Use this environment for inserting source code examples.
-% % Note, that this will print out text in the document exactly as you type it here in the .tex file. That means you can add empty spaces, tabs, blank lines here and they will be printed out like this in the document.). 
-% %For more information check out the LaTeX-Package 'fancyvbr' documentation
-% %
-% \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
-% Use this style for program code, for example:
-% main() {
-%     printf("Hello World\n");    
-% }
-% \end{Verbatim}
-% 
-% %use of references
-% Some examples for the use of references in the text:\\
-% %author name in sentence, single authors
-% \cite{Ano08}, \cite{Bele68}, \cite{Ther99}, \cite{Zica02},
-% %author name in sentence, multiple authors
-% \cite*{VeRo00}, \cite*{AtDa04}, 
-% %reference in brackets, multiple authors
-% \citep*{AtDa04} 
 
 
 %References
