@@ -69,7 +69,7 @@
 % \vspace*{24pt}
 
 
-% TODO write abstract
+% TODO extent abstract
 \begin{abstract}
 How can low-level computation sound and how can it be integrated into livecoding practices?
 This paper gives insights into three years of artistic research and performance practice with Betablocker, an imaginary CPU architecture, specifically designed and implemented for livecoding purposes.
@@ -79,6 +79,8 @@ It covers the themes of algorithmic composition, sound generation, genetic progr
 % TODO write discussion
 % TODO collecting cites
 % TODO Daves performance part
+% TODO ~\cite{mclean2010-vis,ward2004-liv} ~\cite{2006-the} << cites to be built into the text
+
 
 % \section{}
 
@@ -148,8 +150,7 @@ However, they will eventually converge into a (possibly complex) stable state.
 A thread executes code stored on the heap. 
 Its program counter $pC$ stores the current position (i.e., the instruction it is currently evaluating).
 The stack serves as a temporary private storage for a thread, not addressable by other threads. 
-It is accessed by either \emph{popping} an item from the stack to an adress or the indirect location specified by an address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in immediate/literal, address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than using registers, so the resulting language is close to Forth.
-% TODO: cite Forth
+It is accessed by either \emph{popping} an item from the stack to an adress or the indirect location specified by an address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in immediate/literal, address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than using registers, so the resulting language is close to the layout of the Forth programming language \citep{rather1993-the}.
 
 
 \parskip 18pt
@@ -160,18 +161,14 @@ It is accessed by either \emph{popping} an item from the stack to an adress or t
 % musical and computational
 
 Betablocker first came to life as an attempt at a game pad programmable live coding system in fluxus.\footnote{
-% TODO: add fluxus link
-(Fluxus link)
+\url{http://www.pawfal.org/fluxus/}
 } 
 It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and by games such as \emph{Mr Driller} in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic.\footnote{
-% TODO: add Mr Driller link
-(Mr Driller link)
+\url{http://uk.ign.com/games/mr-driller/dc-14308}
 }
- 
-Core Wars\footnote{
-% TODO: add Code Wars link
-(Code Wars link)
-}, a game where programmer/contestants write simple programs that battle to gain memory footprint over each other was also an important inspiration, both in terms of domain specific low level languages, and imaginary hardware.
+\emph{Core Wars},\footnote{
+\url{http://www.corewars.org/}
+} a game where contestants write simple programs that battle to gain memory footprint over each other was also an important inspiration, both in terms of domain specific low level languages, and imaginary hardware.
 
 From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition \citep*{maurer1999-a-b} and simultaneous sonification and visualisation of the process.
 Also, it is inspired by nonlinear and stochastic synthesis techniques as described by Xenakis \citep*{Xenakis:1971, luque2009-the}.
@@ -195,8 +192,13 @@ BetaBlocker is distinct to other approaches of computational machines in several
 In the design of Betablocker, the ability to observe computational behaviour was an essential goal, whereas the result of the computation (and therefore process optimisation) played a minor role.  
 Furthermore, Betablocker is implemented as a software emulation and can be modified easily.
 This allows for its alteration regarding introspection (by adding probes) and customisation (by altering the instruction set).
-Last not least, compared to common microprocessor architectures such as the x86\footnote{\url{http://en.wikipedia.org/wiki/X86}} or even RISC\footnote{\url{http://en.wikipedia.org/wiki/Reduced_instruction_set_computing}} microcontrollers such as AVR\footnote{\url{http://en.wikipedia.org/wiki/Atmel_AVR}}, Betablocker's architecture is extremely simplistic.
+Last not least, compared to common microprocessor architectures such as the x86 \citep{alpert1993-arc}
+or even RISC
+microcontrollers \citep{kane1988-mip} such as AVR, Betablocker's architecture is extremely simplistic.
 Operational complexity arises from the induced data and its processing rather than from the system's architectural features.
+% \footnote{\url{http://en.wikipedia.org/wiki/Atmel_AVR}}
+% \footnote{\url{http://en.wikipedia.org/wiki/Reduced_instruction_set_computing}} 
+% \footnote{\url{http://en.wikipedia.org/wiki/X86}}
 
 The character of Betablocker influences not only the sonic results of a livecoding session but also its overall structuring.
 Due to its potential process complexity, it is e.g. possible to start with a blank page\footnote{As proposed in the TOPLAP Manifesto draft published at \url{http://toplap.org/wiki/ManifestoDraft}.}
@@ -230,7 +232,6 @@ In order to further illustrate the kinds of programs and livecoding strategies, 
 Firstly, a program which will play all the sounds in a sound bank at all frequencies available. 
 Multiple threads can be issued to play this program at the same time to provide more complexity. 
 Values interpreted as pointers are visualised as arrows:
-% TODO: figures are floats and not inline. Fix ":"
 
 \begin{figure}[H]
 	\centering
@@ -252,9 +253,8 @@ The following programs are both 16 bytes long, and require 3 concurrent threads 
  
 \begin{figure}[H]
 	\centering
-	% TODO: caption
 		\includegraphics[width=10cm]{bbds-arp}
-	\caption{Simple arpeggiator}
+	\caption{A simple arpeggiator for Betablocker/Rhythm.}
 	\label{fig:fig_bbds-arp}
 \end{figure}
 
@@ -263,7 +263,7 @@ The first example simply plays the byte as a note - resulting in an arpeggiator 
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=10cm]{bbds-seq}
-	\caption{Sequencer}
+	\caption{A sequencer for Betablocker/Rhythm.}
 	\label{fig:fig_bbds-seq}
 \end{figure}
 
@@ -280,8 +280,8 @@ Another type of program is might be called "self replicating fork bomb": It copi
 
 The same features that makes the Betablocker approach suitable for exploratory artistic and musical applications (lack of error states and code/data isomorphism) also make it a highly convenient environment for employing evolutionary strategies.
 
-% TODO: cite genetic algorithms
-The use of Genetic Algorithms in livecoding presents different purposes to producing efficient and novel solutions to problems specified by a fitness function. In the case of Betablocker/Rhythm the desire initially to use genetic algorithm's arose from the need to learn new, optimal coding patterns for use in livecoding performances, a way of escaping a feeling of being 'stuck in a creative rut'. The use of a genetic algorithm in this case it to provide \emph{new ideas for artistic use} - not final programs for their own sake.
+
+The use of Genetic Algorithms \citep{barricelli1963numerical} in livecoding presents different purposes to producing efficient and novel solutions to problems specified by a fitness function. In the case of Betablocker/Rhythm the desire initially to use genetic algorithm's arose from the need to learn new, optimal coding patterns for use in livecoding performances, a way of escaping a feeling of being 'stuck in a creative rut'. The use of a genetic algorithm in this case it to provide \emph{new ideas for artistic use} - not final programs for their own sake.
 
 The success of an algorithm used for livecoding is to some extent how easy it is to change, how malleable it is, and one of the features of evolutionary strategy is that programs are automatically converged on that may present extremely unorthodox approaches - especially when optimisation is linked to fitness criteria and architectures are used where self modification is possible. In this case we use want to unpick these approaches in order to employ them musically in hand written code.
 
@@ -318,7 +318,7 @@ We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by 
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=10cm]{evolved}
-	\caption{Evolved program}
+	\caption{A program evolved by genetic programming for Betablocker/Rhythm.}
 	\label{fig:evolved}
 \end{figure}
 
@@ -472,12 +472,12 @@ An overview of the rendered signals can be found in Figure~\ref{fig:fig_waveform
 
 \begin{figure}
 	\centering
+		\includegraphics[width=5cm]{wv-sawtooth}
 		\includegraphics[width=5cm]{wv-impulse}
 		\includegraphics[width=5cm]{wv-pulse202}
 		\includegraphics[width=5cm]{wv-pulse22}
 		\includegraphics[width=5cm]{wv-sawImpulse}
-		\includegraphics[width=5cm]{wv-sawtooth}
-	\caption{Manually generated waveforms.}
+	\caption{Manually generated waveforms: sawtoowh, impulse, long pulse, short pulse, saw impulse.}
 	\label{fig:fig_waveforms_POPdestroy-random}
 \end{figure}
 
@@ -523,7 +523,7 @@ The sonic relation between different Betablocker programs seems to follow a spec
 		\includegraphics[height=4.5cm]{Additive-Betablocker}
 		\includegraphics[height=4.5cm]{FM-Betablocker}
 		\includegraphics[height=4.5cm]{AM-Betablocker}
-	\caption{Betablocker synthesis techniques.}
+	\caption{Block diagrams of classic synthesis techniques adapted to Betablocker/Audio.}
 	\label{fig:classicSynthesisTechniquesFMAMAdditive}
 \end{figure}
 
