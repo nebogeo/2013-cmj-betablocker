@@ -324,8 +324,8 @@ We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by 
 
 This program creates a complex pattern efficiently in four different ways:
  (a) a descending scale using the stack to store the current position,
- (b) a rising scale by self modifying address 12 (the 0 in \texttt{PSHL 0}),
- (c) playing it's own code as a pattern of notes by using address 12 as a pointer, and
+ (b) a rising scale by self modifying address 12 (the first 00),
+ (c) playing \emph{it's own code} as a pattern of notes by using address 12 as a pointer, and
  (d) playing the bitwise \texttt{NOT} of it's own code at the same time.
 % 
 % \begin{enumerate}
