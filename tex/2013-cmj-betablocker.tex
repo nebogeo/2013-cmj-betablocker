@@ -76,15 +76,6 @@ This paper gives insights into three years of artistic research and performance 
 It covers the themes of algorithmic composition, sound generation, genetic programming and autonomous coding in the light of self-manipulating code and artistic research practice.
 \end{abstract}
 
-% TODO write discussion
-% TODO collecting cites
-% TODO Daves performance part
-% TODO ~\cite{mclean2010-vis} ~\cite{2006-the} << cites to be built into the text
-
-% \section{}
-
-% + how people imagine computation now (scary stuff) (Dave)
-
 Computation is odd. 
 In fact in many ways it's one of the strangest things we have discovered, and 77 years on we continue to fail to fully grasp it's behaviour.
 And so, we struggle to keep unseen ramifications of our decisions under control. Faced with such a strange and yet essential beast, the only sane strategy is to try and tame it. 
@@ -109,6 +100,12 @@ This paper collects experiences, challenges and insights gathered by the two aut
 Central to the work presented here is the use of livecoding, performance contexts and exploration strategies in order to gain understandings of behaviour emerging from simple instructions sets when given self-modification abilities. 
 This leads us towards a kind of second-order livecoding where, beginning with a blank slate, programs written a few minutes ago interact and interfere with the livecoding of subsequent programs, or even write programs all of their own.
 \parskip 18pt
+
+% TODO overview of the structure of the paper in introduction or abstract?
+The paper starts with an introduction to the Betablocker core technology, followed by a background section featuring a historical overview.
+After that, we describe our findings and explorations with regard to Betablocker  and give insights on how its behaviour influenced our livecoding sessions.
+This section is followed by a report on more than three years of performance practice in Betablocker livecoding.
+The paper concludes with a discussion and outlook on future work.
 
 \section{BetaBlocker core technology} 
 \label{sec:betablocker_core}
@@ -221,7 +218,7 @@ At this point the decision is whether to take advantage of this situation or att
 Taking advantage of it involves looking for interesting sections of code that emerge and manually modifying them, while the best strategy for taking back control is attempting to find a space to write a program that gradually clears memory so you can start again. 
 In most successful performances both options were repeatedly taken over the course of the concert.
 
-It is this gradual cessation of control, with immediacy and totality of the understanding (or at very least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between the audience and performer and process creating the music they hear.
+It is this gradual cessation of control, with immediacy and totality of the understanding (or at very least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between all, audience, performer and the process creating the music they hear.
 \parskip 18pt
 
 \subsubsection{Code patterns for livecoding}
@@ -582,9 +579,9 @@ After some time experimenting with Betablocker using Fluxus, during 2010 the eng
 
 \begin{figure}
 	\centering
-		\includegraphics[width=10cm]{7083569047_14131b8ee2_o}
-	\caption{Performing at the SuperCollider symposium 2012, London.}
-	\label{fig:fig_7083569047_14131b8ee2_o}
+\includegraphics[width=10cm]{2012-SuperColliderSymposiumLiveCodingEnvironment-tills}
+	\caption{Till's livecoding environment as used at the SuperCollider symposium 2012, London. In the bottom part, the heaps are visualised.}
+	\label{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}
 \end{figure}
 
 \subsection{SuperCollider symposium London -- livecoding and visuals [4.2012]}
@@ -600,6 +597,8 @@ This meant
 (a) to develop a visual representation of the heaps he was playing, 
 (b) to design a textual helper environment for his livecoding, mainly providing text blocks, and
 (c) to pre-select heaps that he used as "raw materials" for his part of the  performance.
+Figure~\ref{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till} shows a screenshot of Till's setup.
+
 
 This improvisation with Till allowed David some freedom from the syncronised lockstep of his solo performances, and this concert was the first to experiment with independant speed settings for the different threads. Having control over this meant greater breadth of possible higher level patterns, being able to speed up or slow down different parts while listening to Till's music provided greater control needed in collaborative performance. 
 
@@ -608,9 +607,9 @@ Figure~\ref{fig:fig_7083569047_14131b8ee2_o} gives an overview of the performanc
 
 \begin{figure}
 	\centering
-\includegraphics[width=10cm]{2012-SuperColliderSymposiumLiveCodingEnvironment-tills}
-	\caption{Till's livecoding environment as used at the SuperCollider symposium 2012, London. In the bottom part, the heap visualisation can be seen.}
-	\label{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}
+		\includegraphics[width=10cm]{7083569047_14131b8ee2_o}
+	\caption{Performing at the SuperCollider symposium 2012, London.}
+	\label{fig:fig_7083569047_14131b8ee2_o}
 \end{figure}
 \parskip 18pt
 
@@ -637,6 +636,7 @@ Over the course of the performance, an initially meaningful text turns into nons
 \section{Meta-Discussion}
 \label{sec:meta}
 % TODO Julian Parker commented that this section is a bit too confusing still.
+% TODO comparison of the experience of the process in different performance setups? 
 
 In this paper, we presented our work on and with Betablocker, an imaginary CPU architecture, specifically designed and implemented for livecoding purposes.
 Livecoding with Betablocker can be undertaken in various forms and on different levels; ranging from assembler-level programming to recursive livecoding based on the engine's capability of self-modification up to genetic algorithms and structural programming.
