@@ -108,7 +108,6 @@ Built around this element is a variety of applications for testing, exploring an
 This paper collects experiences, challenges and insights gathered by the two authors over the course of 3 years while they designed imaginary CPU architectures and investigated the combination of established as well as emerging live coding techniques.
 Central to the work presented here is the use of livecoding, performance contexts and exploration strategies in order to gain understandings of behaviour emerging from simple instructions sets when given self-modification abilities. 
 This leads us towards a kind of second-order livecoding where, beginning with a blank slate, programs written a few minutes ago interact and interfere with the livecoding of subsequent programs, or even write programs all of their own.
-
 \parskip 18pt
 
 \section{BetaBlocker core technology} 
@@ -132,12 +131,6 @@ Particular attention has to be given to the fact that, although a specific part 
 In reverse, a critical differentiation with other virtual machines (eg. Java VM, the .NET CLR) is therefore that every possible combination of values is a valid, executable program and that each of these values is interpreted either as an instruction, an address, or a data item. 
 
 
-\begin{figure}
-	\centering
-		\includegraphics[width=13cm]{bbds-legend}
-	\caption{Betablocker instructions.}
-	\label{fig:fig_bbds-legend}
-\end{figure}
 
 
 % instruction set
@@ -151,8 +144,6 @@ A thread executes code stored on the heap.
 Its program counter $pC$ stores the current position (i.e., the instruction it is currently evaluating).
 The stack serves as a temporary private storage for a thread, not addressable by other threads. 
 It is accessed by either \emph{popping} an item from the stack to an adress or the indirect location specified by an address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in immediate/literal, address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than file registers, so the resulting language is close to the operation of the Forth programming language \citep{rather1993-the}.
-
-
 \parskip 18pt
 
 \section{Background and historical context} 
@@ -172,10 +163,14 @@ It was inspired by a discussion on the TOPLAP mailing list about virtual machine
 
 From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition \citep*{maurer1999-a-b} and simultaneous sonification and visualisation of process.
 Also, it is inspired by nonlinear and stochastic synthesis techniques as described by Xenakis \citep*{Xenakis:1971, luque2009-the}.
-
-
-
+\begin{figure}
+	\centering
+		\includegraphics[width=13cm]{bbds-legend}
+	\caption{Betablocker instructions.}
+	\label{fig:fig_bbds-legend}
+\end{figure}
 \parskip 18pt
+
 
 \section{Livecoding philosophy and aesthetic findings}
 \label{sec:distinct_character}
@@ -206,7 +201,6 @@ and quickly build interacting software agents which gain sufficient complexity t
 
 We describe our findings and explorations with regard to Betablocker in the next paragraphs and give insights on how its behaviour influenced our livecoding sessions.
 As we used Betablocker mainly in two perceptional contrasting settings, \emph{rhythmic}, which slowed down processing in order to percieve it and \emph{sonic}, speeding up processing in order to hear it's sonic properties directly, we differentiate in the following between Betablocker/Rhythm and Betablocker/Audio.
-
 \parskip 18pt
 
 \subsection{Very slow computing -- Betablocker/Rhythm}
@@ -214,10 +208,10 @@ As we used Betablocker mainly in two perceptional contrasting settings, \emph{rh
 %  describing the nintendoDS part of the implementation
 
 Betablocker/Rhythm (the Fluxus and Gameboy DS version) makes computation tangible by slowing down processes by many orders of magnitude compared to typical computing applications. 
-The smallest musical loop in Betablocker/Rhythm is 3 instructions long -- push a value onto the stack (\texttt{PSH, 123}), play it as a note (\texttt{NOTE}), jump back to start (\texttt{JMP 0}). 
+The smallest musical loop in Betablocker/Rhythm is 3 instructions long -- push a value onto the stack \texttt{[PSH, 123]}, play it as a note \texttt{[NOTE]}, jump back to start \texttt{[JMP, 0]}. 
 
 In order to play this at 120 BPM it will need to run at 6 cycles per second, the machine I am typing on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Rhythm. 
-This makes computation audible as poly-rhythmic techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents. The memory is displayed on a 16X16 grid, in order to maximise the visibility of the state and align with hexadecimal notation.
+This makes computation audible as poly-rhythmic techno music, and simultaneously visible as the thread's positions are displayed on the livecoding interface synced with the audio along with the entire heap's memory contents. The memory is displayed on a $16\times16$ grid, in order to maximise the visibility of the state and align with hexadecimal notation.
 
 Performing with Betablocker/Rhythm consists of starting with empty memory and manually entering programs byte by byte that trigger synthesis patches while modifing themselves and each other. Bytes used as address locations are visualised literally as pointers - arrows indicating the address in memory they are referencing. 
 Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a kind of 'Turing soup' which is writing it's own code. 
@@ -226,9 +220,12 @@ Taking advantage of it involves looking for interesting sections of code that em
 In most successful performances both options were repeatedly taken over the course of the concert.
 
 It is this gradual cessation of control, with immediacy and totality of the understanding (or at very least display) of the machine that sets this apart from traditional livecoding performance, where the high level description of a process is the only connection between the audience and performer and process creating the music they hear.
+\parskip 18pt
+
+\subsubsection{Code patterns for livecoding}
+\label{ssub:code_patterns_for_livecoding}
 
 In order to further illustrate the kinds of programs and livecoding strategies, we list concrete 'code patterns' which are used in common live coding situations.
-
 Firstly, a program which will play all the sounds in a sound bank at all frequencies available. 
 Multiple threads can be issued to play this program at the same time to provide more complexity. 
 Values interpreted as pointers are visualised as arrows:
@@ -272,7 +269,6 @@ The second example is very similar, but is slightly modified to play a sequence 
 Other types of program alter the memory rather than focus on sound. 
 For example given two addresses, a program may increment one and decrement the other, copying bytes from the source to the destination, which results in the entire CPU memory to be reversed. 
 Another type of program is a self replicating fork bomb, which copies its code to other locations and gradually captures other threads into it's replication.
-
 \parskip 18pt
 
 \subsubsection{Use of Genetic Algorithms as creative augmentation in livecoding} % (fold)
@@ -302,17 +298,15 @@ Which looks for repeating values spaced apart by "n" positions, so:
 (freq '(100 1 2 3 100 4 5 6 100 7 8 9 100) 4) 
 \end{Verbatim}
 
-Returns 3, as it finds 3 pairs of equal values (100) distanced by the specified 4 positions.
+Returns \texttt{3}, as it finds three pairs of equal values (\texttt{100}) distanced by the specified 4 positions.
 
 With this fitness function:
-
 \begin{Verbatim}[fontfamily=courier, xleftmargin=\parindent]
 (+ (* 50 (count (num-unique res))) ; unique notes are very good
    (freq res 4) ; equal notes every 4 beats are good
    (freq res 6)) ; equal notes every 6 beats are good
 \end{Verbatim}
-
-We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by multiplying it by 50. Here is a resulting evolved individual program found after several thousand generations:
+we favour rhythmic components of 4 or 6 beats and boost the uniqueness score by multiplying it by 50. Here is a resulting evolved individual program found after several thousand generations:
 
 \begin{figure}[H]
 	\centering
@@ -321,10 +315,10 @@ We favour rhythmic components of 4 or 6 beats and boost the uniqueness score by 
 	\label{fig:evolved}
 \end{figure}
 
-This program creates a complex pattern efficiently in four different ways:
+It creates a complex pattern efficiently in four different ways:
  (a) a descending scale using the stack to store the current position,
- (b) a rising scale by self modifying address 12 (the first 00),
- (c) playing \emph{it's own code} as a pattern of notes by using address 12 as a pointer, and
+ (b) a rising scale by self modifying address \texttt{12} (the first \texttt{00}),
+ (c) playing \emph{it's own code} as a pattern of notes by using address \texttt{12} as a pointer, and
  (d) playing the bitwise \texttt{NOT} of it's own code at the same time.
 % 
 % \begin{enumerate}
@@ -341,13 +335,9 @@ The evolved programs provided many new ideas used in subsequent livecoding perfo
 Following this work, Betablocker was ported as \emph{Spork Factory} to the ATtiny85 processor as part of an ongoing investigation of physical, livecodable objects and robots. 
 The instruction set was extended by \texttt{IN} and \texttt{OUT} instructions for accessing the pins of the microcontroller. 
 This enables audio programs to be evolved for the processor, using FFT analysis on the resulting sounds as the data to provide fitness metrics for.
-
 % In a second attempt, Spork Factory, an additionally introduced instruction (\texttt{OUT}) writes out the topmost value on the stack to the pins of a microcontroller to be converted to sound.
 % In difference to the probing approach, this feature decouples sound output from computation, however requires faster execution rates to produce the same output.\footnote{Each instruction \texttt{I} that changes the stack has to be replaced by \texttt{[I, DUP, OUT]}}
 % In the next paragraphs, we will describe the implementation and implications of the first attempt.
-
-
-
 \parskip 18pt
 
 \subsection{Sound computing -- Betablocker/Audio} 
@@ -394,7 +384,6 @@ x = { // BBlockerBuf example
 	Splay.ar(stack, spread: 0.1, center: pC);
 }.play;
 \end{Verbatim}
-
 \parskip 18pt
 
 \subsubsection{Noise aesthetics -- on texture and rhythm} 
@@ -417,9 +406,7 @@ To investigate into this, we implemented a cluster generator for synthesising Be
 After extensive listening, we found out that they often sound like airily high-pitched and infinitely sustained sound clouds, broken up occasionally by a rhythmical pattern. 
 Typically, they settle either to a constant pitch or to silence after about 0.1 seconds.
 In the long run (range of 4 minutes), such clusters settle into a local stability with much less high frequencies than at the beginning. 
-
 The first 1000 computation steps could therefore be called transients, whereas the longterm variation can be considered a timbral decay.
-
 \parskip 18pt
 
 \subsubsection{Lessons learned from manually programming sonic structures}
@@ -478,9 +465,6 @@ x = a.play(1000, leak: true);
 	\caption{Manually generated waveforms: sawtoowh, impulse, long pulse, short pulse, saw impulse.}
 	\label{fig:fig_waveforms_POPdestroy-random}
 \end{figure}
-
-
-
 \parskip 18pt
 
 \subsubsection{Classic synthesis techniques adapted to Betablocker/Audio} % (fold)
@@ -574,8 +558,6 @@ To summarise, the application of classic synthesis techniques allows for additio
 % 
 % Out.ar(0, output)}.play;
 % \end{Verbatim}
-
-
 \parskip 18pt
 
 \section{Betablocker and livecoding performance practice} 
@@ -594,13 +576,12 @@ The very first performance of Betablocker in the Fluxus environment took place i
 \label{sub:4for8}
 
 After some time experimenting with Betablocker using Fluxus, during 2010 the engine was ported to the Gameboy DS system via the homebrew development toolchain. This gaming platform was chosen for it's stylus input mechanism, sound co-processor and extremely fast dedicated graphics hardware. The touch screen provided improved input, over the previous gamepad mechanic, with new features such as drag-drop local frame address lookup. It was first performed in Helsinki in 2010, using a web camera to project the screen, stylus and fingers of the livecoder. This system and software is now used as a way of explaining and demonstrating livecoding, particually to children, who are familiar with the Gameboy DS.
-
 \parskip 18pt
 
 \begin{figure}
 	\centering
 		\includegraphics[width=10cm]{7083569047_14131b8ee2_o}
-	\caption{Performance setting at the SuperCollider symposium 2012, London.}
+	\caption{Performing at the SuperCollider symposium 2012, London.}
 	\label{fig:fig_7083569047_14131b8ee2_o}
 \end{figure}
 
@@ -621,14 +602,7 @@ This meant
 This improvisation with Till allowed David some freedom from the syncronised lockstep of his solo performances, and this concert was the first to experiment with independant speed settings for the different threads. Having control over this meant greater breadth of possible higher level patterns, being able to speed up or slow down different parts while listening to Till's music provided greater control needed in collaborative performance. 
 
 This performance using Betablocker DS was also the first to use a new synthesis engine written specifically for the ARM7 sound streaming co-processor on the DS, parts of which were written in hand optimised assembly allowing for greater sonic possibilities with an unfortunate corresponding increased battery consumption. 
-
-The final setup projected to the wall of the venue is shown in Figure~\ref{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}.
-
-This improvisation with Till allowed David some freedom from the syncronised lockstep of his solo performances, and this concert was the first to experiment with independant speed settings for the different threads. Having control over this meant greater breadth of possible higher level patterns, being able to speed up or slow down different parts while listening to Till's music provided greater control needed in collaborative performance. 
-
-This performance using Betablocker DS was also the first to use a new synthesis engine written specifically for the ARM7 sound streaming co-processor on the DS, parts of which were written in hand optimised assembly allowing for greater sonic possibilities with an unfortunate corresponding increased battery consumption. 
-
-The final setup projected to the wall of the venue is shown in Figure~\ref{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}, Figure~\ref{fig:fig_7083569047_14131b8ee2_o} gives an overview of the performance situation.
+Figure~\ref{fig:fig_7083569047_14131b8ee2_o} gives an overview of the performance situation.
 
 \begin{figure}
 	\centering
@@ -636,16 +610,6 @@ The final setup projected to the wall of the venue is shown in Figure~\ref{fig:f
 	\caption{Till's livecoding environment as used at the SuperCollider symposium 2012, London. In the bottom part, the heap visualisation can be seen.}
 	\label{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till}
 \end{figure}
-
-
-% \begin{figure}
-% 	\centering
-% 		\includegraphics[width=5cm, height=5cm]{2013-heapIris-white}
-% 		\includegraphics[width=5cm, height=5cm]{2013-heapIris-black}
-% 	\caption{Iris-style visualisations of heaps.}
-% 	\label{fig:fig_2013-heapIris-white}
-% \end{figure}
-
 \parskip 18pt
 
 \subsection{Oulipop -- translation of codes [5.2012, 4.2013]}
@@ -666,24 +630,23 @@ Over the course of the performance, an initially meaningful text turns into nons
 	\caption{The Oulipop performance environment consists of a laptop with two typing areas.}
 	\label{fig:fig_20120509-IMG_3278}
 \end{figure}
-
 \parskip 18pt
 
 \section{Meta-Discussion}
 \label{sec:meta}
 % TODO Julian Parker commented that this section is a bit too confusing still.
 
-Int his paper, we presented our work on and with Betablocker, an imaginary CPU architecture, specifically designed and implemented for livecoding purposes.
-
+In this paper, we presented our work on and with Betablocker, an imaginary CPU architecture, specifically designed and implemented for livecoding purposes.
 Livecoding with Betablocker can be undertaken in various forms and on different levels; ranging from assembler-level programming to recursive livecoding based on the engine's capability of self-modification up to genetic algorithms and structural programming.
 We shared our insights on the system-inherent aesthetic possibilities and presented our performance practice around livecoding with Betablocker in its various flavours.
 
-Over the course of the project, our preconception was that the beast of computation with all its complexity was not to be tamed with our approach. 
-So is it with Betablocker: Although the output of a Betablocker engine is deterministic, it still is a mystery (i.e., not determinable) for the human mind; our desire for understanding leads us to suspend our disbelief and attach higher level meaning as a way to gain a tangible understanding.
-However, we started to recognise that, with its ability of self-modification and inherent complexity, Betablocker can be viewed as a companion for livecoding that one has the opportunity to get to know, collaborate with and, sometimes, work against.
-In our endeavour to find out specifics of digital processing and using Betablocker in performances as well as the object of investigation itself, we saw Betablocker unfolding as a digital object with an intrinsic character.
+Over the course of the project, our preconception was that the beast of computation with all its complexity was not to be tamed. 
+So is it with Betablocker: Although the output of a Betablocker engine is deterministic, it still remains a mystery for the human mind, it is \emph{pseudo-indeterministic}. 
+However, human desire for understanding leads us to suspend our disbelief and attach higher level meaning to a systems reaction as a way to gain tangible understanding.
+In this light, we recognise that, with its ability of self-modification and inherent complexity, Betablocker can be viewed as a companion for livecoding that one has the opportunity to get to know, collaborate with and, sometimes, work against.
+In our endeavour to find out specifics of digital processing and using Betablocker in both performances and the object of investigation itself, we saw it unfolding as a digital object with an intrinsic character.
 
-In the future, we imagine Betablocker being implemented as a part of a wide range of systems, and being at the heart of an extended set of interpretations of (pseudo-)historical breakthroughs in computation such as mastering the P-NP problem, artificial intelligence, neuroinformatics or theoretical swarm robotics.
+In the future, we imagine Betablocker being implemented as a part of a wide range of mostly artistic or educative systems, and being at the heart of an extended set of interpretations of (pseudo-)historical breakthroughs in computation such as mastering the P-NP problem, artificial intelligence, neuroinformatics or theoretical swarm robotics.
 \parskip 18pt
 
 
