@@ -10,7 +10,7 @@
 			<key>filename</key>
 			<string>2013-cmj-betablocker.tex</string>
 			<key>lastUsed</key>
-			<date>2013-01-22T08:21:11Z</date>
+			<date>2013-01-24T17:52:24Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -18,7 +18,7 @@
 			<key>filename</key>
 			<string>allTheOtherStuff.tex</string>
 			<key>lastUsed</key>
-			<date>2013-01-22T08:21:11Z</date>
+			<date>2013-01-24T17:52:24Z</date>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -38,33 +38,18 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>15</integer>
 				<key>line</key>
-				<integer>146</integer>
+				<integer>497</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>84</integer>
+			<integer>147</integer>
 			<key>firstVisibleLine</key>
-			<integer>123</integer>
-		</dict>
-		<key>allTheOtherStuff.tex</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>608</integer>
-				<key>line</key>
-				<integer>269</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>485</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>allTheOtherStuff.tex</string>
 		<string>2013-cmj-betablocker.tex</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
