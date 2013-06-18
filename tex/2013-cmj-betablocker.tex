@@ -25,14 +25,20 @@
 %% Leave this package commented out for initial submission, but uncomment it for final version. 
 
  % \usepackage{endfloat}
-
-% TODO fight figure resolution: more hiRez!
-
-
-
 \usepackage{microtype}
 
-%---Document----------
+% TODO fight figure resolution: more hiRez! ???
+% TODO forDave: There are cases where an apostrophe should be added
+% TODO forDave and many other grammatical glitches and spelling errors,
+
+% TODO expand cultural aspects
+% TODO reference other work in the live coding field. 
+% TODO review any related work, e.g. using limited instruction sets or microcontrollers (Beta blocker is certainly an outlier in terms of interfaces, so I realise this context may be limited)
+
+
+
+
+%---Document----------Þ
 \begin{document}
 
 {\cmjTitle 	Computation as material in livecoding}
@@ -81,7 +87,7 @@ It covers the themes of algorithmic composition, sound generation, genetic progr
 
 Computation is odd. 
 In fact in many ways it is one of the strangest things we have discovered, and 77 years on we continue to fail to fully grasp its behaviour.
-% TODO Reviewer comment: Computers and scripts that run them, hardware and software are a man made creation these come from particular social political desires and circumstances. People programme the computer, they didn't just evolve like a rock that forms from 'geophysical teutonics' so in this case, this paragraph should be revised or expanded.
+% TODO forDave: Reviewer comment: Computers and scripts that run them, hardware and software are a man made creation these come from particular social political desires and circumstances. People programme the computer, they didn't just evolve like a rock that forms from 'geophysical teutonics' so in this case, this paragraph should be revised or expanded. Till: what should we do with this? I actually think that computation _is_ discovered and quite distinct to computers and scripts. but I don't want to elaborate on this at this very point, for the sake of the point to be made.
 
 And so, we struggle to keep unseen ramifications of our decisions under control. Faced with such a strange and yet essential beast, the only sane strategy is to try and tame it. 
 The field of software engineering is littered with concepts such as regression testing, type checking, white rooms, sandboxing, contracts, and encapsulation -- all attempts to cope with the fact that we fail to naturally understand how a mundane machine of sufficient complexity will act when it is programmed by a human.
@@ -95,9 +101,10 @@ From rehearsed public performances, collaborative improvisations and individual 
 All these derivations of the original theme share elements of live coding as they are featured in the TOPLAP manifesto draft.\footnote{\url{http://toplap.org/wiki/ManifestoDraft}} \citep{ward2004-liv}
 Livecoding attempts to treat computation as a material on its own terms, to pick it up and try to gain understanding into what it looks\citep{mclean2010-vis} and sounds like.
 
-Based on this ground, we introduce Betablocker, our contribution to the field of artistic understanding of low level computation\citep{2006-the}\footnote{Viznut "Algorithmic symphonies from one line of code" \url{http://countercomplex.blogspot.co.uk/2011/10/algorithmic-symphonies-from-one-line-of.html}} which intersects livecoding practise, and brings to light many different strategies for presenting computation as tangible material -- by making \emph{process} as much part of livecoding as the code that describes it.
+Based on these grounds, we introduce Betablocker, our contribution to the field of artistic understanding of low level computation \citep{2006-the},\footnote{Viznut ``Algorithmic symphonies from one line of code'' \url{http://countercomplex.blogspot.co.uk/2011/10/algorithmic-symphonies-from-one-line-of.html}} a field that digital sound synthesis research discovered as early as in the 1970-ies \citep{berg2009-com}.
+Betablocker intersects livecoding practise, and brings to light many different strategies for presenting computation as tangible material -- by making \emph{process} as much part of livecoding as the code that describes it.
 
-% TODO add e.g. nick collins instruction synthesis (breakpoint set interpreter) as a reference. also, fredrik did something in that respect. gotta ask him...
+% TODO tillDave: add fredriks arduino-based setup?
 
 
 Built around this element is a variety of applications for testing, exploring and performing scientific as well as artistic investigations.
@@ -282,12 +289,12 @@ Another type of program is a self replicating fork bomb, which copies its code t
 
 The same features that makes the Betablocker approach suitable for exploratory artistic and musical applications (lack of error states and code/data isomorphism) also make it a highly convenient environment for employing evolutionary strategies.
 
-The use of Genetic Algorithms \citep{barricelli1963numerical} in this livecoding case is different from their traditional use. In the case of Betablocker/Rhythm the desire to use genetic algorithms arose from the need to discover and learn new, optimal coding patterns for use in livecoding performances, as a way of escaping a feeling of being 'stuck in a creative rut'. The use of a genetic algorithm in this case it to provide \emph{new ideas for artistic use} - not final programs for their own sake.
-% TODO reviewer comment: use images to describe [...] the 'new ideas for artistic use'.
-% TODO reviewer comment: "stuck in a creative rut" -- It would be insightful if the writer could explain some of these matters of mind and the extension of the senses through technologies of cognition and perception that he term 'Betablocker' implies.
+The use of Genetic Algorithms \citep{barricelli1963numerical} in this livecoding case is different from their traditional use. In the case of Betablocker/Rhythm the desire to use genetic algorithms arose from the need to discover and learn new, optimal coding patterns for use in livecoding performances, as a way of escaping a feeling of being `stuck in a creative rut'. The use of a genetic algorithm in this case it to provide \emph{new ideas for artistic use} - not final programs for their own sake.
+% TODO forDave: reviewer comment: use images to describe [...] the 'new ideas for artistic use'.
+% TODO forDave: reviewer comment: "stuck in a creative rut" -- It would be insightful if the writer could explain some of these matters of mind and the extension of the senses through technologies of cognition and perception that he term 'Betablocker' implies.
 
 
-% TODO editors comment: as a suggestion, reference one of the cognitive dimensions of notation here, which might provide further dimensions along which success (or otherwise) could be measured/considered.
+% TODO forDave: editors comment: as a suggestion, reference one of the cognitive dimensions of notation here, which might provide further dimensions along which success (or otherwise) could be measured/considered.
 The success of an algorithm used for livecoding is to some extent how easy it is to change, how malleable it is, and one of the features of evolutionary strategy is that programs are automatically converged on that may present extremely unorthodox approaches - especially when optimisation is linked to fitness criteria and architectures are used where self modification is possible. In this case we use want to unpick successful individual programs in order to employ them musically in hand written code.
 
 In a genetic algorithm, in order to select promising programs from a population, we need a way to judge fitness. In this application we are creating lists of note numbers, and in order to create a fitness metric we favour patterns that have unique notes (to avoid repetition) but also look for a rhythmic nature by measuring them with this function:
@@ -444,14 +451,12 @@ The shape of the waveform is therefore limited due to the way the sound signal i
 Note that the slot in which the slope parameter is stored will never be reached by the program counter and can therefore be used as a "safe data storage" for the slope parameter.
 
 
-Another finding of the livecoding-supported Betablocker exploration linking the results of the noise exploration described in the previous paragraph with explicitly writing code
-% Section~\ref{sub:noise_aesthetics}
-was the sonic outcome of a combination of random "data" and a specifically designed algorithm that interprets it.
+Another finding of the livecoding-supported Betablocker exploration linking the results of the noise exploration described in the previous paragraph with explicitly writing code was the sonic outcome of a combination of random ``data'' and a specifically designed algorithm that interprets it.
 Given the program
 \texttt{[NOP, ORG, NOP, NOP, PSH, 245, PSH, -1, SUB, DUP, POP, -1, POP, 1, JMP, 1]} 
 followed by random numbers, the topmost element in the stack varies according to values addressed in previously pushed values.
-Every set of "data" then sounds different, however, the sounds share a "root note" that depends on the execution rate.
-Note that the "program" itself is as well part of the data and can be addressed, too.
+Every set of input then sounds different, however, the sounds share a common ``root note'' that depends on the execution rate.
+Note that the program itself is as well part of the data and can be addressed, too.
 As the point, to which the stack pops its topmost values, is depending on its state, it might as well destroy the original program, leading to unstable (yet maybe refreshingly new) behaviour.
 % The path through the heap is initialised with something depending on the 245th element in the heap.
 
@@ -467,11 +472,13 @@ x = a.play(1000, leak: true);
 
 \begin{figure}
 	\centering
-		\includegraphics[width=5cm]{wv-sawtooth}
-		\includegraphics[width=5cm]{wv-impulse}
-		\includegraphics[width=5cm]{wv-pulse202}
-		\includegraphics[width=5cm]{wv-pulse22}
-		\includegraphics[width=5cm]{wv-sawImpulse}
+		% \includegraphics[width=5cm]{wv-sawtooth}
+		% \includegraphics[width=5cm]{wv-impulse}
+		% \includegraphics[width=5cm]{wv-pulse202}
+		% \includegraphics[width=5cm]{wv-pulse22}
+		% \includegraphics[width=5cm]{wv-sawImpulse}
+		\includegraphics[width=\columnwidth]{wv-allwaves}
+		
 	\caption{Manually generated waveforms: sawtoowh, impulse, long pulse, short pulse, saw impulse.}
 	\label{fig:fig_waveforms_POPdestroy-random}
 \end{figure}
@@ -502,8 +509,6 @@ The sonic relation between different Betablocker programs seems to follow a spec
 Another way to generate aesthetically interesting patterns with complex rhythmical interrelations can be achieved by letting both engines run on the same heap.
 
 To summarise, the application of classic synthesis techniques allows for additional control and variation of the sonic output and, depending on the actual code on which the engines are running on, may even induce musical structures.
-
-% TODO optional: should we add the listings of Additive/FM/AM, or maybe one of them as an example?
 
 \begin{figure}
 	\centering
@@ -573,7 +578,7 @@ To summarise, the application of classic synthesis techniques allows for additio
 \section{Betablocker and livecoding performance practice} 
 \label{sec:betablocker_and_livecoding_practice_a_report}
 
-% TODO reviewer comment: If you need to cut, the section discussing the various performances could probably be made more concise, and/or focus on the most interesting cases.
+% TODO forDave: reviewer comment: If you need to cut, the section discussing the various performances could probably be made more concise, and/or focus on the most interesting cases. till: the other reviewer wants to have less a technical level, so I guess this renders irrelevant.
 
 
 Over the course of the last 3 years, we used Betablocker in a wide variety of livecoding practice, including both public performances and research-oriented investigations.
@@ -582,9 +587,8 @@ Subsequent, we describe relevant Betablocker-based public performances in their 
 
 \subsection{Piksel Festival Bergen [10.2006]}
 \label{sub:piksel}
-% TODO reviewer comment: As a reader I would like to have an indication of what and how the 'performer' performed, f the gamepad was the only input was there gestures moving to the a/v what was the 'dramaturgical relationship of the live code and this relationship to the interface'? if indeed it was a performance was the 'audience' affect considered or what was the 'response' or atmosphere created by the live performance event.
-
-% TODO editor comment: tell more about the first performance.
+% TODO forDave: reviewer comment: As a reader I would like to have an indication of what and how the 'performer' performed, f the gamepad was the only input was there gestures moving to the a/v what was the 'dramaturgical relationship of the live code and this relationship to the interface'? if indeed it was a performance was the 'audience' affect considered or what was the 'response' or atmosphere created by the live performance event.
+% TODO forDave: editor comment: tell more about the first performance.
 
 The very first performance of Betablocker in the Fluxus environment took place in 2006 at the Piksel open source media arts fesival in Norway. This was a 20 minute solo livecoding performance using a gamepad as the only input mechanism. Subsequently Betablocker was used in a series of performaces in London, both solo and in collaborative musical live sessions as part of the group 'slub'\footnote{\url{http://slub.org}}. 
 
@@ -613,11 +617,11 @@ At the same time, he aimed for a certain amount of transparency, i.e., it should
 This meant 
 (a) to develop a visual representation of the heaps he was playing, 
 (b) to design a textual helper environment for his livecoding, mainly providing text blocks, and
-(c) to pre-select heaps that he used as "raw materials" for his part of the  performance.
+(c) to pre-select heaps that he used as ``raw materials'' for his part of the  performance.
 Figure~\ref{fig:fig_2012-SuperColliderSymposiumLiveCodingEnvironment-till} shows a screenshot of Till's setup.
 
 
-This improvisation with Till allowed David some freedom from the syncronised lockstep of his solo performances, and this concert was the first to experiment with independant speed settings for the different threads. Having control over this meant greater breadth of possible higher level patterns, being able to speed up or slow down different parts while listening to Till's music provided greater control needed in collaborative performance. 
+This improvisation with Till allowed David some freedom from the synchronised lockstep of his solo performances, and this concert was the first to experiment with independent speed settings for the different threads. Having control over this meant greater breadth of possible higher level patterns, being able to speed up or slow down different parts while listening to Till's music provided greater control needed in collaborative performance. 
 
 This performance using Betablocker DS was also the first to use a new synthesis engine written specifically for the ARM7 sound streaming co-processor on the DS, parts of which were written in hand optimised assembly allowing for greater sonic possibilities with an unfortunate corresponding increased battery consumption. 
 % TODO reviewer comment: Would be great to hear the 'greater sonic possibilities'.
