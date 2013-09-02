@@ -125,7 +125,7 @@ The BetaBlocker engine consists of
 (b) an \emph{instruction table} linking a byte to an atomic instruction, and
 (c) a number of independent \emph{threads}, each with
 	(ca) an 8bit \emph{program counter} (\texttt{pC}) pointing to an address in the heap, and (cb) a \emph{stack} of eight bytes.
-The resulting state vector consisting of a heap, a stack and a program counter sufficiently represents the whole Betablocker engine.
+The resulting state vector consisting of a heap, a set of stacks and program counters (one per thread) sufficiently represents the whole Betablocker engine.
 
 The heap is where all data is stored.
 Following \emph{von Neumann architecture} \citep*{von-neumann1993-fir}, Betablocker computation does not make any distinction between a program (i.e., values representing instructions) and data (i.e., values on which the program operates).
@@ -140,13 +140,13 @@ In reverse, a critical differentiation with other virtual machines (eg., Java VM
 Regarding the instruction table, we differentiate between the core set which consists of 22 distinct instructions and various extensions to this set, which, depending on the actual application, introduce features such as playing a note (\texttt{NOTE}) or copying information to the output pins of an AVR microprocessor (\texttt{OUT}).
 An overview of the instructions is given in Figure~\ref{fig:fig_bbds-legend}.
 As there are no instructions, interrupts or error states telling the engine to halt, programs will continue to run until externally terminated.
-However, they will eventually converge into a (possibly complex) stable repetitive behaviour, including infinite loops.
+However, they will tend to converge into a (possibly complex) stable repetitive behaviour, including infinite loops.
 
 % thread
 A thread executes code stored on the heap.
 The program counter $pC$ stores the current position (i.e., the instruction it is currently evaluating).
 The stack finally serves as a temporary private storage for a thread, not addressable by other threads.
-Stored values are accessed by either \emph{popping} an item from the stack to a given address or to the indirect location specified by a given address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in (immediate/literal) address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than file registers, so the resulting language is close to the operation of the Forth programming language \citep{rather1993-the}.
+Stored values are accessed by either \emph{popping} an item from the stack to a given address or to the indirect location specified by a given address (e.g.~\texttt{POP}~\texttt{POPI}), or pushing a value to the stack in (immediate/literal) address or indirect variants  (e.g.~\texttt{PSHL},~\texttt{PSH},~\texttt{PSHI}). All mathematical processes operate using the stack rather than heap memory directly, so the resulting language is close to the operation of the Forth programming language \citep{rather1993-the}.
 \parskip 18pt
 
 \section{Background and historical context}
@@ -155,9 +155,9 @@ Stored values are accessed by either \emph{popping} an item from the stack to a 
 % musical and computational
 
 Betablocker first came to life as an attempt at a game pad programmable live coding system in fluxus (\url{http://www.pawfal.org/fluxus/}).
-It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and by games such as \emph{Mr Driller} in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic (\url{http://uk.ign.com/games/mr-driller/dc-14308}). 
-While
-\emph{Core Wars}, (\url{http://www.corewars.org/}) -- a game where contestants write simple programs that battle to gain memory footprint over each other was also an important inspiration, both in terms of domain specific low level languages, and imaginary hardware.
+It was inspired by a discussion on the TOPLAP mailing list about virtual machines, and by games such as \emph{Mr Driller} in terms of colourful blocks interacting with each other and setting up chain reactions as a game mechanic (\url{http://uk.ign.com/games/mr-driller/dc-14308}).
+
+\emph{Core Wars}, (\url{http://www.corewars.org/}) -- a game where contestants write simple programs that battle to gain memory footprint over each other -- was also an important inspiration, both in terms of domain specific low level languages, and imaginary hardware.
 
 From a musical point of view, Betablocker can be viewed as a tool for algorithmic composition \citep*{maurer1999-a-b} and simultaneous sonification and visualisation of process. Also, it is inspired by nonlinear and stochastic synthesis techniques as described by Xenakis \citep*{Xenakis:1971, luque2009-the}.
 
@@ -212,7 +212,7 @@ The smallest musical loop in Betablocker/Rhythm is 3 instructions long -- push a
 In order to play this at 120 BPM it will need to run at 6 cycles per second. The machine this text was typed on peaks at $2.8*10^9$ cycles per second, which is 466 million times faster than Betablocker/Rhythm.
 This makes computation audible as poly-rhythmic techno music, and simultaneously visible as the thread's positions are displayed on the live coding interface synced with the audio along with the entire heap's memory contents. The memory is displayed on a $16\times16$ grid, in order to maximise the visibility of the state and align with hexadecimal notation.
 
-The author's performance practice with Betablocker/Rhythm consists of starting with empty memory and manually entering programs byte by byte that trigger synthesis patches while they modify themselves and each other. 
+The author's performance practice with Betablocker/Rhythm consists of starting with empty memory and manually entering programs byte by byte that trigger synthesis patches while they modify themselves and each other.
 Bytes used as address locations are visualised literally as pointers -- arrows indicating the addresses in memory they are referencing.
 Eventually the quantity of self replicating fork bombs, sequencers interpreting memory as percussion triggers and programs busily reversing the contents of memory reaches a level where the performer is confronted with a kind of `Turing soup' which is writing and altering its own code.
 At this point the decision is whether to take advantage of this situation or attempt to again gain control over it.
@@ -283,7 +283,7 @@ The use of Genetic Algorithms \citep{barricelli1963numerical} in this case is di
 % dave: WTF?
 % till: I guess she likes the term Betablocker and wants to have some explicite reasoning on why you/we chose that name...
 
-According to the cognitive dimensions of notations \citep{green1989cognitive}, \emph{viscosity} is an important metric of success; how malleable a notation is without requiring repetition of actions or knock on effects with relation to internal constraints. One of the features of evolutionary strategies are that programs are automatically converged on that may present extremely unorthodox approaches -- especially when optimisation is linked to fitness criteria and architectures are used where self modification is possible. In this case we want to unpick successful individual programs in order to employ them musically in hand written code.
+According to the cognitive dimensions of notations \citep{green1989cognitive}, \emph{viscosity} is an important metric of success; how malleable a notation is without requiring repetition of actions or knock on effects with relation to internal constraints. One of the features of evolutionary strategies are that programs are automatically converged on that may present extremely unorthodox approaches -- especially when optimisation is linked to fitness criteria and architectures are used where self modification is possible. We can grow small programs capable of large output complexity, in turn providing inspiration for increasing viscosity of livecoding during a performance. To do this we unpick successful individual programs in order to employ them musically in hand written code.
 
 In a genetic algorithm, in order to select promising programs from a population, we need a way to judge fitness. In this application we are creating lists of note numbers, and, in order to create a fitness metric, we favour patterns that have unique notes (to avoid repetition) but also look for a rhythmic nature by measuring them with this function:
 
@@ -331,7 +331,7 @@ It creates a complex pattern efficiently in four different ways:
 % \item Playing the bitwise \texttt{NOT} of its own code at the same time.
 % \end{enumerate}
 %
-The resulting note numbers: \texttt{0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12 5 243 250 17 6 238 249 20 7 235 248 12 8} score poorly for rhythmic patterns, but it is likely that this surprising local maxima was found by the early influence of the rhythmic fitness criteria on its ancestor populations.
+The resulting note numbers: \texttt{0 0 232 255 23 1 232 254 13 2 242 253 22 3 233 252 7 4 248 251 12 5 243 250 17 6 238 249 20 7 235 248 12 8} score poorly for rhythmic patterns but extremely highly for uniqueness -- it is likely that this surprising local maxima was found by the early influence of the rhythmic fitness criteria on its ancestor populations.
 
 The evolved programs provided many new ideas used in subsequent live coding performances,  including self playing programs like the one above, greater use of the stack (evolved programs showed less reliance on storing values on the heap, leading to more robust programs) and more importantly, a general reappraisal of the potential scope of programs possible with this restricted instruction set.
 
@@ -358,10 +358,10 @@ To be able to capture signals in the audible range, the Betablocker/Audio variat
 Because of the intention to probe an otherwise independent system, no separate instructions or other structural enhancements that would influence its computational behaviour were introduced to the Betablocker engine.
 Instead, we added \emph{pointsOfTouch} to meaningful parts like the stack and the program counter.
 
-The implementation of Betablocker/Audio was done in the SuperCollider programming environment. 
+The implementation of Betablocker/Audio was done in the SuperCollider programming environment.
 The source code is available as a plugin to Supercollider (\url{https://github.com/supercollider/sc3-plugins}).
 To facilitate typical usage, we decided to provide two different interfaces: a demand-rate UGen (\texttt{DetaBlockerBuf}) exposing the topmost value of the stack by means of SuperCollider's demand chain implementation, and a multi-out version (\texttt{BBlockerBuf}) that exposes the position of the program counter as well as  the complete stack.
-A basic example on how they can be accessed is given in the following listings. 
+A basic example on how they can be accessed is given in the following listings.
 It is assumed that the heap to be operated on is pre-loaded into a Buffer object.
 By applying a \texttt{LeakDC} operation to the stack values, DC offsets that could harm the speaker system are removed.
 
@@ -624,7 +624,7 @@ The correspondence of characters to instructions is defined by connecting the le
 Each line in the editor is treated as input to one Betablocker module.
 The output of these Betablocker engines is organised in an FM-like structure.
 The resulting sound, an ever-changing blend of noisy texture and rhythmical patterns, influences the performers' decisions on how to further alter the text.
-Over the course of the performance, an initially meaningful text turns into nonsense before it eventually settles into a new and often surprising semantic meaning. 
+Over the course of the performance, an initially meaningful text turns into nonsense before it eventually settles into a new and often surprising semantic meaning.
 For more information and a documentation video, see \url{http://www.tai-studio.org/oulipop/}.
 \begin{figure}
 	\centering
